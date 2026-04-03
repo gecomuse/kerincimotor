@@ -3,7 +3,7 @@
 @section('content')
 @php
     $waNumber   = $globalSettings['wa_number']->value ?? '6287776700009';
-    $tagline    = $globalSettings['hero_tagline']->value ?? 'Mobil Bekas Terinspeksi dengan Harga Terbaik';
+    $tagline    = $globalSettings['hero_tagline']->value ?? 'Mobil Bekas Terpercaya, Harga Terbaik';
     $subtagline = $globalSettings['hero_subtagline']->value ?? 'Mobil bekas berkualitas, inspeksi ketat, dan kilometer jujur.';
     $address    = $globalSettings['address']->value ?? 'Bekasi, Jawa Barat';
     $hours      = $globalSettings['operating_hours']->value ?? 'Every Day, 08:00 – 20:00 WIB';

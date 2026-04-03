@@ -8,7 +8,7 @@
         {{-- Logo --}}
         <a href="{{ route('home') }}" class="flex-shrink-0">
             <img src="{{ asset('images/logo.png') }}" alt="Kerinci Motor"
-                 class="h-10 w-auto min-w-[120px]"
+                 class="h-10 w-auto object-contain"
                  onerror="this.outerHTML='<span class=\'font-heading font-extrabold text-xl text-brand-white\'>KERINCI<span class=\'text-brand-red\'>MOTOR</span></span>'">
         </a>
 
