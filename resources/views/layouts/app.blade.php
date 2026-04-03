@@ -17,19 +17,14 @@
     @livewireStyles
 
     {{-- GA4 --}}
-    @php
-        $ga4Id = $globalSettings['ga4_measurement_id']->value ?? null;
-    @endphp
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PVRX74XRPR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    @if(!empty($ga4Id))
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $ga4Id }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '{{ $ga4Id }}');
-        </script>
-    @endif
+      gtag('config', 'G-PVRX74XRPR');
+    </script>
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
