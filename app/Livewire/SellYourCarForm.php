@@ -2,49 +2,44 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
 use App\Models\SellInquiry;
 use App\Models\Setting;
-use Livewire\Component;
 
 class SellYourCarForm extends Component
 {
-    public int    $step         = 1;
+    public int $step = 1;
+    public int $totalSteps = 3;
 
-    // Step 1
-    public string $name         = '';
-    public string $phone        = '';
+    // Step 1 - Personal Info
+    public string $name = '';
+    public string $phone = '';
 
-    // Step 2
-    public string $car_make     = '';
-    public string $car_model    = '';
-    public string $year         = '';
-    public string $mileage      = '';
-    public string $transmission = '';
-    public string $color        = '';
-    public string $plate_number = '';
-    public string $condition    = '';
+    // Step 2 - Vehicle Info
+    public string $car_make = '';
+    public string $car_year = '';
+    public string $car_mileage = '';
+    public string $car_condition = '';
 
-    // Step 3
-    public string $asking_price = '';
-    public string $notes        = '';
+    // Step 3 - Offer Details
+    public string $expected_price = '';
+    public string $additional_notes = '';
 
-    public bool   $submitted    = false;
-
-    protected function rulesForStep(int $step): array
+    protected function rulesForStep(): array
     {
-        return match ($step) {
+        return match ($this->step) {
             1 => [
-                'name'  => 'required|string|max:100',
-                'phone' => 'required|string|max:20',
+                'name'  => 'required|min:2',
+                'phone' => 'required|min:8',
             ],
             2 => [
-                'car_make'  => 'required|string|max:100',
-                'car_model' => 'required|string|max:150',
-                'year'      => 'required|integer|min:1990|max:' . (date('Y') + 1),
-                'mileage'   => 'required|integer|min:0',
+                'car_make'     => 'required|min:2',
+                'car_year'     => 'required|digits:4',
+                'car_mileage'  => 'required',
+                'car_condition'=> 'required',
             ],
             3 => [
-                'asking_price' => 'required|string|max:100',
+                'expected_price' => 'required',
             ],
             default => [],
         };
@@ -52,82 +47,59 @@ class SellYourCarForm extends Component
 
     public function nextStep(): void
     {
-        $this->validate($this->rulesForStep($this->step));
-        $this->step++;
+        $this->validate($this->rulesForStep());
+
+        if ($this->step < $this->totalSteps) {
+            $this->step++;
+        }
     }
 
     public function prevStep(): void
     {
-        $this->step = max(1, $this->step - 1);
+        if ($this->step > 1) {
+            $this->step--;
+        }
     }
 
-    public function submit()
+    public function submit(): void
     {
-        $this->validate($this->rulesForStep(3));
+        $this->validate($this->rulesForStep());
 
-        $inquiry = SellInquiry::create([
+        // Save to database using existing columns
+        SellInquiry::create([
             'name'         => $this->name,
             'phone'        => $this->phone,
             'car_make'     => $this->car_make,
-            'car_model'    => $this->car_model,
-            'year'         => (int) $this->year,
-            'mileage'      => (int) $this->mileage,
-            'transmission' => $this->transmission ?: null,
-            'color'        => $this->color ?: null,
-            'plate_number' => $this->plate_number ?: null,
-            'condition'    => $this->condition ?: null,
-            'asking_price' => $this->asking_price,
-            'notes'        => $this->notes ?: null,
+            'car_model'    => '',
+            'year'         => (int) $this->car_year,
+            'mileage'      => (int) str_replace(['.', ','], '', $this->car_mileage),
+            'condition'    => $this->car_condition,
+            'asking_price' => $this->expected_price,
+            'notes'        => $this->additional_notes ?: null,
+            'status'       => 'new',
         ]);
 
+        // Build WhatsApp message
         $waNumber = Setting::getValue('wa_number', '6287776700009');
-        $message  = $this->buildMessage();
-        $waUrl    = "https://wa.me/{$waNumber}?text=" . urlencode($message);
+        $message  = "Halo Kerinci Motor, saya ingin menjual kendaraan saya:\n\n";
+        $message .= "📋 *DATA PENJUAL*\n";
+        $message .= "Nama: {$this->name}\n";
+        $message .= "No. HP: {$this->phone}\n\n";
+        $message .= "🚗 *DATA KENDARAAN*\n";
+        $message .= "Merek/Model: {$this->car_make}\n";
+        $message .= "Tahun: {$this->car_year}\n";
+        $message .= "Kilometer: {$this->car_mileage} KM\n";
+        $message .= "Kondisi: {$this->car_condition}\n\n";
+        $message .= "💰 *PENAWARAN*\n";
+        $message .= "Harga yang Diinginkan: Rp {$this->expected_price}\n";
 
-        $this->submitted = true;
-
-        $this->dispatch('redirect-to-wa', url: $waUrl);
-    }
-
-    private function buildMessage(): string
-    {
-        $lines = [
-            "Halo Kerinci Motor, saya ingin menjual kendaraan saya:",
-            "",
-            "📋 *DATA PENJUAL*",
-            "Nama: {$this->name}",
-            "No. HP: {$this->phone}",
-            "",
-            "🚗 *DATA KENDARAAN*",
-            "Merek: {$this->car_make}",
-            "Model/Tipe: {$this->car_model}",
-            "Tahun: {$this->year}",
-            "Kilometer: " . number_format((int) $this->mileage, 0, ',', '.') . " KM",
-        ];
-
-        if ($this->transmission) {
-            $lines[] = "Transmisi: " . ucfirst($this->transmission);
-        }
-        if ($this->color) {
-            $lines[] = "Warna: {$this->color}";
-        }
-        if ($this->plate_number) {
-            $lines[] = "No. Polisi: {$this->plate_number}";
-        }
-        if ($this->condition) {
-            $lines[] = "Kondisi: {$this->condition}";
+        if ($this->additional_notes) {
+            $message .= "\n📝 Catatan: {$this->additional_notes}\n";
         }
 
-        $lines[] = "";
-        $lines[] = "💰 *PENAWARAN*";
-        $lines[] = "Harga yang Diinginkan: Rp {$this->asking_price}";
+        $waUrl = 'https://wa.me/' . $waNumber . '?text=' . urlencode($message);
 
-        if ($this->notes) {
-            $lines[] = "";
-            $lines[] = "📝 Catatan: {$this->notes}";
-        }
-
-        return implode("\n", $lines);
+        $this->redirect($waUrl, navigate: false);
     }
 
     public function render()
