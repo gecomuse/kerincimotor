@@ -1,0 +1,2 @@
+<img src="{{ asset('images/logo.png') }}" alt="Kerinci Motor" class="h-8"
+     onerror="this.outerHTML='<span class=\'font-heading font-bold text-white text-lg\'>KERINCI<span class=\'text-red-500\'>MOTOR</span></span>'">

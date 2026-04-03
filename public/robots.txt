@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /admin-register
+Disallow: /admin-register/*
+
+Sitemap: https://kerincimotor.com/sitemap.xml
