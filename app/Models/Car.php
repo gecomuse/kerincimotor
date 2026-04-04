@@ -60,7 +60,7 @@ class Car extends Model implements HasMedia
         $this->addMediaCollection('car_images')
             ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->onlyKeepLatest(8);
+            ->onlyKeepLatest(16);
     }
 
     public function registerMediaConversions(?Media $media = null): void

@@ -127,12 +127,12 @@ class CarResource extends Resource
                     SpatieMediaLibraryFileUpload::make('car_images')
                         ->collection('car_images')
                         ->multiple()
-                        ->maxFiles(8)
+                        ->maxFiles(16)
                         ->image()
                         ->imageEditor()
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                         ->maxSize(5120)
-                        ->helperText('Upload up to 8 photos. Max 5MB each. JPG/PNG/WebP only.')
+                        ->helperText('Upload up to 16 photos. Max 5MB each. JPG/PNG/WebP only.')
                         ->columnSpanFull(),
                 ]),
 
