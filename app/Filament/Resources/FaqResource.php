@@ -37,15 +37,17 @@ class FaqResource extends Resource
                 ->label('Jawaban')
                 ->required()
                 ->rows(4)
+                ->helperText('Boleh menggunakan HTML sederhana seperti <strong>, <a href="">')
                 ->columnSpanFull(),
 
             Forms\Components\TextInput::make('sort_order')
-                ->label('Urutan')
+                ->label('Urutan Tampil')
                 ->numeric()
-                ->default(0),
+                ->default(0)
+                ->helperText('Angka lebih kecil = tampil lebih atas'),
 
             Forms\Components\Toggle::make('is_active')
-                ->label('Aktif')
+                ->label('Tampilkan di Website')
                 ->default(true),
         ]);
     }

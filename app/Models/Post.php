@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Post extends Model
@@ -20,6 +21,9 @@ class Post extends Model
         'read_time',
         'is_published',
         'published_at',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     protected $casts = [
@@ -51,11 +55,30 @@ class Post extends Model
         return $query->where('is_published', true)->orderByDesc('published_at');
     }
 
+    public function getSeoTitle(): string
+    {
+        return $this->meta_title ?: $this->title . ' | Kerinci Motor';
+    }
+
+    public function getSeoDescription(): string
+    {
+        return $this->meta_description ?: $this->excerpt;
+    }
+
+    public function getSeoKeywords(): string
+    {
+        return $this->meta_keywords ?: '';
+    }
+
+    public function getThumbnailUrl(): ?string
+    {
+        return $this->thumbnail ? Storage::url($this->thumbnail) : null;
+    }
+
     public function getThumbnailUrlAttribute(): string
     {
-        if ($this->thumbnail) {
-            return asset('storage/' . $this->thumbnail);
-        }
-        return asset('images/blog-placeholder.jpg');
+        return $this->thumbnail
+            ? Storage::url($this->thumbnail)
+            : asset('images/blog-placeholder.jpg');
     }
 }

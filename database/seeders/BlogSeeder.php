@@ -11,96 +11,113 @@ class BlogSeeder extends Seeder
 {
     public function run(): void
     {
+        // Skip if already seeded
+        if (Post::count() > 0) {
+            $this->command->info('BlogSeeder: posts already exist, skipping.');
+            return;
+        }
+
+        $placeholder = '<p>Artikel ini sedang dalam proses penulisan. Silakan edit melalui dashboard admin di <a href="/admin">kerincimotor.com/admin</a>.</p>';
+
         // ── Posts ──────────────────────────────────────────────────────────────
         $posts = [
             [
-                'title'        => 'Cara Membeli Mobil Bekas yang Aman dan Tidak Tertipu',
-                'category'     => 'Panduan',
-                'excerpt'      => 'Membeli mobil bekas bisa jadi keputusan cerdas jika Anda tahu caranya. Simak panduan lengkap kami agar tidak terjebak membeli mobil bermasalah.',
-                'content'      => '<h2>Mengapa Membeli Mobil Bekas?</h2><p>Mobil bekas menawarkan nilai yang jauh lebih baik dibandingkan mobil baru. Penyusutan nilai terbesar terjadi pada 1-2 tahun pertama, sehingga dengan membeli mobil bekas berusia 2-3 tahun, Anda bisa mendapatkan kendaraan berkualitas dengan harga yang jauh lebih terjangkau.</p><h2>Langkah-Langkah Pembelian yang Aman</h2><p>Berikut adalah checklist yang perlu Anda lakukan sebelum memutuskan membeli:</p><ul><li>Cek riwayat servis kendaraan</li><li>Periksa fisik body dan interior secara teliti</li><li>Lakukan test drive minimal 15 menit</li><li>Cek kelengkapan dan keaslian dokumen (STNK, BPKB)</li><li>Verifikasi nomor rangka dan nomor mesin</li></ul><h2>Tanda-Tanda Mobil Bermasalah</h2><p>Waspadai tanda-tanda berikut: cat body yang tidak merata (indikasi bekas tabrakan), odometer yang tidak sesuai kondisi mesin, dokumen yang tidak lengkap atau terlihat palsu, dan harga yang jauh di bawah pasaran tanpa alasan jelas.</p><h2>Beli di Dealer Terpercaya</h2><p>Membeli di dealer resmi seperti Kerinci Motor memberikan ketenangan pikiran. Setiap unit telah melalui inspeksi menyeluruh dan dilengkapi dengan garansi purna jual.</p>',
-                'read_time'    => 6,
-                'is_published' => true,
-                'published_at' => now()->subDays(30),
+                'title'            => '7 Hal Wajib Dicek Sebelum Beli Mobil Bekas Pertama Kamu',
+                'category'         => 'Panduan',
+                'read_time'        => 8,
+                'excerpt'          => 'Jangan sampai menyesal! Dari cek nomor rangka, kondisi mesin, bodi, hingga kelengkapan dokumen — panduan lengkap agar kamu tidak tertipu unit bermasalah.',
+                'meta_title'       => '7 Tips Cek Mobil Bekas Sebelum Beli | Kerinci Motor',
+                'meta_description' => 'Panduan lengkap 7 hal wajib dicek sebelum membeli mobil bekas pertama kamu. Dari nomor rangka, mesin, bodi, hingga dokumen.',
+                'meta_keywords'    => 'tips beli mobil bekas, cek mobil bekas, mobil bekas pertama',
             ],
             [
-                'title'        => '5 Tips Merawat Mobil Bekas agar Tetap Prima',
-                'category'     => 'Perawatan',
-                'excerpt'      => 'Merawat mobil bekas tidak harus mahal. Dengan perawatan rutin yang tepat, mobil Anda bisa tetap handal dan tahan lama.',
-                'content'      => '<h2>Rutin Ganti Oli Mesin</h2><p>Penggantian oli mesin secara rutin adalah fondasi perawatan mobil yang baik. Untuk mobil harian, ganti oli setiap 5.000–7.500 km atau setiap 6 bulan sekali, mana yang lebih dulu tercapai.</p><h2>Periksa Tekanan Ban Secara Berkala</h2><p>Tekanan ban yang tidak sesuai mempengaruhi keamanan berkendara, konsumsi bahan bakar, dan usia pakai ban. Periksa setiap 2 minggu sekali dalam kondisi ban dingin.</p><h2>Jaga Kebersihan Filter Udara</h2><p>Filter udara yang kotor membuat mesin bekerja lebih keras dan meningkatkan konsumsi BBM. Bersihkan setiap 10.000 km dan ganti setiap 20.000 km.</p><h2>Perhatikan Kondisi Aki</h2><p>Aki mobil umumnya berumur 2-3 tahun. Jika mesin sulit dihidupkan di pagi hari, segera cek kondisi aki Anda ke bengkel terdekat.</p><h2>Servis Berkala di Bengkel Terpercaya</h2><p>Jangan skip jadwal servis berkala. Selain menjaga performa, servis rutin juga membantu mendeteksi masalah sebelum berkembang menjadi kerusakan serius yang mahal.</p>',
-                'read_time'    => 5,
-                'is_published' => true,
-                'published_at' => now()->subDays(20),
+                'title'            => 'Harga Honda Jazz Bekas 2024: Dari GE8 Hingga GK5',
+                'category'         => 'Harga Pasar',
+                'read_time'        => 5,
+                'excerpt'          => 'Update harga pasar Honda Jazz bekas per tahun ini. Generasi mana yang paling worth it untuk dibeli sekarang?',
+                'meta_title'       => 'Harga Honda Jazz Bekas 2024 Semua Generasi | Kerinci Motor',
+                'meta_description' => 'Daftar harga Honda Jazz bekas 2024: GE8, GE6, GK5. Update harga pasar terkini dan tips memilih generasi terbaik.',
+                'meta_keywords'    => 'harga honda jazz bekas, honda jazz bekas 2024, jazz GK5 bekas',
             ],
             [
-                'title'        => 'Toyota Avanza vs Honda Mobilio: Mana yang Lebih Worth It?',
-                'category'     => 'Tips',
-                'excerpt'      => 'Dua MPV terlaris di Indonesia. Kami bandingkan performa, kenyamanan, dan nilai investasi Toyota Avanza dan Honda Mobilio bekas.',
-                'content'      => '<h2>Toyota Avanza</h2><p>Avanza adalah raja MPV Indonesia dengan jaringan bengkel terluas dan spare part yang mudah ditemukan di seluruh pelosok negeri. Keunggulan utamanya adalah kemudahan servis dan biaya perawatan yang terjangkau.</p><h2>Honda Mobilio</h2><p>Mobilio hadir dengan desain yang lebih modern dan kabin yang terasa lebih lega. Konsumsi BBM-nya juga sedikit lebih efisien berkat mesin VTEC-nya.</p><h2>Perbandingan Harga Bekas</h2><p>Avanza keluaran 2018 berkisar Rp 155–175 juta, sementara Mobilio tahun yang sama di kisaran Rp 145–165 juta. Selisihnya tidak terlalu jauh namun Avanza cenderung lebih stabil nilai jualnya.</p><h2>Kesimpulan</h2><p>Jika Anda sering bepergian jauh ke daerah yang bengkelnya terbatas, Avanza adalah pilihan lebih aman. Jika mengutamakan kenyamanan kabin dan efisiensi BBM untuk perkotaan, Mobilio layak dipertimbangkan.</p>',
-                'read_time'    => 7,
-                'is_published' => true,
-                'published_at' => now()->subDays(15),
+                'title'            => 'Avanza vs Xenia Bekas: Mana yang Lebih Worth It di 2024?',
+                'category'         => 'Perbandingan',
+                'read_time'        => 6,
+                'excerpt'          => 'Dua MPV sejuta umat ini selalu bersaing ketat. Kami bedah dari segi harga, ketersediaan suku cadang, dan biaya perawatan jangka panjang.',
+                'meta_title'       => 'Avanza vs Xenia Bekas 2024: Perbandingan Lengkap | Kerinci Motor',
+                'meta_description' => 'Perbandingan Toyota Avanza vs Daihatsu Xenia bekas: harga, suku cadang, biaya servis, dan mana yang lebih recommended.',
+                'meta_keywords'    => 'avanza vs xenia bekas, perbandingan avanza xenia, mpv bekas terbaik',
             ],
             [
-                'title'        => 'Kapan Waktu Terbaik Menjual Mobil Bekas Anda?',
-                'category'     => 'Tips',
-                'excerpt'      => 'Timing adalah segalanya dalam jual beli mobil. Ketahui kapan harga mobil bekas Anda sedang di puncaknya agar bisa mendapatkan penawaran terbaik.',
-                'content'      => '<h2>Pengaruh Musim terhadap Harga Mobil</h2><p>Harga mobil bekas cenderung naik menjelang hari raya, tahun ajaran baru, dan akhir tahun. Ini adalah saat-saat permintaan meningkat dan pembeli lebih bersedia membayar harga premium.</p><h2>Umur dan Kilometer Ideal untuk Dijual</h2><p>Jual sebelum mobil memasuki tahun ke-5 atau kilometer ke-80.000. Setelah batas ini, nilai jual mulai turun lebih drastis karena pembeli mulai mengkhawatirkan biaya perawatan.</p><h2>Perhatikan Kompetitor di Pasaran</h2><p>Sebelum memasang harga, survei pasar terlebih dahulu. Cek platform jual beli online dan bandingkan dengan kondisi mobil Anda untuk menentukan harga yang kompetitif.</p><h2>Jual ke Dealer untuk Proses Cepat</h2><p>Menjual ke dealer seperti Kerinci Motor menawarkan proses yang cepat dan bebas repot. Anda akan mendapatkan penawaran langsung hari itu juga tanpa perlu menunggu pembeli yang tepat.</p>',
-                'read_time'    => 4,
-                'is_published' => true,
-                'published_at' => now()->subDays(8),
+                'title'            => 'Cara Kredit Mobil Bekas 2024: Syarat, DP, dan Tips Lolos ACC',
+                'category'         => 'Kredit & DP',
+                'read_time'        => 7,
+                'excerpt'          => 'Panduan lengkap pengajuan kredit mobil bekas — mulai syarat dokumen, simulasi cicilan, hingga tips agar pengajuan tidak ditolak leasing.',
+                'meta_title'       => 'Cara Kredit Mobil Bekas 2024: Syarat & Tips ACC | Kerinci Motor',
+                'meta_description' => 'Panduan kredit mobil bekas 2024: syarat dokumen, DP minimal, simulasi cicilan, dan tips agar pengajuan leasing disetujui.',
+                'meta_keywords'    => 'kredit mobil bekas, dp mobil bekas, cicilan mobil bekas, leasing mobil bekas',
             ],
             [
-                'title'        => 'Dokumen Wajib yang Harus Dicek Sebelum Beli Mobil Bekas',
-                'category'     => 'Panduan',
-                'excerpt'      => 'Jangan biarkan dokumen yang bermasalah menjadi mimpi buruk setelah transaksi. Ini daftar lengkap dokumen yang wajib Anda verifikasi.',
-                'content'      => '<h2>STNK (Surat Tanda Nomor Kendaraan)</h2><p>Pastikan data di STNK sesuai dengan kondisi fisik kendaraan: nama pemilik, nomor polisi, nomor rangka, dan nomor mesin. STNK yang sudah mati pajak lebih dari 1 tahun bisa menjadi masalah saat balik nama.</p><h2>BPKB (Buku Pemilik Kendaraan Bermotor)</h2><p>BPKB adalah dokumen kepemilikan yang paling penting. Periksa keasliannya — BPKB palsu memiliki kertas yang berbeda dan nomor seri yang tidak terdaftar di Samsat.</p><h2>Faktur Pembelian</h2><p>Faktur asli dari dealer pertama sangat berguna untuk memverifikasi riwayat kendaraan. Tidak semua transaksi bekas dilengkapi faktur, namun keberadaannya meningkatkan kepercayaan.</p><h2>Kir (Jika Diperlukan)</h2><p>Untuk kendaraan niaga, pastikan buku kir masih berlaku. Kir yang mati bisa menjadi masalah hukum saat kendaraan beroperasi.</h2><h2>Tips Verifikasi Cepat</h2><p>Anda bisa mengecek keabsahan nomor rangka dan nomor mesin melalui aplikasi STNK Online milik Samsat atau mengunjungi kantor Samsat terdekat secara langsung.</p>',
-                'read_time'    => 5,
-                'is_published' => true,
-                'published_at' => now()->subDays(3),
+                'title'            => '5 Mobil Bekas Terbaik di Bawah 100 Juta Tahun 2024',
+                'category'         => 'Rekomendasi',
+                'read_time'        => 5,
+                'excerpt'          => 'Budget 100 juta masih bisa dapat mobil kondisi bagus dan legal. Inilah 5 pilihan terbaik berdasarkan data harga pasar dan keandalan mesin.',
+                'meta_title'       => '5 Rekomendasi Mobil Bekas di Bawah 100 Juta 2024 | Kerinci Motor',
+                'meta_description' => 'Rekomendasi 5 mobil bekas terbaik harga di bawah 100 juta. Unit berkualitas dengan kondisi terawat dan dokumen lengkap.',
+                'meta_keywords'    => 'mobil bekas 100 juta, mobil bekas murah bekasi, rekomendasi mobil bekas',
             ],
         ];
 
-        foreach ($posts as $post) {
-            Post::create(array_merge($post, [
-                'slug' => Str::slug($post['title']),
+        foreach ($posts as $i => $data) {
+            Post::create(array_merge($data, [
+                'slug'         => Str::slug($data['title']),
+                'content'      => $placeholder,
+                'is_published' => true,
+                'published_at' => now()->subDays(count($posts) - $i),
             ]));
+        }
+
+        // Skip FAQs if already seeded
+        if (Faq::count() > 0) {
+            $this->command->info('BlogSeeder: FAQs already exist, skipping.');
+            return;
         }
 
         // ── FAQs ──────────────────────────────────────────────────────────────
         $faqs = [
             [
-                'question'   => 'Apakah semua mobil di Kerinci Motor sudah melalui inspeksi?',
-                'answer'     => 'Ya, setiap kendaraan yang kami jual wajib melewati proses inspeksi menyeluruh yang mencakup pemeriksaan mesin, transmisi, kaki-kaki, eksterior, interior, dan kelengkapan dokumen. Kami tidak menjual kendaraan yang tidak lolos standar kualitas kami.',
+                'question'   => 'Bagaimana cara membeli mobil di Kerinci Motor?',
+                'answer'     => 'Cukup hubungi kami via WhatsApp atau kunjungi showroom langsung. Tim kami akan membantu Anda memilih unit yang sesuai kebutuhan dan budget. Proses pembelian cepat, dokumen lengkap.',
                 'sort_order' => 1,
             ],
             [
-                'question'   => 'Apakah ada garansi untuk mobil bekas yang dibeli?',
-                'answer'     => 'Kami memberikan jaminan kepuasan pelanggan. Jika dalam 7 hari setelah pembelian ditemukan masalah yang tidak diinformasikan sebelumnya, kami siap menanganinya. Hubungi kami langsung untuk detail kebijakan garansi.',
+                'question'   => 'Bagaimana cara mengecek kondisi unit sebelum beli?',
+                'answer'     => 'Setiap unit di Kerinci Motor sudah melalui inspeksi 150+ poin. Anda tetap bisa melakukan test drive dan pemeriksaan mandiri. Kami juga menyediakan riwayat servis kendaraan jika tersedia.',
                 'sort_order' => 2,
             ],
             [
-                'question'   => 'Bagaimana cara menjual mobil saya ke Kerinci Motor?',
-                'answer'     => 'Sangat mudah! Isi formulir "Jual Mobil Anda" di halaman utama kami, atau hubungi kami via WhatsApp. Tim kami akan melakukan penilaian dan memberikan penawaran harga terbaik dalam waktu 24 jam.',
+                'question'   => 'Merek apa saja yang tersedia di Kerinci Motor?',
+                'answer'     => 'Kami menyediakan berbagai merek populer: Toyota, Honda, Daihatsu, Suzuki, Mitsubishi, Nissan, dan lainnya. Stok kami diperbarui secara rutin — cek katalog online kami untuk unit terbaru.',
                 'sort_order' => 3,
             ],
             [
-                'question'   => 'Apakah tersedia fasilitas tukar tambah (trade-in)?',
-                'answer'     => 'Ya, kami melayani tukar tambah. Bawa kendaraan lama Anda ke showroom kami untuk dievaluasi, dan kami akan menghitung selisih harga dengan kendaraan pilihan Anda. Prosesnya cepat dan transparan.',
+                'question'   => 'Apakah tersedia fasilitas kredit atau cicilan?',
+                'answer'     => 'Ya, kami bekerja sama dengan beberapa lembaga pembiayaan terpercaya. DP mulai dari 20% dengan tenor hingga 5 tahun. Hubungi kami untuk simulasi cicilan sesuai kemampuan Anda.',
                 'sort_order' => 4,
             ],
             [
-                'question'   => 'Apakah bisa kredit/cicilan?',
-                'answer'     => 'Kami bekerja sama dengan beberapa lembaga pembiayaan terpercaya. Uang muka (DP) dimulai dari 20% dengan tenor hingga 5 tahun. Hubungi kami untuk simulasi cicilan sesuai kemampuan Anda.',
+                'question'   => 'Di mana lokasi showroom Kerinci Motor?',
+                'answer'     => 'Showroom kami berlokasi di Jl. Mustika Jaya RT.006/RW.012, Mustikajaya, Kota Bekasi, Jawa Barat. Buka setiap hari pukul 08:00–20:00 WIB. Lihat peta di bagian bawah halaman utama.',
                 'sort_order' => 5,
             ],
             [
-                'question'   => 'Berapa lama proses balik nama kendaraan?',
-                'answer'     => 'Proses balik nama umumnya memakan waktu 14–30 hari kerja tergantung wilayah dan kelengkapan dokumen. Kami dapat membantu mengurus proses balik nama sebagai layanan tambahan.',
+                'question'   => 'Apakah bisa tukar tambah (trade-in)?',
+                'answer'     => 'Tentu bisa! Bawa kendaraan lama Anda ke showroom untuk evaluasi kondisi dan harga. Tim kami akan memberikan penawaran harga terbaik dan menghitung selisih dengan unit pilihan Anda.',
                 'sort_order' => 6,
             ],
             [
-                'question'   => 'Di mana lokasi showroom Kerinci Motor?',
-                'answer'     => 'Showroom kami berlokasi di Kerinci, Jambi. Detail alamat lengkap dan peta lokasi tersedia di bagian bawah halaman utama website kami, atau Anda bisa menghubungi kami via WhatsApp untuk panduan arah.',
+                'question'   => 'Apa saja yang perlu saya cek saat membeli mobil bekas?',
+                'answer'     => 'Hal-hal penting: (1) Cek nomor rangka & mesin sesuai STNK/BPKB, (2) Periksa kondisi bodi dari karat dan bekas tabrakan, (3) Test drive minimal 15 menit, (4) Cek kelengkapan dokumen, (5) Verifikasi status pajak kendaraan.',
                 'sort_order' => 7,
             ],
         ];

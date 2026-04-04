@@ -119,6 +119,74 @@
 @endif
 
 {{-- ═══════════════════════════════════════════════════════ --}}
+{{--  SECTION 2B: ARTIKEL TERBARU                             --}}
+{{-- ═══════════════════════════════════════════════════════ --}}
+@if(isset($latestPosts) && $latestPosts->count())
+<section class="py-20 bg-brand-dark-gray">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-12">
+            <p class="section-label">Tips & Panduan</p>
+            <h2 class="section-title">Artikel Terbaru</h2>
+            <p class="section-subtitle mx-auto">Tips dan panduan beli mobil bekas dari praktisi</p>
+            <div class="divider-red mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($latestPosts as $post)
+            <a href="{{ route('artikel.show', $post->slug) }}"
+               class="group block bg-brand-mid-gray border border-white/5 rounded-2xl overflow-hidden
+                      hover:border-brand-red/30 transition-all duration-300 hover:-translate-y-1">
+                <div class="aspect-video overflow-hidden bg-brand-dark-gray">
+                    @if($post->thumbnail_url && $post->thumbnail)
+                    <img src="{{ $post->thumbnail_url }}"
+                         alt="{{ $post->title }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onerror="this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full text-5xl\'>📰</div>'">
+                    @else
+                    <div class="flex items-center justify-center h-full text-5xl">📰</div>
+                    @endif
+                </div>
+                <div class="p-6">
+                    <span class="inline-block bg-brand-red/20 text-brand-red text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+                        {{ $post->category }}
+                    </span>
+                    <h3 class="font-heading font-bold text-base text-brand-white mb-2 group-hover:text-brand-red transition-colors line-clamp-2">
+                        {{ $post->title }}
+                    </h3>
+                    <p class="text-brand-text-gray text-sm leading-relaxed mb-4 line-clamp-3">
+                        {{ Str::limit($post->excerpt, 120) }}
+                    </p>
+                    <div class="flex items-center justify-between text-xs text-brand-text-gray">
+                        <span>{{ $post->published_at?->locale('id')->isoFormat('D MMM YYYY') }}</span>
+                        <span class="flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ $post->read_time }} mnt
+                        </span>
+                    </div>
+                    <div class="mt-4 text-brand-red text-sm font-semibold group-hover:underline">
+                        Baca Selengkapnya →
+                    </div>
+                </div>
+            </a>
+            @empty
+            <div class="col-span-3 text-center py-10 text-brand-text-gray">
+                Belum ada artikel tersedia.
+            </div>
+            @endforelse
+        </div>
+
+        <div class="text-center mt-10">
+            <a href="{{ route('artikel.index') }}" class="btn-outline">
+                Lihat Semua Artikel →
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- ═══════════════════════════════════════════════════════ --}}
 {{--  SECTION 3: KENAPA PILIH KAMI (Why Us)                  --}}
 {{-- ═══════════════════════════════════════════════════════ --}}
 <section id="why-us" class="py-20 bg-brand-dark-gray">

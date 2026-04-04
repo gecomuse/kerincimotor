@@ -30,14 +30,16 @@ class SellInquiryResource extends Resource
             Infolists\Components\Section::make('Seller Information')
                 ->schema([
                     Infolists\Components\TextEntry::make('name')->label('Name'),
-                    Infolists\Components\TextEntry::make('phone')->label('WhatsApp'),
+                    Infolists\Components\TextEntry::make('phone')->label('Nomor Telepon'),
                     Infolists\Components\TextEntry::make('created_at')->label('Received')->dateTime('d M Y, H:i'),
-                    Infolists\Components\BadgeEntry::make('status')
-                        ->colors([
-                            'warning' => 'new',
-                            'info'    => 'contacted',
-                            'success' => 'closed',
-                        ]),
+                    Infolists\Components\TextEntry::make('status')
+                        ->badge()
+                        ->color(fn (string $state): string => match ($state) {
+                            'new'       => 'warning',
+                            'contacted' => 'info',
+                            'closed'    => 'success',
+                            default     => 'gray',
+                        }),
                 ])
                 ->columns(2),
 
@@ -75,7 +77,7 @@ class SellInquiryResource extends Resource
                     ->weight('bold'),
 
                 Tables\Columns\TextColumn::make('phone')
-                    ->label('Phone')
+                    ->label('Nomor Telepon')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('car_make')
@@ -91,12 +93,14 @@ class SellInquiryResource extends Resource
                     ->label('Asking Price')
                     ->prefix('Rp '),
 
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => 'new',
-                        'info'    => 'contacted',
-                        'success' => 'closed',
-                    ])
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'new'       => 'warning',
+                        'contacted' => 'info',
+                        'closed'    => 'success',
+                        default     => 'gray',
+                    })
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')

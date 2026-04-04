@@ -19,9 +19,9 @@ Route::post('/sell-inquiry', [SellInquiryController::class, 'store'])
     ->middleware('throttle:5,60')
     ->name('sell-inquiry.store');
 
-// Blog
-Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+// Artikel (Blog)
+Route::get('/artikel', [BlogController::class, 'index'])->name('artikel.index');
+Route::get('/artikel/{slug}', [BlogController::class, 'show'])->name('artikel.show');
 
 // Sitemap
 Route::get('/sitemap.xml', [HomeController::class, 'sitemap'])->name('sitemap');

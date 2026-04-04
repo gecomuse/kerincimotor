@@ -16,7 +16,7 @@
         <nav class="hidden md:flex items-center gap-8">
             <a href="{{ route('home') }}#why-us"  class="navbar-link">Kenapa Kami</a>
             <a href="{{ route('catalog.index') }}" class="navbar-link">Katalog</a>
-            <a href="{{ route('blog.index') }}" class="navbar-link">Blog</a>
+            <a href="{{ route('artikel.index') }}" class="navbar-link">Artikel</a>
             <a href="{{ route('home') }}#testimonials" class="navbar-link">Ulasan</a>
             <a href="{{ route('home') }}#sell-car" class="navbar-link">Jual Mobil Anda</a>
             <a href="{{ route('home') }}#location" class="navbar-link">Lokasi</a>
@@ -49,7 +49,7 @@
         <nav class="flex flex-col gap-3">
             <a href="{{ route('home') }}#why-us" class="navbar-link py-2 border-b border-white/5">Kenapa Kami</a>
             <a href="{{ route('catalog.index') }}" class="navbar-link py-2 border-b border-white/5">Katalog</a>
-            <a href="{{ route('blog.index') }}" class="navbar-link py-2 border-b border-white/5">Blog</a>
+            <a href="{{ route('artikel.index') }}" class="navbar-link py-2 border-b border-white/5">Artikel</a>
             <a href="{{ route('home') }}#testimonials" class="navbar-link py-2 border-b border-white/5">Ulasan</a>
             <a href="{{ route('home') }}#sell-car" class="navbar-link py-2 border-b border-white/5">Jual Mobil Anda</a>
             <a href="{{ route('home') }}#location" class="navbar-link py-2 border-b border-white/5">Lokasi</a>

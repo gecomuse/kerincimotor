@@ -15,63 +15,68 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
+    protected static ?string $navigationIcon  = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Content';
-
-    protected static ?int $navigationSort = 1;
-
-    protected static ?string $modelLabel = 'Artikel';
-
+    protected static ?string $navigationLabel = 'Artikel';
+    protected static ?int    $navigationSort  = 1;
+    protected static ?string $modelLabel      = 'Artikel';
     protected static ?string $pluralModelLabel = 'Artikel';
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Informasi Artikel')
+
+            Forms\Components\Section::make('Konten Artikel')
                 ->schema([
                     Forms\Components\TextInput::make('title')
-                        ->label('Judul')
+                        ->label('Judul Artikel')
                         ->required()
                         ->maxLength(255)
                         ->live(onBlur: true)
-                        ->afterStateUpdated(fn ($state, Forms\Set $set) =>
-                            $set('slug', Str::slug($state))
-                        ),
+                        ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            $set('slug', Str::slug($state));
+                            $wordCount = str_word_count(strip_tags($state ?? ''));
+                            $set('read_time', max(1, (int) ceil($wordCount / 200)));
+                        })
+                        ->columnSpanFull(),
 
                     Forms\Components\TextInput::make('slug')
-                        ->label('Slug')
+                        ->label('URL Slug')
                         ->required()
                         ->maxLength(255)
-                        ->unique(Post::class, 'slug', ignoreRecord: true),
+                        ->unique(Post::class, 'slug', ignoreRecord: true)
+                        ->prefix('kerincimotor.com/artikel/')
+                        ->helperText('Auto-generated dari judul. Edit jika perlu.')
+                        ->columnSpanFull(),
 
                     Forms\Components\Select::make('category')
                         ->label('Kategori')
                         ->required()
                         ->options([
-                            'Panduan'    => 'Panduan',
-                            'Tips'       => 'Tips',
-                            'Berita'     => 'Berita',
-                            'Perawatan'  => 'Perawatan',
+                            'Panduan'      => 'Panduan',
+                            'Harga Pasar'  => 'Harga Pasar',
+                            'Perbandingan' => 'Perbandingan',
+                            'Kredit & DP'  => 'Kredit & DP',
+                            'Rekomendasi'  => 'Rekomendasi',
+                            'Tips Merawat' => 'Tips Merawat',
+                            'Berita'       => 'Berita',
                         ])
                         ->default('Panduan'),
 
                     Forms\Components\TextInput::make('read_time')
-                        ->label('Estimasi Baca (menit)')
+                        ->label('Estimasi Waktu Baca')
                         ->numeric()
+                        ->suffix('menit')
                         ->default(5)
                         ->minValue(1)
                         ->maxValue(60),
-                ])
-                ->columns(2),
 
-            Forms\Components\Section::make('Konten')
-                ->schema([
                     Forms\Components\Textarea::make('excerpt')
-                        ->label('Ringkasan')
+                        ->label('Ringkasan (Excerpt)')
+                        ->helperText('Ditampilkan di card artikel dan sebagai fallback meta description. Maks 300 karakter.')
                         ->required()
+                        ->maxLength(300)
                         ->rows(3)
-                        ->maxLength(500)
                         ->columnSpanFull(),
 
                     Forms\Components\RichEditor::make('content')
@@ -82,30 +87,73 @@ class PostResource extends Resource
                             'bold', 'italic', 'underline', 'strike',
                             'h2', 'h3',
                             'bulletList', 'orderedList',
-                            'blockquote', 'codeBlock',
-                            'link',
-                            'undo', 'redo',
-                        ]),
-                ]),
+                            'blockquote', 'link',
+                            'attachFiles', 'codeBlock',
+                            'redo', 'undo',
+                        ])
+                        ->fileAttachmentsDirectory('posts/attachments'),
+                ])
+                ->columns(2),
 
-            Forms\Components\Section::make('Thumbnail & Publikasi')
+            Forms\Components\Section::make('Thumbnail')
                 ->schema([
                     Forms\Components\FileUpload::make('thumbnail')
-                        ->label('Thumbnail')
+                        ->label('Thumbnail Artikel')
                         ->image()
-                        ->directory('blog')
-                        ->imageEditor()
-                        ->nullable(),
+                        ->imageResizeMode('cover')
+                        ->imageCropAspectRatio('16:9')
+                        ->imageResizeTargetWidth('800')
+                        ->imageResizeTargetHeight('450')
+                        ->directory('posts/thumbnails')
+                        ->helperText('Rasio 16:9. Otomatis di-resize ke 800×450px.')
+                        ->nullable()
+                        ->columnSpanFull(),
+                ]),
 
+            Forms\Components\Section::make('SEO & Meta Tags')
+                ->description('Isi bagian ini untuk mengoptimalkan artikel di mesin pencari (Google, Bing). Jika dikosongkan, sistem akan menggunakan judul dan excerpt artikel secara otomatis.')
+                ->schema([
+                    Forms\Components\TextInput::make('meta_title')
+                        ->label('Meta Title')
+                        ->maxLength(60)
+                        ->helperText('Judul yang muncul di tab browser dan hasil pencarian Google. Idealnya 50–60 karakter.')
+                        ->placeholder('Kosongkan untuk menggunakan judul artikel secara otomatis')
+                        ->columnSpanFull(),
+
+                    Forms\Components\Textarea::make('meta_description')
+                        ->label('Meta Description')
+                        ->maxLength(160)
+                        ->rows(3)
+                        ->helperText('Deskripsi singkat yang muncul di bawah judul di hasil pencarian. Idealnya 120–160 karakter.')
+                        ->placeholder('Kosongkan untuk menggunakan excerpt artikel secara otomatis')
+                        ->columnSpanFull(),
+
+                    Forms\Components\TextInput::make('meta_keywords')
+                        ->label('Meta Keywords')
+                        ->maxLength(255)
+                        ->helperText('Kata kunci dipisahkan koma. Contoh: mobil bekas bekasi, beli mobil bekas, honda jazz bekas')
+                        ->placeholder('keyword1, keyword2, keyword3')
+                        ->columnSpanFull(),
+                ]),
+
+            Forms\Components\Section::make('Publikasi')
+                ->schema([
                     Forms\Components\Toggle::make('is_published')
-                        ->label('Publikasikan')
-                        ->default(false),
+                        ->label('Publikasikan Artikel')
+                        ->helperText('Aktifkan untuk menampilkan artikel di website.')
+                        ->live()
+                        ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            if ($state) {
+                                $set('published_at', now());
+                            }
+                        }),
 
                     Forms\Components\DateTimePicker::make('published_at')
-                        ->label('Tanggal Publikasi')
-                        ->nullable(),
+                        ->label('Tanggal Publish')
+                        ->nullable()
+                        ->native(false),
                 ])
-                ->columns(3),
+                ->columns(2),
         ]);
     }
 
@@ -116,53 +164,60 @@ class PostResource extends Resource
                 Tables\Columns\ImageColumn::make('thumbnail')
                     ->label('Thumbnail')
                     ->width(80)
-                    ->height(60)
+                    ->height(50)
                     ->defaultImageUrl(asset('images/blog-placeholder.jpg')),
 
                 Tables\Columns\TextColumn::make('title')
                     ->label('Judul')
                     ->searchable()
                     ->sortable()
-                    ->limit(50),
+                    ->limit(50)
+                    ->wrap(),
 
                 Tables\Columns\TextColumn::make('category')
                     ->label('Kategori')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Tips'      => 'info',
-                        'Berita'    => 'warning',
-                        'Perawatan' => 'success',
-                        default     => 'gray',
-                    }),
-
-                Tables\Columns\IconColumn::make('is_published')
-                    ->label('Publikasi')
-                    ->boolean(),
-
-                Tables\Columns\TextColumn::make('published_at')
-                    ->label('Tgl Publikasi')
-                    ->date('d M Y')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('read_time')
-                    ->label('Baca')
-                    ->suffix(' mnt')
+                Tables\Columns\IconColumn::make('is_published')
+                    ->label('Published')
+                    ->boolean()
+                    ->sortable(),
+
+                Tables\Columns\IconColumn::make('seo_filled')
+                    ->label('SEO')
+                    ->boolean()
+                    ->getStateUsing(fn ($record) => !empty($record->meta_title)),
+
+                Tables\Columns\TextColumn::make('published_at')
+                    ->label('Tanggal')
+                    ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('is_published')
+                    ->label('Status Publikasi')
+                    ->trueLabel('Published')
+                    ->falseLabel('Draft'),
                 Tables\Filters\SelectFilter::make('category')
                     ->label('Kategori')
                     ->options([
-                        'Panduan'    => 'Panduan',
-                        'Tips'       => 'Tips',
-                        'Berita'     => 'Berita',
-                        'Perawatan'  => 'Perawatan',
+                        'Panduan'      => 'Panduan',
+                        'Harga Pasar'  => 'Harga Pasar',
+                        'Perbandingan' => 'Perbandingan',
+                        'Kredit & DP'  => 'Kredit & DP',
+                        'Rekomendasi'  => 'Rekomendasi',
+                        'Tips Merawat' => 'Tips Merawat',
+                        'Berita'       => 'Berita',
                     ]),
-                Tables\Filters\TernaryFilter::make('is_published')
-                    ->label('Status Publikasi'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('preview')
+                    ->label('Preview')
+                    ->icon('heroicon-o-eye')
+                    ->url(fn (Post $record) => route('artikel.show', $record->slug))
+                    ->openUrlInNewTab(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -170,7 +225,7 @@ class PostResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('published_at', 'desc');
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

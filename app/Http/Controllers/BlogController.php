@@ -13,13 +13,13 @@ class BlogController extends Controller
         $posts = Post::published()->paginate(9);
         $faqs  = Faq::active()->get();
 
-        return view('blog.index', compact('posts', 'faqs'));
+        return view('artikel.index', compact('posts', 'faqs'));
     }
 
     public function show(string $slug): View
     {
         $post = Post::published()->where('slug', $slug)->firstOrFail();
 
-        return view('blog.show', compact('post'));
+        return view('artikel.show', compact('post'));
     }
 }
