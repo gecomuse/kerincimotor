@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\CarResource;
+use App\Filament\Resources\FaqResource;
+use App\Filament\Resources\PostResource;
 use App\Filament\Resources\SellInquiryResource;
 use App\Filament\Resources\SettingResource;
 use App\Filament\Resources\TestimonialResource;
@@ -42,6 +44,8 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/favicon.png'))
             ->resources([
                 CarResource::class,
+                PostResource::class,
+                FaqResource::class,
                 TestimonialResource::class,
                 SettingResource::class,
                 SellInquiryResource::class,
