@@ -14,41 +14,39 @@ class FaqResource extends Resource
 {
     protected static ?string $model = Faq::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
-
+    protected static ?string $navigationIcon  = 'heroicon-o-question-mark-circle';
     protected static ?string $navigationGroup = 'Content';
-
-    protected static ?int $navigationSort = 2;
-
-    protected static ?string $modelLabel = 'FAQ';
-
-    protected static ?string $pluralModelLabel = 'FAQ';
+    protected static ?string $navigationLabel = 'FAQ';
+    protected static ?string $modelLabel      = 'FAQ';
+    protected static ?int    $navigationSort  = 2;
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('question')
-                ->label('Pertanyaan')
-                ->required()
-                ->maxLength(255)
-                ->columnSpanFull(),
+            Forms\Components\Section::make()->schema([
+                Forms\Components\TextInput::make('question')
+                    ->label('Pertanyaan')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
 
-            Forms\Components\Textarea::make('answer')
-                ->label('Jawaban')
-                ->required()
-                ->rows(4)
-                ->helperText('Boleh menggunakan HTML sederhana seperti <strong>, <a href="">')
-                ->columnSpanFull(),
+                Forms\Components\Textarea::make('answer')
+                    ->label('Jawaban')
+                    ->required()
+                    ->rows(4)
+                    ->helperText('Boleh menggunakan HTML sederhana: <strong>teks</strong>, <a href="url">teks</a>')
+                    ->columnSpanFull(),
 
-            Forms\Components\TextInput::make('sort_order')
-                ->label('Urutan Tampil')
-                ->numeric()
-                ->default(0)
-                ->helperText('Angka lebih kecil = tampil lebih atas'),
+                Forms\Components\TextInput::make('sort_order')
+                    ->label('Urutan Tampil')
+                    ->numeric()
+                    ->default(0)
+                    ->helperText('Angka lebih kecil = tampil lebih atas.'),
 
-            Forms\Components\Toggle::make('is_active')
-                ->label('Tampilkan di Website')
-                ->default(true),
+                Forms\Components\Toggle::make('is_active')
+                    ->label('Tampilkan di Website')
+                    ->default(true),
+            ])->columns(2),
         ]);
     }
 
@@ -59,27 +57,25 @@ class FaqResource extends Resource
                 Tables\Columns\TextColumn::make('sort_order')
                     ->label('#')
                     ->sortable()
-                    ->width(50),
+                    ->width(40),
 
                 Tables\Columns\TextColumn::make('question')
                     ->label('Pertanyaan')
                     ->searchable()
-                    ->limit(80),
-
-                Tables\Columns\TextColumn::make('answer')
-                    ->label('Jawaban')
-                    ->limit(60)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->limit(70)
+                    ->wrap(),
 
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean(),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Update')
+                    ->since()
+                    ->sortable(),
             ])
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
-            ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')->label('Status'),
-            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

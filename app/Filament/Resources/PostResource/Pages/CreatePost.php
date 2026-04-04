@@ -13,4 +13,12 @@ class CreatePost extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (!empty($data['is_published']) && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
+        return $data;
+    }
 }

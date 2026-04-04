@@ -18,6 +18,7 @@ class Post extends Model
         'excerpt',
         'content',
         'thumbnail',
+        'meta_image',
         'read_time',
         'is_published',
         'published_at',
@@ -57,7 +58,7 @@ class Post extends Model
 
     public function getSeoTitle(): string
     {
-        return $this->meta_title ?: $this->title . ' | Kerinci Motor';
+        return $this->meta_title ?: $this->title . ' | Kerinci Motor Bekasi';
     }
 
     public function getSeoDescription(): string
@@ -73,6 +74,14 @@ class Post extends Model
     public function getThumbnailUrl(): ?string
     {
         return $this->thumbnail ? Storage::url($this->thumbnail) : null;
+    }
+
+    public function getMetaImageUrl(): ?string
+    {
+        if ($this->meta_image) {
+            return Storage::url($this->meta_image);
+        }
+        return $this->getThumbnailUrl();
     }
 
     public function getThumbnailUrlAttribute(): string

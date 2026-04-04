@@ -5,8 +5,8 @@
 @if($post->getSeoKeywords())
 @section('seo_keywords', $post->getSeoKeywords())
 @endif
-@if($post->getThumbnailUrl())
-@section('og_image', $post->getThumbnailUrl())
+@if($post->getMetaImageUrl())
+@section('og_image', $post->getMetaImageUrl())
 @endif
 
 @push('meta')
@@ -14,8 +14,8 @@
 <meta property="og:title" content="{{ $post->getSeoTitle() }}">
 <meta property="og:description" content="{{ $post->getSeoDescription() }}">
 <meta property="og:url" content="{{ route('artikel.show', $post->slug) }}">
-@if($post->getThumbnailUrl())
-<meta property="og:image" content="{{ $post->getThumbnailUrl() }}">
+@if($post->getMetaImageUrl())
+<meta property="og:image" content="{{ $post->getMetaImageUrl() }}">
 @endif
 <script type="application/ld+json">
 {

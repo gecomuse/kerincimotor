@@ -13,7 +13,12 @@ class ListPosts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label('Buat Artikel'),
         ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [];
     }
 }
