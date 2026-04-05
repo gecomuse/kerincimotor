@@ -113,7 +113,7 @@
     </script>
 </head>
 
-<body class="bg-brand-black text-brand-white antialiased">
+<body class="bg-brand-black text-brand-white antialiased" style="overflow-x: hidden;">
 
     {{-- Navbar --}}
     @include('components.navbar')

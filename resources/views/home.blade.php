@@ -119,8 +119,8 @@
 @endif
 
 {{-- ========== VIDEO SECTION ========== --}}
-<section id="video-review" style="background: #0a0a0a; padding: 80px 0;">
-  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+<section id="video-review" style="background: #0a0a0a; padding: 80px 0; overflow: hidden;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; overflow: hidden;">
 
     {{-- Section Header --}}
     <div style="text-align: center; margin-bottom: 48px;">
