@@ -27,13 +27,9 @@ Route::get('/artikel/{slug}', [BlogController::class, 'show'])->name('artikel.sh
 Route::get('/sitemap.xml', function () {
     $posts = collect([]);
     $vehicles = collect([]);
-
     try {
-        $posts = \App\Models\Post::published()
-                    ->latest('published_at')
-                    ->get();
+        $posts = \App\Models\Post::published()->latest('published_at')->get();
     } catch (\Exception $e) {}
-
     try {
         if (class_exists(\App\Models\Vehicle::class)) {
             $vehicles = \App\Models\Vehicle::all();
@@ -41,11 +37,9 @@ Route::get('/sitemap.xml', function () {
     } catch (\Exception $e) {}
 
     $content = view('sitemap', compact('posts', 'vehicles'))->render();
-
     return response($content, 200, [
         'Content-Type'  => 'text/xml; charset=utf-8',
         'Cache-Control' => 'public, max-age=3600',
-        'X-Robots-Tag'  => 'noindex',
     ]);
 });
 

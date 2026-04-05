@@ -1,46 +1,59 @@
-{!! '<?xml version="1.0" encoding="UTF-8"?>' !!}
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-@php
-    $cars = collect([]);
-    try {
-        $cars = \App\Models\Car::available()->latest('updated_at')->get();
-    } catch (\Exception $e) {}
-@endphp
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  {{-- Static pages --}}
   <url>
     <loc>{{ url('/') }}</loc>
+    <lastmod>{{ now()->toIso8601String() }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
   <url>
-    <loc>{{ url('/catalog') }}</loc>
+    <loc>{{ url('/katalog') }}</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>{{ url('/artikel') }}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  {{-- Cars --}}
-  @foreach ($cars as $car)
   <url>
-    <loc>{{ url('/catalog/' . $car->slug) }}</loc>
-    <lastmod>{{ $car->updated_at->toAtomString() }}</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>{{ url('/jual-mobil') }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>{{ url('/lokasi') }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  @foreach($posts as $post)
+  <url>
+    <loc>{{ route('artikel.show', $post->slug) }}</loc>
+    <lastmod>{{ $post->updated_at->toIso8601String() }}</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    @if($post->getThumbnailUrl())
+    <image:image>
+      <image:loc>{{ $post->getThumbnailUrl() }}</image:loc>
+      <image:title>{{ htmlspecialchars($post->title) }}</image:title>
+    </image:image>
+    @endif
   </url>
   @endforeach
 
-  {{-- Articles --}}
-  @foreach ($posts as $post)
+  @foreach($vehicles as $vehicle)
   <url>
-    <loc>{{ url('/artikel/' . $post->slug) }}</loc>
-    <lastmod>{{ $post->updated_at->toAtomString() }}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>{{ url('/catalog/' . ($vehicle->slug ?? $vehicle->id)) }}</loc>
+    <lastmod>{{ $vehicle->updated_at->toIso8601String() }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   @endforeach
 
