@@ -118,10 +118,22 @@
 
     /* ── Floating WA button ─────────────────────────── */
     .floating-wa {
-        @apply fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full
+        @apply fixed bottom-6 right-6 z-50 h-14
                bg-brand-wa-green shadow-lg shadow-green-900/50
-               flex items-center justify-center
-               transition-transform duration-200 hover:scale-110;
+               flex items-center gap-2
+               rounded-full px-5
+               transition-all duration-200 hover:scale-105;
+    }
+    .wa-label {
+        @apply text-white font-heading font-semibold text-sm whitespace-nowrap;
+    }
+    @media (max-width: 480px) {
+        .floating-wa {
+            @apply w-14 h-14 px-0 justify-center;
+        }
+        .wa-label {
+            @apply hidden;
+        }
     }
 
     /* ── Testimonial card ───────────────────────────── */
@@ -211,7 +223,7 @@ input[type='range']:focus {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 50%;
+    border-radius: inherit;
     background: #25D366;
     animation: ping-wa 1.8s ease-out infinite;
     z-index: -1;

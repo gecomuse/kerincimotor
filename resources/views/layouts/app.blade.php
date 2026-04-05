@@ -43,7 +43,7 @@
     @hasSection('og_image')
         <meta property="og:image" content="@yield('og_image')">
     @else
-        <meta property="og:image" content="{{ asset('images/og-default.jpg') }}">
+        <meta property="og:image" content="{{ asset('images/logo.png') }}">
     @endif
     <meta name="twitter:card" content="summary_large_image">
 
@@ -67,6 +67,7 @@
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
 
     {{-- LocalBusiness Schema --}}
     <script type="application/ld+json">
@@ -74,9 +75,17 @@
       "@context": "https://schema.org",
       "@type": "AutoDealer",
       "name": "Kerinci Motor",
-      "description": "Dealer mobil bekas terpercaya di Bekasi",
+      "description": "Dealer mobil bekas terpercaya di Bekasi. Stok lengkap, harga transparan, proses mudah. Spesialis Honda, Toyota, Daihatsu, Suzuki, dan Mitsubishi.",
       "url": "https://kerincimotor.com",
       "telephone": "+6287776700009",
+      "priceRange": "Rp 50.000.000 - Rp 350.000.000",
+      "image": "https://kerincimotor.com/images/logo.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://kerincimotor.com/images/logo.png",
+        "width": 200,
+        "height": 60
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Jl. Mustika Jaya RT.006/RW.012, Mustikajaya",
@@ -85,13 +94,21 @@
         "postalCode": "17158",
         "addressCountry": "ID"
       },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -6.3000,
+        "longitude": 107.0000
+      },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
         "opens": "08:00",
         "closes": "20:00"
       },
-      "sameAs": ["https://www.instagram.com/kerincimotor"]
+      "sameAs": [
+        "https://www.instagram.com/kerincimotor",
+        "https://wa.me/6287776700009"
+      ]
     }
     </script>
 </head>
