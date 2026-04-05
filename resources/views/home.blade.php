@@ -118,6 +118,343 @@
 </section>
 @endif
 
+{{-- ========== VIDEO SECTION ========== --}}
+<section id="video-review" style="background: #0a0a0a; padding: 80px 0;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+    {{-- Section Header --}}
+    <div style="text-align: center; margin-bottom: 48px;">
+      <p style="
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #CC0000;
+        margin-bottom: 12px;
+      ">VIDEO REVIEW</p>
+      <h2 style="
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        color: #FAFAFA;
+        margin-bottom: 12px;
+        line-height: 1.2;
+      ">Lihat Kondisi Unit<br>Sebelum ke Showroom</h2>
+      <p style="color: #9E9E9E; font-size: 15px; max-width: 480px; margin: 0 auto;">
+        Video jujur tanpa filter — eksterior, interior, mesin, dan test drive langsung.
+      </p>
+      <div style="width: 48px; height: 3px; background: #CC0000; margin: 20px auto 0;"></div>
+    </div>
+
+    {{-- Video Grid --}}
+    <div style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    " class="video-grid-responsive">
+
+      {{-- FEATURED VIDEO PLACEHOLDER (kiri - besar) --}}
+      <div style="
+        background: #141414;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      " onmouseover="this.style.borderColor='rgba(204,0,0,0.4)';this.style.transform='translateY(-4px)'"
+         onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='translateY(0)'">
+
+        {{-- Video Placeholder (ganti dengan iframe YouTube/TikTok setelah ada video) --}}
+        <div style="
+          position: relative;
+          aspect-ratio: 16/9;
+          background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          overflow: hidden;
+        " id="featured-video-placeholder">
+
+          {{-- Background pattern --}}
+          <div style="
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at center, rgba(204,0,0,0.08) 0%, transparent 70%);
+          "></div>
+
+          {{-- Car icon --}}
+          <div style="text-align: center; position: relative; z-index: 1;">
+            <div style="font-size: 64px; opacity: 0.15; margin-bottom: 16px;">🎬</div>
+            <div style="
+              width: 72px; height: 72px;
+              background: #CC0000;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 0 auto 16px;
+              box-shadow: 0 0 0 0 rgba(204,0,0,0.4);
+              animation: pulse-red 2s ease-in-out infinite;
+            ">
+              <div style="
+                width: 0; height: 0;
+                border-top: 12px solid transparent;
+                border-bottom: 12px solid transparent;
+                border-left: 20px solid white;
+                margin-left: 4px;
+              "></div>
+            </div>
+            <p style="color: #9E9E9E; font-size: 13px;">Video segera hadir</p>
+          </div>
+
+          {{-- Coming soon badge --}}
+          <div style="
+            position: absolute;
+            top: 14px; left: 14px;
+            background: rgba(204,0,0,0.9);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+          ">Segera Hadir</div>
+        </div>
+
+        {{-- Video Info --}}
+        <div style="padding: 20px 22px;">
+          <h3 style="
+            font-size: 18px;
+            font-weight: 700;
+            color: #FAFAFA;
+            margin-bottom: 8px;
+            line-height: 1.3;
+          ">Review Unit Unggulan — Kerinci Motor</h3>
+          <p style="font-size: 13px; color: #9E9E9E; margin-bottom: 16px; line-height: 1.6;">
+            Video review lengkap unit pilihan — cek eksterior, interior, mesin, dan test drive. Jujur tanpa filter.
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="https://wa.me/6287776700009?text=Halo%20Kerinci%20Motor%2C%20saya%20ingin%20tanya%20unit%20yang%20tersedia"
+               target="_blank"
+               style="
+                 display: inline-flex;
+                 align-items: center;
+                 gap: 6px;
+                 background: #CC0000;
+                 color: white;
+                 padding: 10px 18px;
+                 border-radius: 6px;
+                 font-size: 13px;
+                 font-weight: 700;
+                 text-decoration: none;
+                 transition: background 0.2s;
+               "
+               onmouseover="this.style.background='#ff1a1a'"
+               onmouseout="this.style.background='#CC0000'">
+              Tanya Unit via WA
+            </a>
+            <a href="{{ route('artikel.index') }}"
+               style="
+                 display: inline-flex;
+                 align-items: center;
+                 gap: 6px;
+                 background: transparent;
+                 color: #C0C0C0;
+                 padding: 10px 18px;
+                 border-radius: 6px;
+                 font-size: 13px;
+                 font-weight: 700;
+                 text-decoration: none;
+                 border: 1px solid rgba(192,192,192,0.2);
+                 transition: border-color 0.2s;
+               "
+               onmouseover="this.style.borderColor='rgba(192,192,192,0.5)'"
+               onmouseout="this.style.borderColor='rgba(192,192,192,0.2)'">
+              Baca Artikel Tips
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {{-- RIGHT SIDE — 3 mini video placeholders --}}
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+
+        {{-- Mini Video Card 1 --}}
+        <div style="
+          display: flex;
+          gap: 14px;
+          background: #141414;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.06);
+          align-items: stretch;
+          transition: border-color 0.2s;
+          cursor: pointer;
+        " onmouseover="this.style.borderColor='rgba(204,0,0,0.3)'"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="
+            width: 130px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 80px;
+          ">
+            <span style="font-size: 28px; opacity: 0.2;">🚗</span>
+            <div style="
+              position: absolute;
+              top: 50%; left: 50%;
+              transform: translate(-50%, -50%);
+              width: 32px; height: 32px;
+              background: rgba(204,0,0,0.8);
+              border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+            ">
+              <div style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid white;margin-left:2px;"></div>
+            </div>
+          </div>
+          <div style="padding: 14px 14px 14px 0; display: flex; flex-direction: column; justify-content: center;">
+            <p style="font-size: 13px; font-weight: 600; color: #E8E8E8; margin-bottom: 4px; line-height: 1.3;">
+              Review Honda Brio 2021 — KM Rendah
+            </p>
+            <span style="font-size: 11px; color: #5A5A5A;">Segera hadir · Kerinci Motor</span>
+          </div>
+        </div>
+
+        {{-- Mini Video Card 2 --}}
+        <div style="
+          display: flex;
+          gap: 14px;
+          background: #141414;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.06);
+          align-items: stretch;
+          transition: border-color 0.2s;
+          cursor: pointer;
+        " onmouseover="this.style.borderColor='rgba(204,0,0,0.3)'"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="
+            width: 130px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 80px;
+          ">
+            <span style="font-size: 28px; opacity: 0.2;">🚙</span>
+            <div style="
+              position: absolute;
+              top: 50%; left: 50%;
+              transform: translate(-50%, -50%);
+              width: 32px; height: 32px;
+              background: rgba(204,0,0,0.8);
+              border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+            ">
+              <div style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid white;margin-left:2px;"></div>
+            </div>
+          </div>
+          <div style="padding: 14px 14px 14px 0; display: flex; flex-direction: column; justify-content: center;">
+            <p style="font-size: 13px; font-weight: 600; color: #E8E8E8; margin-bottom: 4px; line-height: 1.3;">
+              Review Toyota Avanza 2020 — Full Inspeksi
+            </p>
+            <span style="font-size: 11px; color: #5A5A5A;">Segera hadir · Kerinci Motor</span>
+          </div>
+        </div>
+
+        {{-- Mini Video Card 3 --}}
+        <div style="
+          display: flex;
+          gap: 14px;
+          background: #141414;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.06);
+          align-items: stretch;
+          transition: border-color 0.2s;
+          cursor: pointer;
+        " onmouseover="this.style.borderColor='rgba(204,0,0,0.3)'"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+          <div style="
+            width: 130px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 80px;
+          ">
+            <span style="font-size: 28px; opacity: 0.2;">🏎️</span>
+            <div style="
+              position: absolute;
+              top: 50%; left: 50%;
+              transform: translate(-50%, -50%);
+              width: 32px; height: 32px;
+              background: rgba(204,0,0,0.8);
+              border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+            ">
+              <div style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid white;margin-left:2px;"></div>
+            </div>
+          </div>
+          <div style="padding: 14px 14px 14px 0; display: flex; flex-direction: column; justify-content: center;">
+            <p style="font-size: 13px; font-weight: 600; color: #E8E8E8; margin-bottom: 4px; line-height: 1.3;">
+              Review Mitsubishi Xpander 2019 — Worth It?
+            </p>
+            <span style="font-size: 11px; color: #5A5A5A;">Segera hadir · Kerinci Motor</span>
+          </div>
+        </div>
+
+        {{-- Subscribe CTA --}}
+        <a href="https://www.youtube.com/@kerincimotor"
+           target="_blank"
+           rel="noopener"
+           style="
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             gap: 8px;
+             padding: 14px;
+             border: 1px dashed rgba(204,0,0,0.3);
+             border-radius: 12px;
+             color: #9E9E9E;
+             font-size: 13px;
+             font-weight: 600;
+             text-decoration: none;
+             transition: border-color 0.2s, color 0.2s;
+           "
+           onmouseover="this.style.borderColor='rgba(204,0,0,0.7)';this.style.color='#CC0000'"
+           onmouseout="this.style.borderColor='rgba(204,0,0,0.3)';this.style.color='#9E9E9E'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          Subscribe YouTube Kerinci Motor →
+        </a>
+
+      </div>
+    </div>{{-- /video-grid --}}
+  </div>
+</section>
+
+{{-- Responsive CSS for video grid --}}
+<style>
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(204,0,0,0.4); }
+  50% { box-shadow: 0 0 0 16px rgba(204,0,0,0); }
+}
+@media (max-width: 768px) {
+  .video-grid-responsive {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+
 {{-- ═══════════════════════════════════════════════════════ --}}
 {{--  SECTION 2B: ARTIKEL TERBARU                             --}}
 {{-- ═══════════════════════════════════════════════════════ --}}
