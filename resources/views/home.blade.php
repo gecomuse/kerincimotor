@@ -181,46 +181,28 @@
         </div>
       </div>
 
-      {{-- Video 2 — Placeholder --}}
+      {{-- Video 2 — LIVE --}}
       <div style="
         background: #141414;
         border-radius: 16px;
         overflow: hidden;
         border: 1px solid rgba(255,255,255,0.06);
-      ">
-        <div style="
-          position: relative;
-          width: 100%;
-          aspect-ratio: 9/16;
-          background: #0A0A0A;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        ">
-          <div style="text-align: center;">
-            <div style="
-              width: 56px; height: 56px;
-              background: rgba(204,0,0,0.15);
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin: 0 auto 12px;
-            ">
-              <div style="
-                width: 0; height: 0;
-                border-top: 10px solid transparent;
-                border-bottom: 10px solid transparent;
-                border-left: 16px solid #CC0000;
-                margin-left: 3px;
-              "></div>
-            </div>
-            <p style="color: #5A5A5A; font-size: 12px;">Segera Hadir</p>
-          </div>
+        transition: transform 0.2s, box-shadow 0.2s;
+      " onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(204,0,0,0.15)'"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+        <div style="position: relative; width: 100%; aspect-ratio: 9/16; background: #000;">
+          <iframe
+            src="https://www.youtube.com/embed/s9KAaHeKOu8"
+            style="position: absolute; inset: 0; width: 100%; height: 100%; border: none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+            title="Review Unit — Kerinci Motor">
+          </iframe>
         </div>
         <div style="padding: 14px 16px;">
-          <h3 style="font-size: 14px; font-weight: 600; color: #5A5A5A; margin-bottom: 4px; line-height: 1.3;">Video Berikutnya</h3>
-          <span style="font-size: 12px; color: #3A3A3A;">Segera hadir · Kerinci Motor</span>
+          <h3 style="font-size: 14px; font-weight: 600; color: #FAFAFA; margin-bottom: 4px; line-height: 1.3;">Review Unit — Kerinci Motor</h3>
+          <span style="font-size: 12px; color: #9E9E9E;">Kerinci Motor</span>
         </div>
       </div>
 

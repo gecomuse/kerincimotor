@@ -23,6 +23,9 @@ Route::post('/sell-inquiry', [SellInquiryController::class, 'store'])
 Route::get('/artikel', [BlogController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{slug}', [BlogController::class, 'show'])->name('artikel.show');
 
+// Video
+Route::get('/video', fn() => view('video'))->name('video');
+
 // Sitemap
 Route::get('/sitemap.xml', function () {
     $posts = collect([]);

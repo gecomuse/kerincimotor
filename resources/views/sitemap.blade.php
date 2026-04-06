@@ -16,6 +16,12 @@
   </url>
 
   <url>
+    <loc>{{ url('/video') }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>{{ url('/artikel') }}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
