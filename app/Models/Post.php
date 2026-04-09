@@ -25,12 +25,27 @@ class Post extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        // Social media distribution
+        'publish_to_instagram',
+        'publish_to_facebook',
+        'social_format',
+        'social_caption',
+        'carousel_images',
+        'reel_video_path',
+        'social_scheduled_at',
+        'ig_status',
+        'fb_status',
+        'social_error_message',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean',
-        'published_at' => 'datetime',
-        'read_time'    => 'integer',
+        'is_published'         => 'boolean',
+        'published_at'         => 'datetime',
+        'read_time'            => 'integer',
+        'publish_to_instagram' => 'boolean',
+        'publish_to_facebook'  => 'boolean',
+        'carousel_images'      => 'array',
+        'social_scheduled_at'  => 'datetime',
     ];
 
     protected static function booted(): void

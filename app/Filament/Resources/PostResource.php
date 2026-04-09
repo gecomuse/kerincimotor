@@ -178,6 +178,86 @@ class PostResource extends Resource
                 ])
                 ->columns(2),
 
+            Forms\Components\Section::make('Distribusi Konten Sosial Media')
+                ->description('Atur bagaimana artikel ini akan didistribusikan ke Instagram dan Facebook.')
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                    Forms\Components\Grid::make(2)
+                        ->schema([
+                            Forms\Components\Toggle::make('publish_to_instagram')
+                                ->label('Post ke Instagram')
+                                ->helperText('Aktifkan untuk publish ke Instagram saat artikel dipublish')
+                                ->live(),
+
+                            Forms\Components\Toggle::make('publish_to_facebook')
+                                ->label('Post ke Facebook Page')
+                                ->helperText('Aktifkan untuk publish ke Facebook saat artikel dipublish')
+                                ->live(),
+                        ]),
+
+                    Forms\Components\Select::make('social_format')
+                        ->label('Format Konten Sosial Media')
+                        ->options([
+                            'feed'     => 'Feed Foto — 1 gambar (gunakan thumbnail artikel)',
+                            'carousel' => 'Carousel — 2 sampai 10 gambar',
+                            'reel'     => 'Reels — Video MP4 format 9:16',
+                        ])
+                        ->default('feed')
+                        ->live()
+                        ->visible(fn(Forms\Get $get) => $get('publish_to_instagram') || $get('publish_to_facebook'))
+                        ->required(fn(Forms\Get $get) => $get('publish_to_instagram') || $get('publish_to_facebook')),
+
+                    Forms\Components\Textarea::make('social_caption')
+                        ->label('Caption Instagram / Facebook')
+                        ->helperText('Kosongkan = AI (Groq) akan generate otomatis dari judul dan isi artikel')
+                        ->rows(5)
+                        ->maxLength(2200)
+                        ->visible(fn(Forms\Get $get) => $get('publish_to_instagram') || $get('publish_to_facebook')),
+
+                    Forms\Components\FileUpload::make('carousel_images')
+                        ->label('Gambar Carousel (2–10 foto)')
+                        ->helperText('Upload minimal 2, maksimal 10 gambar. Rasio ideal: 1:1 atau 4:5.')
+                        ->multiple()
+                        ->maxFiles(10)
+                        ->image()
+                        ->imageEditor()
+                        ->directory('carousel')
+                        ->reorderable()
+                        ->visible(fn(Forms\Get $get) => $get('social_format') === 'carousel'),
+
+                    Forms\Components\FileUpload::make('reel_video_path')
+                        ->label('File Video Reels')
+                        ->helperText('Format MP4, rasio 9:16 (1080x1920), maksimal 1 GB.')
+                        ->acceptedFileTypes(['video/mp4', 'video/quicktime'])
+                        ->directory('reels')
+                        ->maxSize(1024 * 1024) // 1 GB in KB
+                        ->visible(fn(Forms\Get $get) => $get('social_format') === 'reel'),
+
+                    Forms\Components\DateTimePicker::make('social_scheduled_at')
+                        ->label('Jadwal Post Sosial Media (Opsional)')
+                        ->helperText('Kosongkan = langsung post bersamaan saat artikel dipublish. Isi = post dijadwalkan pada waktu ini.')
+                        ->timezone('Asia/Jakarta')
+                        ->visible(fn(Forms\Get $get) => $get('publish_to_instagram') || $get('publish_to_facebook')),
+
+                    Forms\Components\Grid::make(2)
+                        ->schema([
+                            Forms\Components\Placeholder::make('ig_status')
+                                ->label('Status Instagram')
+                                ->content(fn($record) => $record?->ig_status ?? 'idle'),
+
+                            Forms\Components\Placeholder::make('fb_status')
+                                ->label('Status Facebook')
+                                ->content(fn($record) => $record?->fb_status ?? 'idle'),
+                        ])
+                        ->visible(fn($record) => $record !== null),
+
+                    Forms\Components\Placeholder::make('social_error_message')
+                        ->label('Error Log')
+                        ->content(fn($record) => $record?->social_error_message ?? '—')
+                        ->visible(fn($record) => $record?->social_error_message !== null),
+                ]),
+
         ]);
     }
 
