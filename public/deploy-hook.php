@@ -84,14 +84,18 @@ function runArtisan(object $app, string $command): array
     ];
 }
 
-// ── Commands to run ──────────────────────────────────────────────────────────
+// ── Commands to run (full Phase 4 sequence) ──────────────────────────────────
 $commands = [
     'storage:link',
     'filament:assets',
+    'optimize:clear',
     'config:clear',     // clear first so config:cache reads fresh .env
     'cache:clear',
     'view:clear',
-    'optimize:clear',
+    'route:clear',
+    'migrate --force',
+    'config:cache',
+    'route:cache',
 ];
 
 $results = [];
@@ -114,28 +118,49 @@ foreach ($results as $r) {
     }
 }
 
-// ── Post-run asset verification ──────────────────────────────────────────────
+// ── Post-run verification ────────────────────────────────────────────────────
 echo "\n" . str_repeat('-', 40) . "\n\n";
-echo "ASSET VERIFICATION\n";
+echo "VERIFICATION\n";
 
+// 1. APP_URL and ASSET_URL from config (after config:cache with fresh .env)
+$configAppUrl   = config('app.url');
+$configAssetUrl = config('app.asset_url');
+echo "  APP_URL   (config) : {$configAppUrl}\n";
+echo "  ASSET_URL (config) : " . ($configAssetUrl ?: '(empty — falls back to APP_URL)') . "\n";
+
+// 2. Resolved base for asset()
+$resolvedBase = rtrim($configAssetUrl ?: $configAppUrl, '/');
+echo "  asset() base       : {$resolvedBase}\n";
+
+if (str_contains($resolvedBase, '127.0.0.1') || str_contains($resolvedBase, 'localhost')) {
+    echo "\n  [!!!] CRITICAL: asset() is still generating localhost URLs.\n";
+    echo "        Fix APP_URL and ASSET_URL in .env, then re-run this hook.\n";
+} else {
+    echo "  [OK] asset() base looks correct.\n";
+}
+
+// 3. Filament CSS and JS
 $filamentCss = $laravelRoot . '/public/css/filament/filament/app.css';
 $filamentJs  = $laravelRoot . '/public/js/filament/filament/app.js';
 
 $cssExists = file_exists($filamentCss);
 $jsExists  = file_exists($filamentJs);
 
-echo "  Filament CSS : " . ($cssExists ? 'EXISTS (' . number_format(filesize($filamentCss)) . ' bytes)' : 'MISSING') . "\n";
-echo "  Filament JS  : " . ($jsExists  ? 'EXISTS (' . number_format(filesize($filamentJs))  . ' bytes)' : 'MISSING') . "\n";
+echo "\n  Filament CSS : " . ($cssExists ? 'EXISTS (' . number_format(filesize($filamentCss)) . ' bytes)' : 'MISSING — run filament:assets') . "\n";
+echo "  Filament JS  : " . ($jsExists  ? 'EXISTS (' . number_format(filesize($filamentJs))  . ' bytes)' : 'MISSING — run filament:assets') . "\n";
+echo "  Filament CSS URL : {$resolvedBase}/css/filament/filament/app.css\n";
 
-// Resolve what asset() would generate using fresh env values
-$resolvedBase = rtrim($assetUrl ?: $appUrl, '/');
-echo "  asset() base : {$resolvedBase}\n";
-echo "  Filament CSS URL would be: {$resolvedBase}/css/filament/filament/app.css\n";
-
-if (str_contains($resolvedBase, '127.0.0.1') || str_contains($resolvedBase, 'localhost')) {
-    echo "\n  [!!!] CRITICAL: asset() is generating localhost URLs.\n";
-    echo "        Browsers cannot load these. Fix APP_URL and ASSET_URL in .env,\n";
-    echo "        then re-run this hook to clear the config cache.\n";
+// 4. Storage symlink
+$storagePath = $laravelRoot . '/public/storage';
+if (is_link($storagePath)) {
+    $target = readlink($storagePath);
+    $targetExists = is_dir($storagePath);
+    echo "\n  Storage symlink  : EXISTS → {$target}\n";
+    echo "  Symlink target   : " . ($targetExists ? 'ACCESSIBLE' : 'BROKEN (target dir not found)') . "\n";
+} elseif (is_dir($storagePath)) {
+    echo "\n  Storage symlink  : Is a real directory (not a symlink) — storage:link may have failed\n";
+} else {
+    echo "\n  Storage symlink  : MISSING — storage:link failed\n";
 }
 
 $elapsed = round(microtime(true) - LARAVEL_START, 2);

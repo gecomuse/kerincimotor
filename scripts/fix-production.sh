@@ -63,14 +63,20 @@ echo "=== Publishing Filament assets ==="
 php artisan filament:assets
 echo "  [OK] Filament assets published"
 
-# ── STEP 7: Rebuild config and route cache with correct values ───────────────
+# ── STEP 7: Run pending database migrations ───────────────────────────────────
+echo ""
+echo "=== Running database migrations ==="
+php artisan migrate --force
+echo "  [OK] Migrations complete"
+
+# ── STEP 8: Rebuild config and route cache with correct values ───────────────
 echo ""
 echo "=== Rebuilding cache with production values ==="
 php artisan config:cache
 php artisan route:cache
 echo "  [OK] Config and route cache rebuilt"
 
-# ── STEP 8: Verify asset() generates the correct URL ─────────────────────────
+# ── STEP 9: Verify asset() generates the correct URL ─────────────────────────
 echo ""
 echo "=== Asset URL verification ==="
 php artisan tinker --execute="
@@ -81,7 +87,7 @@ echo 'Filament JS  URL: ' . asset('js/filament/filament/app.js') . PHP_EOL;
 echo 'CSS file exists : ' . (file_exists(public_path('css/filament/filament/app.css')) ? 'YES (' . filesize(public_path('css/filament/filament/app.css')) . ' bytes)' : 'NO — run: php artisan filament:assets') . PHP_EOL;
 "
 
-# ── STEP 9: Done ─────────────────────────────────────────────────────────────
+# ── STEP 10: Done ────────────────────────────────────────────────────────────
 echo ""
 echo "=== DONE ==="
 echo "Open https://kerincimotor.com/admin to verify styling is fixed."
