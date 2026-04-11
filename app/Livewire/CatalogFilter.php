@@ -44,17 +44,30 @@ class CatalogFilter extends Component
         'onlyAvailable' => ['as' => 'available', 'except' => true],
     ];
 
-    public function updatedBrands(): void      { $this->resetPage(); }
-    public function updatedYearMin(): void     { $this->resetPage(); }
-    public function updatedYearMax(): void     { $this->resetPage(); }
-    public function updatedPriceMin(): void    { $this->resetPage(); }
-    public function updatedPriceMax(): void    { $this->resetPage(); }
-    public function updatedMileageMax(): void  { $this->resetPage(); }
-    public function updatedTransmission(): void { $this->resetPage(); }
-    public function updatedBodyTypes(): void   { $this->resetPage(); }
-    public function updatedFuelTypes(): void   { $this->resetPage(); }
-    public function updatedColors(): void      { $this->resetPage(); }
-    public function updatedOnlyAvailable(): void { $this->resetPage(); }
+    public function updatedBrands(): void      { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedYearMin(): void     { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedYearMax(): void     { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedPriceMin(): void    { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedPriceMax(): void    { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedMileageMax(): void  { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedTransmission(): void { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedBodyTypes(): void   { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedFuelTypes(): void   { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedColors(): void      { $this->resetPage(); $this->dispatchSearchEvent(); }
+    public function updatedOnlyAvailable(): void { $this->resetPage(); $this->dispatchSearchEvent(); }
+
+    private function dispatchSearchEvent(): void
+    {
+        $filters = array_filter([
+            implode(',', $this->brands),
+            $this->yearMin ? "year:{$this->yearMin}" : null,
+            $this->yearMax ? "year_max:{$this->yearMax}" : null,
+            $this->transmission ?: null,
+            implode(',', $this->bodyTypes) ?: null,
+        ]);
+
+        $this->dispatch('catalog-search', search_string: implode(' | ', $filters) ?: 'all');
+    }
 
     public function resetFilters(): void
     {

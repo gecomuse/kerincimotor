@@ -99,6 +99,9 @@ class SellYourCarForm extends Component
 
         $waUrl = 'https://wa.me/' . $waNumber . '?text=' . urlencode($message);
 
+        // Fire pixel Contact event before redirect
+        $this->dispatch('sell-inquiry-submitted');
+
         $this->redirect($waUrl, navigate: false);
     }
 

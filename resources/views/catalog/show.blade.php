@@ -226,5 +226,18 @@
             car_price: {{ $car->price }}
         });
     }
+
+    // Meta Pixel — ViewContent
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'ViewContent', {
+            content_name: '{{ addslashes($car->make_model) }} {{ $car->year }}',
+            content_type: 'vehicle',
+            content_ids: ['{{ $car->id }}'],
+            @if($car->price)
+            value: {{ $car->price }},
+            currency: 'IDR',
+            @endif
+        });
+    }
 </script>
 @endpush

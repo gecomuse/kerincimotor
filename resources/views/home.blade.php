@@ -566,3 +566,18 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+    // Meta Pixel — Contact (fires when sell-your-car form is submitted)
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('sell-inquiry-submitted', () => {
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Contact', {
+                    content_name: 'Jual Mobil Inquiry',
+                });
+            }
+        });
+    });
+</script>
+@endpush

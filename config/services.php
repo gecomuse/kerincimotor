@@ -27,4 +27,14 @@ return [
         'fb_page_id'   => env('META_FB_PAGE_ID', ''),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Meta Pixel — Conversion Tracking
+    |--------------------------------------------------------------------------
+    | Only fires on production. Set META_PIXEL_ID in .env.
+    */
+    'meta_pixel' => [
+        'id' => env('META_PIXEL_ID', ''),
+    ],
+
 ];

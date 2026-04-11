@@ -105,6 +105,14 @@ window.trackWA = function(location, carName, carPrice) {
         if (carPrice) params.car_price = carPrice;
         gtag('event', eventName, params);
     }
+
+    // Meta Pixel — Lead
+    if (typeof fbq !== 'undefined') {
+        const leadParams = {
+            content_name: carName ? carName + ' Inquiry' : 'Car Inquiry',
+        };
+        fbq('track', 'Lead', leadParams);
+    }
 };
 
 window.trackFilter = function(filterType, filterValue) {

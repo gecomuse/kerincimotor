@@ -65,6 +65,9 @@
       gtag('config', 'G-PVRX74XRPR');
     </script>
 
+    {{-- Meta Pixel --}}
+    @include('components.meta-pixel')
+
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
@@ -114,6 +117,7 @@
 </head>
 
 <body class="bg-brand-black text-brand-white antialiased" style="overflow-x: hidden;">
+    @stack('pixel_noscript')
 
     {{-- Navbar --}}
     @include('components.navbar')

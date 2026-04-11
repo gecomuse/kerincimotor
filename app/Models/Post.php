@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Observers\PostObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -11,11 +10,6 @@ use Illuminate\Support\Str;
 class Post extends Model
 {
     use HasFactory;
-
-    protected static function booting(): void
-    {
-        static::observe(PostObserver::class);
-    }
 
     protected $fillable = [
         'title',
