@@ -9,4 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/articles', [ArticleController::class, 'store']);
+Route::patch('/articles/{id}', [ArticleController::class, 'update']);
 Route::post('/upload-image', [ArticleController::class, 'uploadImage']);

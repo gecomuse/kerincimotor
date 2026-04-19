@@ -85,6 +85,54 @@ class ArticleController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $token = $request->bearerToken();
+        if ($token !== config('services.openclaw.token')) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $post = Post::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'            => 'nullable|string|max:255',
+            'content'          => 'nullable|string',
+            'excerpt'          => 'nullable|string|max:300',
+            'meta_title'       => 'nullable|string|max:100',
+            'meta_description' => 'nullable|string|max:160',
+            'meta_keywords'    => 'nullable|string|max:255',
+            'thumbnail'        => 'nullable|string',
+            'category'         => 'nullable|string',
+            'status'           => 'nullable|in:draft,published',
+        ]);
+
+        $thumbnailPath = null;
+        if (!empty($validated['thumbnail'])) {
+            $thumbnailPath = str_replace(asset('storage') . '/', '', $validated['thumbnail']);
+        }
+
+        $post->update(array_filter([
+            'title'            => $validated['title'] ?? null,
+            'content'          => $validated['content'] ?? null,
+            'excerpt'          => $validated['excerpt'] ?? null,
+            'meta_title'       => $validated['meta_title'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
+            'meta_keywords'    => $validated['meta_keywords'] ?? null,
+            'thumbnail'        => $thumbnailPath,
+            'category'         => $validated['category'] ?? null,
+            'is_published'     => isset($validated['status']) ? $validated['status'] === 'published' : null,
+            'published_at'     => isset($validated['status']) && $validated['status'] === 'published' ? now() : null,
+        ], fn($value) => $value !== null));
+
+        return response()->json([
+            'success'    => true,
+            'article_id' => $post->id,
+            'slug'       => $post->slug,
+            'url'        => url('/artikel/' . $post->slug),
+            'message'    => 'Article updated successfully',
+        ]);
+    }
+
     public function uploadImage(Request $request)
     {
         $token = $request->bearerToken();
