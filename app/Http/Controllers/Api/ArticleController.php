@@ -52,6 +52,11 @@ class ArticleController extends Controller
         $readTime = $validated['read_time']
             ?? (int) ceil(str_word_count(strip_tags($content)) / 200) ?: 1;
 
+        $thumbnailPath = null;
+        if (!empty($validated['thumbnail'])) {
+            $thumbnailPath = str_replace(asset('storage') . '/', '', $validated['thumbnail']);
+        }
+
         $article = Post::create([
             'title'                => $title,
             'slug'                 => $slug,
@@ -68,7 +73,7 @@ class ArticleController extends Controller
             'publish_to_facebook'  => $validated['publish_to_facebook'] ?? false,
             'social_caption'       => $validated['social_caption'] ?? null,
             'social_format'        => $validated['social_format'] ?? 'feed',
-            'thumbnail'            => $validated['thumbnail'] ?? null,
+            'thumbnail'            => $thumbnailPath,
         ]);
 
         return response()->json([
