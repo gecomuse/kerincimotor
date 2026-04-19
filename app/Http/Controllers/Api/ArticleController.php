@@ -140,6 +140,34 @@ class ArticleController extends Controller
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
         }
 
+        if ($request->has('image_base64')) {
+            $request->validate(['image_base64' => 'required|string']);
+
+            $base64    = preg_replace('/^data:image\/\w+;base64,/', '', $request->image_base64);
+            $imageData = base64_decode($base64);
+
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($imageData);
+            $ext      = match ($mimeType) {
+                'image/jpeg' => 'jpg',
+                'image/png'  => 'png',
+                'image/webp' => 'webp',
+                'image/gif'  => 'gif',
+                default      => 'jpg',
+            };
+
+            $filename = Str::uuid() . '.' . $ext;
+            $path     = 'posts/thumbnails/' . $filename;
+            Storage::disk('public')->put($path, $imageData);
+
+            return response()->json([
+                'success' => true,
+                'path'    => $path,
+                'url'     => asset('storage/' . $path),
+                'message' => 'Image uploaded successfully',
+            ]);
+        }
+
         $request->validate([
             'image'     => 'required_without:image_url|image|mimes:jpg,jpeg,png,webp|max:5120',
             'image_url' => 'required_without:image|nullable|url',
