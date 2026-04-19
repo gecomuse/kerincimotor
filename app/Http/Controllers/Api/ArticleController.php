@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
@@ -86,15 +88,38 @@ class ArticleController extends Controller
         }
 
         $request->validate([
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'type'  => 'nullable|in:thumbnail,meta_image',
+            'image'     => 'required_without:image_url|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_url' => 'required_without:image|nullable|url',
+            'type'      => 'nullable|in:thumbnail,meta_image',
         ]);
 
         $type      = $request->input('type', 'thumbnail');
         $directory = "posts/{$type}s";
 
-        $path = $request->file('image')->store($directory, 'public');
-        $url  = asset('storage/' . $path);
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store($directory, 'public');
+        } else {
+            $imageUrl  = $request->input('image_url');
+            $response  = Http::timeout(15)->get($imageUrl);
+
+            if (!$response->successful()) {
+                return response()->json(['success' => false, 'message' => 'Failed to download image from URL'], 422);
+            }
+
+            $mime      = $response->header('Content-Type');
+            $extension = match (explode(';', $mime)[0]) {
+                'image/jpeg' => 'jpg',
+                'image/png'  => 'png',
+                'image/webp' => 'webp',
+                default      => 'jpg',
+            };
+
+            $filename = Str::uuid() . '.' . $extension;
+            $path     = "{$directory}/{$filename}";
+            Storage::disk('public')->put($path, $response->body());
+        }
+
+        $url = asset('storage/' . $path);
 
         return response()->json([
             'success' => true,
