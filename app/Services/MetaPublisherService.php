@@ -143,7 +143,7 @@ class MetaPublisherService
         Log::info('MetaPublisherService: getPageInfo request', ['page_id' => $this->pageId]);
 
         $response = Http::timeout(15)->get(self::GRAPH_URL . "/{$this->pageId}", [
-            'fields'       => 'name,id,followers_count',
+            'fields'       => 'name,id,fan_count',
             'access_token' => $this->pageAccessToken,
         ]);
 
@@ -163,7 +163,7 @@ class MetaPublisherService
         return [
             'name'            => $body['name'] ?? '',
             'id'              => $body['id'] ?? '',
-            'followers_count' => $body['followers_count'] ?? 0,
+            'followers_count' => $body['fan_count'] ?? 0,
         ];
     }
 }
