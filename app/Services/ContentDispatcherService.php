@@ -4,153 +4,134 @@ namespace App\Services;
 
 use App\Models\Post;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
-/**
- * ContentDispatcherService — orchestrates caption generation and social media publishing.
- *
- * Flow:
- *   1. Resolve caption  → use social_caption if set, else generate via GroqService
- *   2. Resolve image URL → use thumbnail (or meta_image for feed/fb)
- *   3. Dispatch to Instagram if publish_to_instagram = true
- *   4. Dispatch to Facebook  if publish_to_facebook  = true
- *   5. Update post ig_status / fb_status / social_error_message
- *
- * Call this from:
- *   - An Observer on Post::updated (when is_published flips to true)
- *   - A queued Job if social_scheduled_at is set
- */
 class ContentDispatcherService
 {
     public function __construct(
-        protected GroqService          $groq,
+        protected DeepSeekService      $deepseek,
         protected MetaPublisherService $meta,
     ) {}
 
     /**
-     * Dispatch a published post to all enabled social channels.
+     * Orchestrate caption generation and social media publishing for a post.
+     * Skips silently if auto_distribute is false.
      */
     public function dispatch(Post $post): void
     {
-        $caption = $this->resolveCaption($post);
-        $errors  = [];
-
-        if ($post->publish_to_instagram) {
-            $result = $this->dispatchInstagram($post, $caption);
-            $post->ig_status = $result['success'] ? 'published' : 'failed';
-            if (! $result['success']) {
-                $errors[] = 'IG: ' . $result['error'];
-            }
+        if (! $post->auto_distribute) {
+            Log::info('ContentDispatcherService: skipped (auto_distribute=false)', [
+                'post_id' => $post->id,
+            ]);
+            return;
         }
 
-        if ($post->publish_to_facebook) {
-            $result = $this->dispatchFacebook($post, $caption);
-            $post->fb_status = $result['success'] ? 'published' : 'failed';
-            if (! $result['success']) {
-                $errors[] = 'FB: ' . $result['error'];
-            }
-        }
+        Log::info('ContentDispatcherService: dispatch started', ['post_id' => $post->id]);
 
-        $post->social_error_message = $errors ? implode("\n", $errors) : null;
-        $post->saveQuietly(); // avoid re-triggering observers
-    }
-
-    // ─────────────────────────────────────────────
-    //  Instagram dispatch
-    // ─────────────────────────────────────────────
-
-    protected function dispatchInstagram(Post $post, string $caption): array
-    {
-        $format = $post->social_format ?? 'feed';
+        $post->forceFill(['distribution_status' => 'pending'])->saveQuietly();
 
         try {
-            return match ($format) {
-                'carousel' => $this->dispatchIgCarousel($post, $caption),
-                'reel'     => $this->dispatchIgReel($post, $caption),
-                default    => $this->dispatchIgFeed($post, $caption),
-            };
+            // Resolve featured image URL
+            // Uses Spatie Media Library 'featured-image' collection if HasMedia is configured,
+            // otherwise falls back to the post's thumbnail field.
+            $imageUrl = null;
+            if (method_exists($post, 'getFirstMediaUrl')) {
+                $spatieUrl = $post->getFirstMediaUrl('featured-image');
+                $imageUrl  = $spatieUrl ?: null;
+            }
+            if (! $imageUrl) {
+                $imageUrl = $post->getThumbnailUrl();
+            }
+
+            Log::info('ContentDispatcherService: image resolved', [
+                'post_id'  => $post->id,
+                'imageUrl' => $imageUrl,
+            ]);
+
+            // Generate captions via DeepSeek
+            Log::info('ContentDispatcherService: generating Facebook caption', ['post_id' => $post->id]);
+            $fbCaption = $this->deepseek->generateCaption(
+                $post->title,
+                $post->content ?? '',
+                'facebook'
+            );
+
+            Log::info('ContentDispatcherService: generating Instagram caption', ['post_id' => $post->id]);
+            $igCaption = $this->deepseek->generateCaption(
+                $post->title,
+                $post->content ?? '',
+                'instagram'
+            );
+
+            $post->forceFill([
+                'fb_caption'       => $fbCaption,
+                'ig_caption'       => $igCaption,
+                'gemini_generated' => false,
+            ])->saveQuietly();
+
+            Log::info('ContentDispatcherService: captions saved', ['post_id' => $post->id]);
+
+            // Publish to Facebook
+            Log::info('ContentDispatcherService: publishing to Facebook', ['post_id' => $post->id]);
+            $fbPostId = $this->meta->publishToFacebook($fbCaption, $imageUrl);
+
+            $post->forceFill([
+                'fb_post_id'   => $fbPostId,
+                'fb_published' => true,
+            ])->saveQuietly();
+
+            Log::info('ContentDispatcherService: Facebook published', [
+                'post_id'    => $post->id,
+                'fb_post_id' => $fbPostId,
+            ]);
+
+            // Publish to Instagram (requires an image URL)
+            if ($imageUrl) {
+                Log::info('ContentDispatcherService: publishing to Instagram', ['post_id' => $post->id]);
+                $igPostId = $this->meta->publishToInstagram($igCaption, $imageUrl);
+
+                $post->forceFill([
+                    'ig_post_id'   => $igPostId,
+                    'ig_published' => true,
+                ])->saveQuietly();
+
+                Log::info('ContentDispatcherService: Instagram published', [
+                    'post_id'    => $post->id,
+                    'ig_post_id' => $igPostId,
+                ]);
+            } else {
+                Log::warning('ContentDispatcherService: Instagram skipped — no image available', [
+                    'post_id' => $post->id,
+                ]);
+            }
+
+            $post->forceFill([
+                'distribution_status' => 'published',
+                'distributed_at'      => now(),
+                'distribution_error'  => null,
+            ])->saveQuietly();
+
+            Log::info('ContentDispatcherService: dispatch complete', ['post_id' => $post->id]);
+
         } catch (\Throwable $e) {
-            Log::error('ContentDispatcher IG exception', ['post' => $post->id, 'error' => $e->getMessage()]);
-            return ['success' => false, 'error' => $e->getMessage()];
+            Log::error('ContentDispatcherService: dispatch failed', [
+                'post_id' => $post->id,
+                'error'   => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+
+            $post->forceFill([
+                'distribution_status' => 'failed',
+                'distribution_error'  => $e->getMessage(),
+            ])->saveQuietly();
         }
-    }
-
-    protected function dispatchIgFeed(Post $post, string $caption): array
-    {
-        $imageUrl = $this->publicUrl($post->thumbnail ?? $post->meta_image);
-        if (! $imageUrl) {
-            return ['success' => false, 'error' => 'No thumbnail for IG feed'];
-        }
-        return $this->meta->publishInstagramFeed($post, $caption, $imageUrl);
-    }
-
-    protected function dispatchIgCarousel(Post $post, string $caption): array
-    {
-        $paths = $post->carousel_images ?? [];
-        if (count($paths) < 2) {
-            return ['success' => false, 'error' => 'Carousel requires at least 2 images'];
-        }
-        $urls = array_map(fn($p) => $this->publicUrl($p), $paths);
-        $urls = array_filter($urls); // drop any nulls
-        return $this->meta->publishInstagramCarousel($post, $caption, array_values($urls));
-    }
-
-    protected function dispatchIgReel(Post $post, string $caption): array
-    {
-        $videoUrl = $this->publicUrl($post->reel_video_path);
-        if (! $videoUrl) {
-            return ['success' => false, 'error' => 'No reel video path set'];
-        }
-        return $this->meta->publishInstagramReel($post, $caption, $videoUrl);
-    }
-
-    // ─────────────────────────────────────────────
-    //  Facebook dispatch
-    // ─────────────────────────────────────────────
-
-    protected function dispatchFacebook(Post $post, string $caption): array
-    {
-        $imageUrl = $this->publicUrl($post->thumbnail ?? $post->meta_image);
-        if (! $imageUrl) {
-            return ['success' => false, 'error' => 'No thumbnail for Facebook post'];
-        }
-
-        try {
-            return $this->meta->publishFacebookPage($post, $caption, $imageUrl);
-        } catch (\Throwable $e) {
-            Log::error('ContentDispatcher FB exception', ['post' => $post->id, 'error' => $e->getMessage()]);
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
-    // ─────────────────────────────────────────────
-    //  Helpers
-    // ─────────────────────────────────────────────
-
-    protected function resolveCaption(Post $post): string
-    {
-        if (! empty($post->social_caption)) {
-            return $post->social_caption;
-        }
-
-        $generated = $this->groq->generateCaption($post->title, $post->excerpt ?? '');
-        if (! empty($generated)) {
-            // Persist so the admin can review/edit it next time
-            $post->social_caption = $generated;
-        }
-
-        return $generated ?: $post->title;
     }
 
     /**
-     * Convert a storage path to a fully qualified public URL.
-     * Returns null if path is empty.
+     * Convenience wrapper — look up the post by ID then dispatch.
      */
-    protected function publicUrl(?string $storagePath): ?string
+    public function dispatchById(int $postId): void
     {
-        if (empty($storagePath)) {
-            return null;
-        }
-        return Storage::url($storagePath);
+        $post = Post::findOrFail($postId);
+        $this->dispatch($post);
     }
 }

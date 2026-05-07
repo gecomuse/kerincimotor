@@ -2,242 +2,168 @@
 
 namespace App\Services;
 
-use App\Models\Post;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
-/**
- * MetaPublisherService — publishes content to Instagram and Facebook via the Meta Graph API.
- *
- * Required .env:
- *   META_ACCESS_TOKEN=    Long-lived Page access token
- *   META_IG_USER_ID=      Instagram Business Account ID
- *   META_FB_PAGE_ID=      Facebook Page ID
- *
- * Docs:
- *   https://developers.facebook.com/docs/instagram-api/guides/content-publishing
- *   https://developers.facebook.com/docs/pages/managing
- */
 class MetaPublisherService
 {
-    protected const GRAPH_URL = 'https://graph.facebook.com/v19.0';
+    private const GRAPH_URL = 'https://graph.facebook.com/v19.0';
 
-    protected string $accessToken;
-    protected string $igUserId;
-    protected string $fbPageId;
+    private string $pageAccessToken;
+    private string $pageId;
+    private string $igAccountId;
 
     public function __construct()
     {
-        $this->accessToken = config('services.meta.access_token', '');
-        $this->igUserId    = config('services.meta.ig_user_id', '');
-        $this->fbPageId    = config('services.meta.fb_page_id', '');
-    }
-
-    // ─────────────────────────────────────────────
-    //  Instagram
-    // ─────────────────────────────────────────────
-
-    /**
-     * Publish a single-image feed post to Instagram.
-     * Flow: create container → publish
-     */
-    public function publishInstagramFeed(Post $post, string $caption, string $imageUrl): array
-    {
-        if (! $this->isConfigured()) {
-            return $this->err('Meta credentials not configured');
-        }
-
-        // 1. Create media container
-        $container = $this->graphPost("/{$this->igUserId}/media", [
-            'image_url'  => $imageUrl,
-            'caption'    => $caption,
-            'media_type' => 'IMAGE',
-        ]);
-
-        if (! $container['success']) {
-            return $container;
-        }
-
-        // 2. Publish
-        return $this->graphPost("/{$this->igUserId}/media_publish", [
-            'creation_id' => $container['id'],
-        ]);
+        $this->pageAccessToken = env('META_PAGE_ACCESS_TOKEN', '');
+        $this->pageId          = env('META_PAGE_ID', '');
+        $this->igAccountId     = env('META_IG_ACCOUNT_ID', '');
     }
 
     /**
-     * Publish a carousel post to Instagram (2–10 images).
-     * Flow: create item container for each image → create carousel container → publish
+     * Publish a post to Facebook Page.
+     * With image → photo post. Without image → text-only feed post.
+     *
+     * @return string Facebook post ID (fb_post_id)
      */
-    public function publishInstagramCarousel(Post $post, string $caption, array $imageUrls): array
+    public function publishToFacebook(string $message, ?string $imageUrl = null): string
     {
-        if (! $this->isConfigured()) {
-            return $this->err('Meta credentials not configured');
+        if ($imageUrl) {
+            $endpoint = "/{$this->pageId}/photos";
+            $payload  = [
+                'url'          => $imageUrl,
+                'caption'      => $message,
+                'access_token' => $this->pageAccessToken,
+            ];
+        } else {
+            $endpoint = "/{$this->pageId}/feed";
+            $payload  = [
+                'message'      => $message,
+                'access_token' => $this->pageAccessToken,
+            ];
         }
 
-        if (count($imageUrls) < 2) {
-            return $this->err('Carousel requires at least 2 images');
-        }
-
-        // 1. Create a container for each image
-        $childIds = [];
-        foreach ($imageUrls as $url) {
-            $item = $this->graphPost("/{$this->igUserId}/media", [
-                'image_url'        => $url,
-                'is_carousel_item' => true,
-            ]);
-
-            if (! $item['success']) {
-                return $this->err("Failed to create carousel item: {$item['error']}");
-            }
-
-            $childIds[] = $item['id'];
-        }
-
-        // 2. Create carousel container
-        $container = $this->graphPost("/{$this->igUserId}/media", [
-            'media_type' => 'CAROUSEL',
-            'caption'    => $caption,
-            'children'   => implode(',', $childIds),
+        Log::info('MetaPublisherService: publishToFacebook request', [
+            'endpoint'  => $endpoint,
+            'has_image' => (bool) $imageUrl,
         ]);
 
-        if (! $container['success']) {
-            return $container;
+        $response = Http::timeout(30)->post(self::GRAPH_URL . $endpoint, $payload);
+        $body     = $response->json();
+
+        Log::info('MetaPublisherService: publishToFacebook response', ['body' => $body]);
+
+        if (isset($body['error'])) {
+            throw new RuntimeException(
+                "Facebook API error [{$body['error']['code']}]: {$body['error']['message']}"
+            );
         }
 
-        // 3. Publish
-        return $this->graphPost("/{$this->igUserId}/media_publish", [
-            'creation_id' => $container['id'],
-        ]);
+        if (! $response->successful() || empty($body['id'])) {
+            throw new RuntimeException('Facebook API failed: ' . $response->body());
+        }
+
+        return $body['id'];
     }
 
     /**
-     * Publish a Reel to Instagram.
-     * Flow: create container → poll until FINISHED (up to 60s) → publish
+     * Publish a single-image post to Instagram Business Account.
+     * Step 1: create media container.
+     * Step 2: publish container.
+     *
+     * @return string Instagram post ID (ig_post_id)
      */
-    public function publishInstagramReel(Post $post, string $caption, string $videoUrl): array
+    public function publishToInstagram(string $caption, string $imageUrl): string
     {
-        if (! $this->isConfigured()) {
-            return $this->err('Meta credentials not configured');
-        }
-
-        // 1. Create media container
-        $container = $this->graphPost("/{$this->igUserId}/media", [
-            'video_url'  => $videoUrl,
-            'caption'    => $caption,
-            'media_type' => 'REELS',
+        Log::info('MetaPublisherService: publishToInstagram step 1 — create container', [
+            'ig_account_id' => $this->igAccountId,
+            'image_url'     => $imageUrl,
         ]);
 
-        if (! $container['success']) {
-            return $container;
+        $containerResponse = Http::timeout(30)->post(
+            self::GRAPH_URL . "/{$this->igAccountId}/media",
+            [
+                'image_url'    => $imageUrl,
+                'caption'      => $caption,
+                'access_token' => $this->pageAccessToken,
+            ]
+        );
+
+        $containerBody = $containerResponse->json();
+        Log::info('MetaPublisherService: Instagram container response', ['body' => $containerBody]);
+
+        if (isset($containerBody['error'])) {
+            throw new RuntimeException(
+                "Instagram container error [{$containerBody['error']['code']}]: {$containerBody['error']['message']}"
+            );
         }
 
-        $containerId = $container['id'];
-
-        // 2. Poll until status = FINISHED (max 12 attempts × 5s = 60s)
-        for ($i = 0; $i < 12; $i++) {
-            sleep(5);
-
-            $status = $this->graphGet("/{$containerId}", ['fields' => 'status_code']);
-
-            if (! $status['success']) {
-                return $status;
-            }
-
-            if ($status['status_code'] === 'FINISHED') {
-                break;
-            }
-
-            if ($status['status_code'] === 'ERROR') {
-                return $this->err('Reel processing failed (status: ERROR)');
-            }
+        if (empty($containerBody['id'])) {
+            throw new RuntimeException('Instagram container creation failed: ' . $containerResponse->body());
         }
 
-        // 3. Publish
-        return $this->graphPost("/{$this->igUserId}/media_publish", [
+        $containerId = $containerBody['id'];
+
+        Log::info('MetaPublisherService: publishToInstagram step 2 — publish container', [
             'creation_id' => $containerId,
         ]);
-    }
 
-    // ─────────────────────────────────────────────
-    //  Facebook
-    // ─────────────────────────────────────────────
+        $publishResponse = Http::timeout(30)->post(
+            self::GRAPH_URL . "/{$this->igAccountId}/media_publish",
+            [
+                'creation_id'  => $containerId,
+                'access_token' => $this->pageAccessToken,
+            ]
+        );
+
+        $publishBody = $publishResponse->json();
+        Log::info('MetaPublisherService: Instagram publish response', ['body' => $publishBody]);
+
+        if (isset($publishBody['error'])) {
+            throw new RuntimeException(
+                "Instagram publish error [{$publishBody['error']['code']}]: {$publishBody['error']['message']}"
+            );
+        }
+
+        if (empty($publishBody['id'])) {
+            throw new RuntimeException('Instagram publish failed: ' . $publishResponse->body());
+        }
+
+        return $publishBody['id'];
+    }
 
     /**
-     * Publish a photo post to a Facebook Page.
+     * Fetch basic page info. Use this to test API connectivity.
+     *
+     * @return array{name: string, id: string, followers_count: int}
      */
-    public function publishFacebookPage(Post $post, string $caption, string $imageUrl): array
+    public function getPageInfo(): array
     {
-        if (! $this->isConfigured()) {
-            return $this->err('Meta credentials not configured');
-        }
+        Log::info('MetaPublisherService: getPageInfo request', ['page_id' => $this->pageId]);
 
-        return $this->graphPost("/{$this->fbPageId}/photos", [
-            'url'     => $imageUrl,
-            'caption' => $caption,
+        $response = Http::timeout(15)->get(self::GRAPH_URL . "/{$this->pageId}", [
+            'fields'       => 'name,id,followers_count',
+            'access_token' => $this->pageAccessToken,
         ]);
-    }
 
-    // ─────────────────────────────────────────────
-    //  HTTP helpers
-    // ─────────────────────────────────────────────
+        $body = $response->json();
+        Log::info('MetaPublisherService: getPageInfo response', ['body' => $body]);
 
-    protected function graphPost(string $endpoint, array $params): array
-    {
-        try {
-            $response = Http::timeout(30)
-                ->post(self::GRAPH_URL . $endpoint, array_merge(
-                    $params,
-                    ['access_token' => $this->accessToken]
-                ));
-
-            $body = $response->json();
-
-            if ($response->successful() && isset($body['id'])) {
-                return ['success' => true, 'id' => $body['id'], 'error' => null];
-            }
-
-            $error = $body['error']['message'] ?? $response->body();
-            Log::warning('MetaPublisherService POST failed', ['endpoint' => $endpoint, 'error' => $error]);
-            return $this->err($error);
-
-        } catch (\Throwable $e) {
-            Log::error('MetaPublisherService exception', ['endpoint' => $endpoint, 'message' => $e->getMessage()]);
-            return $this->err($e->getMessage());
+        if (isset($body['error'])) {
+            throw new RuntimeException(
+                "Facebook Page info error [{$body['error']['code']}]: {$body['error']['message']}"
+            );
         }
-    }
 
-    protected function graphGet(string $endpoint, array $params = []): array
-    {
-        try {
-            $response = Http::timeout(15)
-                ->get(self::GRAPH_URL . $endpoint, array_merge(
-                    $params,
-                    ['access_token' => $this->accessToken]
-                ));
-
-            $body = $response->json();
-
-            if ($response->successful()) {
-                return array_merge(['success' => true, 'error' => null], $body);
-            }
-
-            $error = $body['error']['message'] ?? $response->body();
-            return $this->err($error);
-
-        } catch (\Throwable $e) {
-            return $this->err($e->getMessage());
+        if (! $response->successful()) {
+            throw new RuntimeException('Failed to get page info: ' . $response->body());
         }
-    }
 
-    protected function isConfigured(): bool
-    {
-        return ! empty($this->accessToken)
-            && ! empty($this->igUserId)
-            && ! empty($this->fbPageId);
-    }
-
-    protected function err(string $message): array
-    {
-        return ['success' => false, 'id' => null, 'error' => $message];
+        return [
+            'name'            => $body['name'] ?? '',
+            'id'              => $body['id'] ?? '',
+            'followers_count' => $body['followers_count'] ?? 0,
+        ];
     }
 }
