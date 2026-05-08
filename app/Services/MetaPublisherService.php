@@ -142,7 +142,7 @@ class MetaPublisherService
     {
         Log::info('MetaPublisherService: getPageInfo request', ['page_id' => $this->pageId]);
 
-        $response = Http::timeout(15)->get(self::GRAPH_URL . "/{$this->pageId}", [
+        $response = Http::timeout(15)->get(self::GRAPH_URL . '/me', [
             'fields'       => 'name,id,fan_count',
             'access_token' => $this->pageAccessToken,
         ]);
