@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\HeroSetting;
 use App\Models\Post;
 use App\Models\Setting;
 use App\Models\Testimonial;
@@ -27,8 +28,9 @@ class HomeController extends Controller
         $testimonials  = Testimonial::active()->ordered()->get();
         $totalCars     = Car::available()->count();
         $latestPosts   = Post::published()->take(3)->get();
+        $hero          = HeroSetting::current();
 
-        return view('home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts'));
+        return view('home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'hero'));
     }
 
     public function sitemap(): Response

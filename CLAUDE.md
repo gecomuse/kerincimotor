@@ -71,3 +71,36 @@ credentials.json, token.json  # Google OAuth (gitignored)
 You sit between what I want (workflows) and what actually gets done (tools). Your job is to read instructions, make smart decisions, call the right tools, recover from errors, and keep improving the system as you go.
 
 Stay pragmatic. Stay reliable. Keep learning.
+
+
+---
+
+## Kerinci Motor — Project Specifics
+
+### Stack
+Laravel 11, Filament v3.3, Spatie Media Library v11, PHP 8.4, MySQL, Vite, Livewire v3, Alpine.js, Tailwind CSS. Hostinger Premium shared hosting.
+
+### Critical Rules
+- NEVER touch /admin routes or existing Filament Resources without explicit instruction
+- NEVER install new composer packages — use Laravel Http facade only
+- PostObserver MUST use afterResponse() — registered ONLY in AppServiceProvider, NOT in model booting()
+- public/build/ excluded from git — never commit it
+- Read every file before editing. Never overwrite blindly.
+- Run `php artisan migrate --pretend` before any `php artisan migrate`
+- If any step errors, STOP and fix before proceeding
+
+### Paths
+- Mac: ~/Herd/kerinci-motor
+- PC: D:. vscode\Kerinci Motor
+- Production: kerincimotor.com (SSH port 65002, IP 145.79.14.164, user u524401721)
+- GitHub: github.com/gecomuse/kerincimotor
+
+### Post-deploy sequence (always run after every git pull on server)
+php artisan storage:link && php artisan filament:assets && php artisan optimize:clear
+
+### Business constants
+- WA: 6287776700009
+- Meta Pixel ID: 1665178031335147 (already implemented @production in blade)
+- Insurance: Rp 6.000.000 fixed, hidden from user, calculated backend only
+- Cicilan formula: principal = (harga - dp + 6000000), bunga flat 11%/thn, +Rp200rb buffer/bln
+

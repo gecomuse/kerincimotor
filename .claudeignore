@@ -1,0 +1,13 @@
+vendor/
+node_modules/
+public/build/
+public/storage/
+storage/logs/
+storage/framework/
+storage/app/public/
+.git/
+*.log
+composer.lock
+package-lock.json
+database/seeders/
+tests/

@@ -4,27 +4,51 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SellInquiryController;
+use App\Http\Controllers\SellCarController;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\AdminRegisterController;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Frontend ────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Catalog
+// Catalog (primary URLs)
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/catalog/{car:slug}', [CatalogController::class, 'show'])->name('catalog.show');
 
-// Sell Your Car form submission
+// Catalog aliases (SEO-friendly URLs)
+Route::get('/inventory', [CatalogController::class, 'index'])->name('inventory.index');
+Route::get('/mobil/{car:slug}', [CatalogController::class, 'show'])->name('car.detail');
+
+// Sell Your Car — existing Livewire form submission
 Route::post('/sell-inquiry', [SellInquiryController::class, 'store'])
     ->middleware('throttle:5,60')
     ->name('sell-inquiry.store');
+
+// Sell Your Car — dedicated page + JSON endpoint
+Route::get('/jual-mobil', [SellCarController::class, 'index'])->name('sell.index');
+Route::post('/lead', [SellCarController::class, 'store'])
+    ->middleware('throttle:5,60')
+    ->name('lead.store');
+
+// WhatsApp redirect
+Route::get('/whatsapp', function () {
+    $waNumber = Setting::getValue('wa_number', '6287776700009');
+    $msg = urlencode('Halo Kerinci Motor, saya ingin mengetahui unit yang tersedia.');
+    return redirect()->away("https://wa.me/{$waNumber}?text={$msg}");
+})->name('whatsapp');
 
 // Artikel (Blog)
 Route::get('/artikel', [BlogController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{slug}', [BlogController::class, 'show'])->name('artikel.show');
 
+// Tips alias for artikel
+Route::get('/tips-trick', [BlogController::class, 'index'])->name('tips.index');
+
 // Video
-Route::get('/video', fn() => view('video'))->name('video');
+Route::get('/video', [VideoController::class, 'index'])->name('video');
+Route::get('/video-review', [VideoController::class, 'index'])->name('video.index');
 
 // Sitemap
 Route::get('/sitemap.xml', function () {

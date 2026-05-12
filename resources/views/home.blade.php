@@ -118,6 +118,69 @@
 </section>
 @endif
 
+{{-- ═══════════════════════════════════════════════════════ --}}
+{{--  SECTION FINANCING: KALKULATOR CICILAN                   --}}
+{{-- ═══════════════════════════════════════════════════════ --}}
+<section id="financing" class="py-20 bg-brand-black">
+    <div class="max-w-3xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-10">
+            <p class="section-label">Simulasi Kredit</p>
+            <h2 class="section-title">Kalkulator Cicilan</h2>
+            <p class="section-subtitle mx-auto">Estimasi cicilan per bulan berdasarkan harga dan uang muka yang Anda masukkan.</p>
+            <div class="divider-red mx-auto mt-4"></div>
+        </div>
+
+        <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div>
+                    <label class="km-label">Harga Mobil (Rp)</label>
+                    <input type="number" id="calc-price" placeholder="150000000"
+                           oninput="calcKredit()"
+                           class="km-input">
+                    <p class="text-brand-text-gray text-xs mt-1">Masukkan harga dalam Rupiah penuh</p>
+                </div>
+                <div>
+                    <label class="km-label">Uang Muka / DP (Rp)</label>
+                    <input type="number" id="calc-dp" placeholder="30000000"
+                           oninput="calcKredit()"
+                           class="km-input">
+                </div>
+                <div>
+                    <label class="km-label">Tenor (Bulan)</label>
+                    <select id="calc-tenor" onchange="calcKredit()" class="km-select">
+                        <option value="12">12 bulan</option>
+                        <option value="24">24 bulan</option>
+                        <option value="36">36 bulan</option>
+                        <option value="48" selected>48 bulan</option>
+                        <option value="60">60 bulan</option>
+                        <option value="72">72 bulan</option>
+                    </select>
+                </div>
+            </div>
+
+            {{-- Result --}}
+            <div class="bg-brand-mid-gray rounded-xl p-6 text-center border border-white/5">
+                <div class="text-brand-text-gray text-sm mb-2">Estimasi Cicilan per Bulan</div>
+                <div id="calc-result" class="font-heading font-extrabold text-3xl md:text-4xl text-brand-red">
+                    —
+                </div>
+                <div id="calc-breakdown" class="text-brand-text-gray text-xs mt-2">
+                    Masukkan harga dan DP untuk melihat estimasi
+                </div>
+                <p class="text-brand-text-gray/60 text-xs mt-3">
+                    * Estimasi sudah termasuk asuransi Rp 6.000.000. Angka final dari leasing bisa berbeda.
+                </p>
+            </div>
+
+            <div class="text-center mt-6">
+                <a href="{{ route('sell.index') }}" class="btn-outline text-sm">
+                    Ingin Menjual Mobil? →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- ══════════════════════════════════════════════════════════════ --}}
 {{-- VIDEO REVIEW — YouTube Shorts Vertical Grid                   --}}
 {{-- ══════════════════════════════════════════════════════════════ --}}
@@ -569,13 +632,32 @@
 
 @push('scripts')
 <script>
+    // Cicilan calculator
+    const FIXED_INSURANCE = 6000000;
+    function calcKredit() {
+        const price = parseFloat(document.getElementById('calc-price').value) || 0;
+        const dp    = parseFloat(document.getElementById('calc-dp').value) || 0;
+        const tenor = parseInt(document.getElementById('calc-tenor').value) || 48;
+        if (price > 0 && dp >= 0 && dp < price) {
+            const principal   = price - dp + FIXED_INSURANCE;
+            const totalBunga  = principal * (0.11 * (tenor / 12));
+            const cicilan     = (principal + totalBunga) / tenor + 200000;
+            document.getElementById('calc-result').textContent =
+                'Rp ' + Math.round(cicilan).toLocaleString('id-ID');
+            document.getElementById('calc-breakdown').textContent =
+                'Total bayar: Rp ' + Math.round(principal + totalBunga).toLocaleString('id-ID') +
+                ' | ' + tenor + ' bulan';
+        } else {
+            document.getElementById('calc-result').textContent = '—';
+            document.getElementById('calc-breakdown').textContent = 'Masukkan harga dan DP untuk melihat estimasi';
+        }
+    }
+
     // Meta Pixel — Contact (fires when sell-your-car form is submitted)
     document.addEventListener('livewire:initialized', () => {
         Livewire.on('sell-inquiry-submitted', () => {
             if (typeof fbq !== 'undefined') {
-                fbq('track', 'Contact', {
-                    content_name: 'Jual Mobil Inquiry',
-                });
+                fbq('track', 'Contact', { content_name: 'Jual Mobil Inquiry' });
             }
         });
     });

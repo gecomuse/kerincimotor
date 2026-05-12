@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             TestimonialSeeder::class,
             BlogSeeder::class,
+            KerincMotorSeeder::class,
         ]);
     }
 }

@@ -15,6 +15,10 @@
     RewriteCond %{REQUEST_URI} ^/storage/
     RewriteRule ^ - [L]
 
+    # Allow direct access to Vite build assets (LiteSpeed fix)
+    RewriteCond %{REQUEST_URI} ^/build/
+    RewriteRule ^ - [L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$

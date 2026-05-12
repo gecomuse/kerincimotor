@@ -14,13 +14,11 @@
 
         {{-- Desktop Nav --}}
         <nav class="hidden md:flex items-center gap-8">
-            <a href="{{ route('home') }}#why-us"  class="navbar-link">Kenapa Kami</a>
-            <a href="{{ route('catalog.index') }}" class="navbar-link">Katalog</a>
-            <a href="{{ route('artikel.index') }}" class="navbar-link">Artikel</a>
-            <a href="{{ route('video') }}" class="navbar-link">Video</a>
-            <a href="{{ route('home') }}#testimonials" class="navbar-link">Ulasan</a>
-            <a href="{{ route('home') }}#sell-car" class="navbar-link">Jual Mobil Anda</a>
-            <a href="{{ route('home') }}#location" class="navbar-link">Lokasi</a>
+            <a href="{{ route('inventory.index') }}" class="navbar-link">Mobil HOT DEALS!</a>
+            <a href="{{ route('home') }}#financing" class="navbar-link">Simulasi Cicilan</a>
+            <a href="{{ route('video.index') }}" class="navbar-link">Video Review</a>
+            <a href="{{ route('tips.index') }}" class="navbar-link">Tips &amp; Trick</a>
+            <a href="{{ route('sell.index') }}" class="navbar-link">Jual Mobil Anda</a>
         </nav>
 
         {{-- CTA --}}
@@ -48,13 +46,11 @@
     {{-- Mobile Menu --}}
     <div id="mobile-menu" class="hidden md:hidden mt-4 glass-dark rounded-xl p-4 mx-4">
         <nav class="flex flex-col gap-3">
-            <a href="{{ route('home') }}#why-us" class="navbar-link py-2 border-b border-white/5">Kenapa Kami</a>
-            <a href="{{ route('catalog.index') }}" class="navbar-link py-2 border-b border-white/5">Katalog</a>
-            <a href="{{ route('artikel.index') }}" class="navbar-link py-2 border-b border-white/5">Artikel</a>
-            <a href="{{ route('video') }}" class="navbar-link py-2 border-b border-white/5">Video</a>
-            <a href="{{ route('home') }}#testimonials" class="navbar-link py-2 border-b border-white/5">Ulasan</a>
-            <a href="{{ route('home') }}#sell-car" class="navbar-link py-2 border-b border-white/5">Jual Mobil Anda</a>
-            <a href="{{ route('home') }}#location" class="navbar-link py-2 border-b border-white/5">Lokasi</a>
+            <a href="{{ route('inventory.index') }}" class="navbar-link py-2 border-b border-white/5">Mobil HOT DEALS!</a>
+            <a href="{{ route('home') }}#financing" class="navbar-link py-2 border-b border-white/5">Simulasi Cicilan</a>
+            <a href="{{ route('video.index') }}" class="navbar-link py-2 border-b border-white/5">Video Review</a>
+            <a href="{{ route('tips.index') }}" class="navbar-link py-2 border-b border-white/5">Tips &amp; Trick</a>
+            <a href="{{ route('sell.index') }}" class="navbar-link py-2 border-b border-white/5">Jual Mobil Anda</a>
             <a href="{{ $waNavbar }}" target="_blank" rel="noopener" onclick="trackWA('navbar')"
                class="btn-wa w-full justify-center mt-2">
                 Hubungi Kami via WhatsApp
