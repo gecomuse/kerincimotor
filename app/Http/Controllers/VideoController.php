@@ -18,6 +18,7 @@ class VideoController extends Controller
         $featuredVideo = Video::active()->featured()->ordered()->first();
         $videos        = Video::active()->ordered()->get();
 
-        return view('video', compact('settings', 'featuredVideo', 'videos'));
+        // UPDATE DI SINI: Tambahkan prefix 'frontend.'
+        return view('frontend.video', compact('settings', 'featuredVideo', 'videos'));
     }
 }

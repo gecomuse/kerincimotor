@@ -16,7 +16,8 @@ class SellCarController extends Controller
         SEOTools::setTitle('Jual Mobil Anda — Kerinci Motor Bekasi');
         SEOTools::setDescription('Jual mobil Anda ke Kerinci Motor. Proses cepat, harga terbaik, pembayaran langsung. Isi formulir dan kami akan menghubungi Anda via WhatsApp.');
 
-        return view('sell-car', compact('settings'));
+        // UPDATE DI SINI: Tambahkan prefix 'frontend.'
+        return view('frontend.sell-car', compact('settings'));
     }
 
     public function store(Request $request)
