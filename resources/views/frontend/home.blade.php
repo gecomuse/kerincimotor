@@ -26,7 +26,7 @@
         </div>
         <div class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);">
           <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
-          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">150+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Poin Inspeksi</div></div>
+          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">100%</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">KM Bebas Reset</div></div>
           <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
         </div>
       </div>

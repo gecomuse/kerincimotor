@@ -17,7 +17,7 @@
       Lihat Kondisi Unit<br><span class="tgrad">Sebelum ke Showroom</span>
     </h1>
     <p class="reveal" style="color:var(--g500);font-size:1.05rem;font-weight:500;max-width:560px;margin:0 auto 32px;line-height:1.7;">Video jujur tanpa filter — cek eksterior, interior, mesin, dan test drive langsung.</p>
-    <a href="https://www.youtube.com/@kerincimotor" target="_blank" rel="noopener" class="btn-outline reveal" style="padding:13px 28px;border-radius:100px;font-size:.9rem;text-decoration:none;"><span>▶ Subscribe YouTube KerinciMotor</span></a>
+    <a href="https://www.youtube.com/@kerincimotorofficial" target="_blank" rel="noopener" class="btn-outline reveal" style="padding:13px 28px;border-radius:100px;font-size:.9rem;text-decoration:none;"><span>▶ Subscribe YouTube KerinciMotor</span></a>
   </div>
 </section>
 
@@ -65,7 +65,7 @@
         <div class="section-tag">Semua Video</div>
         <h2 style="font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;font-family:'Raleway',sans-serif;letter-spacing:-1px;">Review Unit Kami</h2>
       </div>
-      <a href="https://www.youtube.com/@kerincimotor" target="_blank" rel="noopener" class="btn-outline reveal" style="padding:11px 24px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>▶ Semua di YouTube →</span></a>
+      <a href="https://www.youtube.com/@kerincimotorofficial" target="_blank" rel="noopener" class="btn-outline reveal" style="padding:11px 24px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>▶ Semua di YouTube →</span></a>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" id="vid-grid">
@@ -131,7 +131,7 @@
     <h2 class="reveal" style="font-size:clamp(1.6rem,4vw,2.8rem);font-weight:900;color:#fff;font-family:'Raleway',sans-serif;margin-bottom:14px;letter-spacing:-1px;">Jangan Lewatkan<br>Video Terbaru</h2>
     <p class="reveal" style="color:rgba(255,255,255,.45);font-weight:500;margin-bottom:28px;line-height:1.7;">Subscribe channel YouTube kami untuk video review unit terbaru setiap minggu.</p>
     <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <a href="https://www.youtube.com/@kerincimotor" target="_blank" rel="noopener" class="btn-red" style="padding:14px 32px;border-radius:100px;font-size:.95rem;text-decoration:none;">▶ Subscribe Sekarang</a>
+      <a href="https://www.youtube.com/@kerincimotorofficial" target="_blank" rel="noopener" class="btn-red" style="padding:14px 32px;border-radius:100px;font-size:.95rem;text-decoration:none;">▶ Subscribe Sekarang</a>
       <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-outline" style="padding:14px 28px;border-radius:100px;font-size:.875rem;text-decoration:none;border-color:rgba(255,255,255,.25);color:#fff;" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='transparent'"><span>💬 Tanya Unit</span></a>
     </div>
   </div>
