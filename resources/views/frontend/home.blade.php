@@ -21,18 +21,18 @@
           Dealer Used Car terpercaya Sejabodetabek, bebas banjir, laka, dan terbakar. {{ $totalCars ?? 0 }}+ unit tersedia.
         </p>
         <div class="reveal" style="display:flex;flex-wrap:wrap;gap:14px;">
-          <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
+          <a href="{{ route('inventory.index') }}" class="btn-gradient-border" style="font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
           <a href="{{ route('sell.index') }}" class="btn-outline" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;"><span>Jual Mobil Anda</span></a>
         </div>
-        <div class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);">
-          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
-          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">100%</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">KM Bebas Reset</div></div>
-          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
+        <div class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);" data-stats-section>
+          <div><div data-counter="{{ $totalCars ?? 50 }}" data-suffix="+" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
+          <div><div data-counter="100" data-suffix="%" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">100%</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Jaminan KM Bebas Reset</div></div>
+          <div><div data-counter="4.9" data-suffix="★" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
         </div>
       </div>
       <div class="reveal-right tilt-card" style="position:relative;" id="hero-img-col">
         <div class="tilt-shine"></div>
-        <div style="border-radius:40px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.14);">
+        <div class="hero-float" style="border-radius:40px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.14);">
           <img src="{{ $hero?->image_url ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop' }}" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.28),transparent 55%);"></div>
         </div>

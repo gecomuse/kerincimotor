@@ -132,6 +132,29 @@ body{font-family:'Raleway',sans-serif;background:#fff;color:var(--black);overflo
 
 #mnav{display:none;position:fixed;inset:0;z-index:999;background:rgba(255,255,255,0.97);backdrop-filter:blur(24px);padding:90px 36px 36px;flex-direction:column;gap:28px;overflow-y:auto;}
 #mnav.open{display:flex;}
+
+/* 4B — split char */
+.split-char{display:inline-block;opacity:0;transform:translateY(60px) rotate(6deg);transition:opacity .6s ease,transform .6s cubic-bezier(0.34,1.4,0.64,1);}
+.split-char.in{opacity:1;transform:translateY(0) rotate(0);}
+
+/* 4E — card glow follow mouse */
+.car-card::after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(280px circle at var(--mouse-x,50%) var(--mouse-y,50%),rgba(204,0,0,0.10),transparent 80%);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1;}
+.car-card:hover::after{opacity:1;}
+
+/* 4G — hero float */
+@keyframes heroFloat{0%,100%{transform:translateY(0) scale(1);}33%{transform:translateY(-12px) scale(1.005);}66%{transform:translateY(-6px) scale(1.003);}}
+.hero-float{animation:heroFloat 7s ease-in-out infinite;}
+
+/* 4H — noise shift */
+@keyframes noiseShift{0%{background-position:0 0;}25%{background-position:40px -20px;}50%{background-position:-30px 30px;}75%{background-position:20px 40px;}100%{background-position:0 0;}}
+.noise::after{animation:noiseShift 8s steps(4,end) infinite!important;}
+
+/* 4I — gradient border button */
+.btn-gradient-border{position:relative;background:#fff;color:var(--black);font-family:'Raleway',sans-serif;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;z-index:0;}
+.btn-gradient-border::before{content:'';position:absolute;inset:-2px;border-radius:100px;background:linear-gradient(90deg,var(--red),#ff6b35,var(--red));background-size:200%;animation:gradBorder 3s linear infinite;z-index:-1;}
+.btn-gradient-border::after{content:'';position:absolute;inset:1px;border-radius:100px;background:#fff;z-index:-1;}
+@keyframes gradBorder{from{background-position:0%;}to{background-position:200%;}}
+.btn-gradient-border:hover{transform:translateY(-3px);}
 </style>
 </head>
 <body>
@@ -312,7 +335,73 @@ body{font-family:'Raleway',sans-serif;background:#fff;color:var(--black);overflo
   var vm=document.getElementById('vmodal');
   if(vm)vm.addEventListener('click',function(e){if(e.target===this)closeVid();});
 
-  document.addEventListener('DOMContentLoaded',function(){initReveal();initTilt();});
+  // 4A — MAGNETIC BUTTONS
+  function initMagnetic(){
+    if(window.innerWidth<=768)return;
+    document.querySelectorAll('.btn-red,.btn-gradient-border').forEach(function(btn){
+      btn.addEventListener('mousemove',function(e){
+        var r=btn.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.25,y=(e.clientY-r.top-r.height/2)*.25;
+        btn.style.transform='translateY(-3px) translate('+x+'px,'+y+'px)';
+        btn.style.boxShadow='0 16px 40px rgba(204,0,0,0.35)';
+      });
+      btn.addEventListener('mouseleave',function(){btn.style.transform='';btn.style.boxShadow='';});
+    });
+  }
+
+  // 4B — SPLIT TEXT
+  window.splitText=function(el){
+    if(!el||el.dataset.split)return;
+    el.dataset.split='1';
+    var words=el.innerText.split(' ');
+    el.innerHTML=words.map(function(w,wi){
+      return w.split('').map(function(c,ci){
+        return '<span class="split-char" style="transition-delay:'+(wi*60+ci*30)+'ms">'+c+'</span>';
+      }).join('')+' ';
+    }).join('');
+  };
+
+  // 4C — COUNTER ANIMATION
+  function animCounter(el){
+    var target=parseFloat(el.dataset.counter),duration=1600,start=null,isFloat=String(target).includes('.');
+    requestAnimationFrame(function tick(ts){
+      if(!start)start=ts;
+      var p=Math.min((ts-start)/duration,1),ease=1-Math.pow(1-p,4),val=target*ease;
+      el.textContent=(isFloat?val.toFixed(1):Math.floor(val))+(el.dataset.suffix||'');
+      if(p<1)requestAnimationFrame(tick);
+    });
+  }
+  function initCounters(){
+    if(!window.IntersectionObserver)return;
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){if(e.isIntersecting){animCounter(e.target);obs.unobserve(e.target);}});
+    },{threshold:.5});
+    document.querySelectorAll('[data-counter]').forEach(function(el){obs.observe(el);});
+  }
+
+  // 4D — GSAP SCROLL ANIMATIONS
+  function initGSAP(){
+    if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.orb').forEach(function(orb){
+      gsap.to(orb,{y:function(){return(Math.random()-0.5)*80;},ease:'none',scrollTrigger:{trigger:orb.parentElement,start:'top bottom',end:'bottom top',scrub:1.5}});
+    });
+    gsap.utils.toArray('h2').forEach(function(h){
+      gsap.fromTo(h,{opacity:0,y:30},{opacity:1,y:0,duration:.8,ease:'power2.out',scrollTrigger:{trigger:h,start:'top 85%',toggleActions:'play none none none'}});
+    });
+  }
+
+  // 4E — CAR CARD GLOW MOUSE FOLLOW
+  function initCardGlow(){
+    document.querySelectorAll('.car-card').forEach(function(card){
+      card.addEventListener('mousemove',function(e){
+        var r=card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x',(e.clientX-r.left)+'px');
+        card.style.setProperty('--mouse-y',(e.clientY-r.top)+'px');
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){initReveal();initTilt();initMagnetic();initCounters();initGSAP();initCardGlow();});
 })();
 </script>
 </body>
