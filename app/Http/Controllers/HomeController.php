@@ -30,7 +30,7 @@ class HomeController extends Controller
         $latestPosts   = Post::published()->take(3)->get();
         $hero          = HeroSetting::current();
 
-        return view('home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'hero'));
+        return view('frontend.home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'hero'));
     }
 
     public function sitemap(): Response
