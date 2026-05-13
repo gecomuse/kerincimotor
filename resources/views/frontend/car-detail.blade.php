@@ -1,272 +1,182 @@
 @extends('frontend.layouts.app')
-
 @section('title', $car->make_model . ' ' . $car->year . ' Bekas | Kerinci Motor')
 @section('description', 'Beli ' . $car->make_model . ' tahun ' . $car->year . ', ' . $car->formatted_mileage . ', transmisi ' . $car->transmission . '. Harga ' . $car->formatted_price . '. Hubungi Kerinci Motor via WhatsApp.')
-@section('og_image', $car->getFirstMediaUrl('car_images', 'medium') ?: $car->getFirstMediaUrl('car_images'))
+@section('og_image', $car->getFirstMediaUrl('car_images','medium') ?: $car->getFirstMediaUrl('car_images'))
 
 @section('content')
 
 @php
-    $waNumber = $globalSettings['wa_number']->value ?? '6287776700009';
-    $photos   = $car->getMedia('car_images');
-
-    $pdpMsg = "Halo Kerinci Motor, saya tertarik dengan:\n\n"
-            . "🚗 *{$car->make_model}*\n"
-            . "📅 Tahun: {$car->year}\n"
-            . "💰 Harga: {$car->formatted_price}\n"
-            . "🛣️ Kilometer: {$car->formatted_mileage}\n"
-            . "⚙️ Transmisi: " . ucfirst($car->transmission) . "\n"
-            . "🎨 Warna: {$car->color}\n\n"
-            . "Apakah unit ini masih tersedia? Terima kasih!";
-    $waUrl = "https://wa.me/{$waNumber}?text=" . urlencode($pdpMsg);
-
-    // Cicilan estimate (48 bulan, bunga 11%/tahun, insurance sudah include)
-    $FIXED_INSURANCE = 6000000;
-    $dp = $car->price * 0.30;
-    $principal = ($car->price - $dp) + $FIXED_INSURANCE;
-    $tenor = 48;
-    $totalBunga = $principal * (0.11 * ($tenor / 12));
-    $cicilanPerBulan = isset($cicilanPerBulan) ? $cicilanPerBulan : (($principal + $totalBunga) / $tenor + 200000);
+  $images = $car->getMedia('car_images');
+  $mainImg = $car->large_image ?: ($images->first()?->getUrl() ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400');
+  $FIXED_INSURANCE = 6000000;
+  $dp30 = round($car->price * 0.30);
+  $principal = ($car->price - $dp30) + $FIXED_INSURANCE;
+  $tenor = 48;
+  $totalBunga = $principal * (0.11 * ($tenor / 12));
+  $cicilanEst = isset($cicilanPerBulan) ? $cicilanPerBulan : round(($principal + $totalBunga) / $tenor + 200000);
 @endphp
 
-{{-- Sticky CTA Bar --}}
-<div id="sticky-cta"
-     class="fixed bottom-0 left-0 right-0 z-30 bg-brand-dark-gray/95 backdrop-blur-md
-            border-t border-white/10 py-3 px-4 translate-y-full opacity-0 transition-all duration-300">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        <div class="hidden sm:block">
-            <div class="font-heading font-bold text-brand-white">{{ $car->make_model }} {{ $car->year }}</div>
-            <div class="text-brand-red font-heading font-bold text-lg">{{ $car->formatted_price }}</div>
-        </div>
-        <a href="{{ $waUrl }}" target="_blank" rel="noopener"
-           class="btn-wa ml-auto">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Tanya Harga
-        </a>
+{{-- STICKY CTA BAR --}}
+<div id="sticky-cta" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);border-top:1px solid var(--g100);padding:14px 24px;box-shadow:0 -8px 32px rgba(0,0,0,0.1);">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div>
+      <div style="font-weight:900;font-size:1rem;font-family:'Raleway',sans-serif;">{{ $car->make_model }} {{ $car->year }}</div>
+      <div style="font-weight:900;font-size:1.25rem;color:var(--red);font-family:'Raleway',sans-serif;">{{ $car->formatted_price }}</div>
     </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="{{ $car->whatsapp_url }}" target="_blank" rel="noopener" class="btn-red" style="padding:12px 24px;border-radius:100px;font-size:.875rem;text-decoration:none;">💬 Tanya via WA</a>
+      <a href="{{ route('inventory.index') }}" class="btn-outline" style="padding:12px 24px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>← Kembali</span></a>
+    </div>
+  </div>
 </div>
 
-<div class="pt-28 pb-24 bg-brand-black">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-
-        {{-- Breadcrumb --}}
-        <nav class="flex items-center gap-2 text-xs text-brand-text-gray mb-8 flex-wrap">
-            <a href="{{ route('home') }}"          class="hover:text-brand-red transition-colors">Beranda</a>
-            <span>/</span>
-            <a href="{{ route('inventory.index') }}" class="hover:text-brand-red transition-colors">Inventaris</a>
-            <span>/</span>
-            <span class="text-brand-white">{{ $car->make_model }} {{ $car->year }}</span>
-        </nav>
-
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
-
-            {{-- ── Gallery ─────────────────── --}}
-            <div class="lg:col-span-3">
-                @if($photos->count())
-
-                {{-- Main image --}}
-                <div id="det-img-wrapper"
-                     class="rounded-2xl overflow-hidden bg-brand-dark-gray border border-white/5 mb-3 aspect-video">
-                    <img id="det-img"
-                         src="{{ $photos->first()->hasGeneratedConversion('medium') ? $photos->first()->getUrl('medium') : $photos->first()->getUrl() }}"
-                         alt="{{ $car->make_model }} {{ $car->year }}"
-                         class="w-full h-full object-cover">
-                </div>
-
-                {{-- Thumbnails --}}
-                @if($photos->count() > 1)
-                <div class="grid grid-cols-5 gap-2">
-                    @foreach($photos as $i => $photo)
-                    <button onclick="document.getElementById('det-img').src='{{ $photo->hasGeneratedConversion('large') ? $photo->getUrl('large') : $photo->getUrl() }}';
-                                     document.querySelectorAll('.det-thumb').forEach(t=>t.classList.remove('border-brand-red'));
-                                     this.querySelector('img').closest('button').classList.add('border-brand-red');"
-                            class="det-thumb rounded-lg overflow-hidden border-2 {{ $i === 0 ? 'border-brand-red' : 'border-transparent' }} hover:border-brand-red transition-colors">
-                        <img src="{{ $photo->hasGeneratedConversion('thumb') ? $photo->getUrl('thumb') : $photo->getUrl() }}"
-                             alt="Foto {{ $i+1 }}"
-                             class="w-full aspect-video object-cover">
-                    </button>
-                    @endforeach
-                </div>
-                @endif
-
-                @else
-                <div class="rounded-2xl bg-brand-dark-gray border border-white/5 aspect-video flex items-center justify-center">
-                    <div class="text-center text-brand-text-gray">
-                        <svg class="w-16 h-16 mx-auto mb-3 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <p class="text-sm">Foto tidak tersedia</p>
-                    </div>
-                </div>
-                @endif
-            </div>
-
-            {{-- ── Details ──────────────────────────── --}}
-            <div class="lg:col-span-2 flex flex-col gap-5">
-
-                {{-- Status badges --}}
-                <div class="flex items-center gap-3">
-                    <span class="{{ $car->is_available ? 'badge-available' : 'badge-sold' }}">
-                        {{ $car->is_available ? 'TERSEDIA' : 'TERJUAL' }}
-                    </span>
-                    @if($car->is_featured)
-                    <span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full px-3 py-1 text-xs font-heading font-bold">
-                        ★ Unggulan
-                    </span>
-                    @endif
-                </div>
-
-                {{-- Title --}}
-                <div>
-                    <h1 class="font-heading font-extrabold text-2xl md:text-3xl text-brand-white leading-tight">
-                        {{ $car->make_model }}
-                    </h1>
-                    <p class="text-brand-text-gray text-sm mt-1">
-                        {{ $car->year }} · {{ ucfirst(str_replace('_', ' ', $car->body_type)) }}
-                    </p>
-                </div>
-
-                {{-- Price --}}
-                <div class="bg-brand-dark-gray border border-white/5 rounded-xl p-5">
-                    <div class="text-brand-text-gray text-sm mb-1">Harga</div>
-                    <div class="font-heading font-extrabold text-3xl text-brand-white">{{ $car->formatted_price }}</div>
-                    @if($car->tax_status)
-                    <div class="text-xs text-green-400 mt-1">✓ Pajak {{ $car->tax_status }}</div>
-                    @endif
-                </div>
-
-                {{-- Cicilan estimate --}}
-                <div class="bg-brand-red/10 border border-brand-red/20 rounded-xl p-4 text-center">
-                    <div class="text-brand-text-gray text-xs mb-1">Estimasi Cicilan 48 Bulan</div>
-                    <div class="font-heading font-extrabold text-xl text-brand-red">
-                        Rp {{ number_format($cicilanPerBulan, 0, ',', '.') }}/bln
-                    </div>
-                    <div class="text-brand-text-gray/60 text-xs mt-1">DP 30% · Sudah termasuk asuransi</div>
-                </div>
-
-                {{-- Specs --}}
-                <div class="bg-brand-dark-gray border border-white/5 rounded-xl p-5">
-                    <h3 class="font-heading font-bold text-brand-silver text-xs uppercase tracking-wider mb-4">Spesifikasi</h3>
-                    <div class="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                        @foreach([
-                            ['Kilometer',   $car->formatted_mileage],
-                            ['Transmisi',   ucfirst($car->transmission)],
-                            ['Bahan Bakar', ucfirst($car->fuel_type)],
-                            ['Warna',       $car->color],
-                            ['Tipe Bodi',   ucfirst(str_replace('_',' ',$car->body_type))],
-                            ['Tahun',       $car->year],
-                        ] as [$label, $value])
-                        <div>
-                            <div class="text-brand-text-gray text-xs mb-0.5">{{ $label }}</div>
-                            <div class="text-brand-white font-semibold">{{ $value }}</div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- CTA --}}
-                @if($car->is_available)
-                <a href="{{ $waUrl }}" target="_blank" rel="noopener"
-                   class="btn-wa w-full justify-center text-base py-4">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    💬 Tanya via WhatsApp
-                </a>
-                @endif
-
-                <a href="{{ route('inventory.index') }}" class="btn-outline w-full justify-center text-sm">
-                    ← Kembali ke Inventaris
-                </a>
-            </div>
-        </div>
-
-        {{-- Description / Condition Notes --}}
-        @if($car->description || $car->condition_notes)
-        <div class="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            @if($car->description)
-            <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-7">
-                <h2 class="font-heading font-bold text-xl text-brand-white mb-5">Deskripsi Kendaraan</h2>
-                <div class="prose prose-invert prose-sm max-w-none text-brand-text-gray leading-relaxed">
-                    {!! $car->description !!}
-                </div>
-            </div>
-            @endif
-            @if($car->condition_notes)
-            <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-7">
-                <h2 class="font-heading font-bold text-xl text-brand-white mb-5">Catatan Kondisi</h2>
-                <p class="text-brand-text-gray text-sm leading-relaxed">{{ $car->condition_notes }}</p>
-            </div>
-            @endif
-        </div>
-        @endif
-
-        {{-- Related Cars --}}
-        @if(isset($relatedCars) && $relatedCars->count())
-        <div class="mt-16">
-            <h2 class="font-heading font-bold text-2xl text-brand-white mb-6">Kendaraan Serupa</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($relatedCars as $related)
-                <div class="car-card group cursor-pointer"
-                     onclick="window.location='{{ route('car.detail', $related->slug) }}'">
-                    <div class="relative aspect-[4/3] overflow-hidden bg-brand-dark-gray rounded-t-xl">
-                        <img src="{{ $related->getFirstMediaUrl('car_images', 'thumb') ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800' }}"
-                             alt="{{ $related->make_model }}"
-                             loading="lazy"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-heading font-bold text-brand-white text-sm mb-1 group-hover:text-brand-red transition-colors line-clamp-1">
-                            {{ $related->make_model }}
-                        </h3>
-                        <div class="text-brand-text-gray text-xs mb-2">{{ $related->year }} · {{ $related->formatted_mileage }}</div>
-                        <div class="font-heading font-bold text-brand-white">{{ $related->formatted_price }}</div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
+{{-- BREADCRUMB --}}
+<div style="padding-top:72px;background:#fff;border-bottom:1px solid var(--g100);">
+  <div style="max-width:1280px;margin:0 auto;padding:16px 24px;">
+    <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--g400);font-weight:600;flex-wrap:wrap;">
+      <a href="{{ route('home') }}" style="color:var(--g400);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--g400)'">Beranda</a>
+      <span>›</span>
+      <a href="{{ route('inventory.index') }}" style="color:var(--g400);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--g400)'">Inventaris</a>
+      <span>›</span>
+      <span style="color:var(--black);">{{ $car->make_model }} {{ $car->year }}</span>
     </div>
+  </div>
 </div>
+
+<section style="padding:40px 0 80px;background:#fff;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;">
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start;" id="detail-grid">
+
+      {{-- LEFT: GALLERY --}}
+      <div class="reveal-left">
+        <div style="border-radius:28px;overflow:hidden;background:var(--g50);margin-bottom:16px;position:relative;" id="main-img-wrap">
+          <img id="main-img" src="{{ $mainImg }}" style="width:100%;height:480px;object-fit:cover;display:block;transition:opacity .3s;" alt="{{ $car->make_model }} {{ $car->year }}">
+          @if($car->is_featured)
+          <span style="position:absolute;top:20px;left:20px;background:var(--red);color:#fff;font-size:.78rem;font-weight:800;padding:6px 16px;border-radius:100px;font-family:'Raleway',sans-serif;">🔥 HOT DEAL</span>
+          @endif
+          <span style="position:absolute;top:20px;right:20px;font-size:.78rem;font-weight:800;padding:6px 14px;border-radius:100px;font-family:'Raleway',sans-serif;{{ $car->is_available ? 'background:rgba(34,197,94,0.9);color:#fff;' : 'background:rgba(0,0,0,0.8);color:#fff;' }}">{{ $car->is_available ? '✓ TERSEDIA' : '✗ TERJUAL' }}</span>
+        </div>
+        @if($images->count() > 1)
+        <div style="display:flex;gap:10px;flex-wrap:wrap;" id="thumbs">
+          @foreach($images as $i => $media)
+          @php $url = $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl(); @endphp
+          <div class="gallery-thumb {{ $i===0?'active':'' }}" onclick="switchImg('{{ $media->hasGeneratedConversion('large')?$media->getUrl('large'):$media->getUrl() }}',this)" style="width:80px;flex-shrink:0;">
+            <img src="{{ $url }}" alt="Foto {{ $i+1 }}" loading="lazy">
+          </div>
+          @endforeach
+        </div>
+        @endif
+      </div>
+
+      {{-- RIGHT: INFO --}}
+      <div class="reveal-right" style="position:sticky;top:92px;">
+        <div style="margin-bottom:8px;">
+          <div class="section-tag">{{ $car->year }} · {{ strtoupper($car->transmission) }}</div>
+          <h1 style="font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;line-height:1.1;margin-bottom:16px;">{{ $car->make_model }}</h1>
+          <div style="font-size:2.4rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--red);margin-bottom:24px;">{{ $car->formatted_price }}</div>
+        </div>
+
+        {{-- SPEC TABLE --}}
+        <div style="margin-bottom:28px;border-radius:20px;border:1px solid var(--g200);padding:8px 20px;background:var(--g50);">
+          <div class="spec-row"><span class="spec-key">Kilometer</span><span class="spec-val">{{ $car->formatted_mileage }}</span></div>
+          <div class="spec-row"><span class="spec-key">Transmisi</span><span class="spec-val">{{ ucfirst($car->transmission) }}</span></div>
+          <div class="spec-row"><span class="spec-key">Tahun</span><span class="spec-val">{{ $car->year }}</span></div>
+          @if($car->body_type)
+          <div class="spec-row"><span class="spec-key">Tipe Bodi</span><span class="spec-val">{{ $car->body_type }}</span></div>
+          @endif
+          @if($car->color)
+          <div class="spec-row"><span class="spec-key">Warna</span><span class="spec-val">{{ $car->color }}</span></div>
+          @endif
+          @if($car->fuel_type)
+          <div class="spec-row"><span class="spec-key">Bahan Bakar</span><span class="spec-val">{{ ucfirst($car->fuel_type) }}</span></div>
+          @endif
+          <div class="spec-row"><span class="spec-key">Status</span><span class="spec-val" style="{{ $car->is_available ? 'color:#22c55e;' : 'color:var(--red);' }}">{{ $car->is_available ? '✓ Tersedia' : '✗ Terjual' }}</span></div>
+        </div>
+
+        {{-- CICILAN --}}
+        <div style="background:var(--black);border-radius:20px;padding:20px;margin-bottom:24px;position:relative;overflow:hidden;">
+          <div class="orb" style="width:150px;height:150px;background:rgba(204,0,0,0.2);top:-30px;right:-30px;animation:orbFloat2 6s ease-in-out infinite;"></div>
+          <div style="position:relative;z-index:2;">
+            <div style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Estimasi Cicilan (DP 30%, 48 bln)</div>
+            <div style="font-size:1.75rem;font-weight:900;color:#fff;font-family:'Raleway',sans-serif;">Rp {{ number_format($cicilanEst,0,',','.') }}<span style="font-size:1rem;font-weight:600;">/bln</span></div>
+            <div style="color:rgba(255,255,255,.4);font-size:.72rem;margin-top:4px;font-weight:600;">*Estimasi, hubungi kami untuk detail kredit</div>
+            <a href="{{ route('home') }}#financing" style="display:inline-flex;align-items:center;gap:6px;color:var(--red);font-size:.8rem;font-weight:800;text-decoration:none;margin-top:10px;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Simulasi lebih detail →</a>
+          </div>
+        </div>
+
+        {{-- CTA BUTTONS --}}
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <a href="{{ $car->whatsapp_url }}" target="_blank" rel="noopener" class="btn-red" style="width:100%;padding:16px;border-radius:100px;font-size:1rem;text-decoration:none;justify-content:center;">💬 Tanya / Booking via WhatsApp</a>
+          <a href="{{ route('inventory.index') }}" class="btn-outline" style="width:100%;padding:14px;border-radius:100px;font-size:.9rem;text-decoration:none;justify-content:center;"><span>← Lihat Unit Lainnya</span></a>
+        </div>
+
+        {{-- TRUST --}}
+        <div style="display:flex;gap:16px;margin-top:20px;padding-top:20px;border-top:1px solid var(--g100);flex-wrap:wrap;">
+          @foreach(['✓ Bebas Banjir','✓ Bebas Laka','✓ BPKB Asli','✓ Garansi Mesin'] as $trust)
+          <span style="font-size:.72rem;font-weight:700;color:var(--g500);">{{ $trust }}</span>
+          @endforeach
+        </div>
+      </div>
+    </div>
+
+    {{-- DESCRIPTION --}}
+    @if($car->description ?? $car->condition_notes ?? null)
+    <div style="margin-top:56px;max-width:760px;">
+      <h2 class="reveal" style="font-weight:900;font-size:1.5rem;font-family:'Raleway',sans-serif;margin-bottom:16px;">Deskripsi & Kondisi</h2>
+      <div class="reveal" style="color:var(--g600);line-height:1.8;font-size:.95rem;font-weight:500;white-space:pre-line;">{{ $car->description ?? $car->condition_notes }}</div>
+    </div>
+    @endif
+
+    {{-- RELATED CARS --}}
+    @if(isset($relatedCars) && $relatedCars->count() > 0)
+    <div style="margin-top:72px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
+        <h2 class="reveal" style="font-weight:900;font-size:1.6rem;font-family:'Raleway',sans-serif;letter-spacing:-.5px;">Unit Serupa</h2>
+        <a href="{{ route('inventory.index') }}" class="btn-outline reveal" style="padding:11px 24px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>Lihat Semua →</span></a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;" id="rel-grid">
+        @foreach($relatedCars as $rel)
+        @php $relImg = $rel->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+        <div class="car-card reveal" onclick="window.location='{{ route('car.detail', $rel->slug) }}'" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);border:1px solid var(--g100);">
+          <div class="card-glow"></div>
+          <div class="thumb" style="overflow:hidden;">
+            <img src="{{ $relImg }}" style="width:100%;height:160px;object-fit:cover;display:block;" alt="{{ $rel->make_model }}" loading="lazy">
+          </div>
+          <div style="padding:16px;">
+            <div style="color:var(--g400);font-size:.7rem;font-weight:600;margin-bottom:4px;">{{ $rel->year }} · {{ $rel->formatted_mileage }}</div>
+            <h4 style="font-weight:900;font-size:.9rem;font-family:'Raleway',sans-serif;margin-bottom:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{ $rel->make_model }}</h4>
+            <div style="font-weight:900;font-size:1rem;color:var(--red);font-family:'Raleway',sans-serif;">{{ $rel->formatted_price }}</div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+      <style>@media(max-width:900px){#rel-grid{grid-template-columns:repeat(2,1fr)!important;}}</style>
+    </div>
+    @endif
+  </div>
+</section>
+<style>@media(max-width:900px){#detail-grid{grid-template-columns:1fr!important;}#detail-grid>div:last-child{position:static!important;}}</style>
 
 @endsection
 
 @push('scripts')
 <script>
-    // Sticky CTA trigger
-    const stickyCta = document.getElementById('sticky-cta');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            stickyCta.classList.remove('translate-y-full', 'opacity-0');
-        } else {
-            stickyCta.classList.add('translate-y-full', 'opacity-0');
-        }
-    });
+// GALLERY
+function switchImg(url,thumb){
+  var img=document.getElementById('main-img');
+  img.style.opacity='0';
+  setTimeout(function(){img.src=url;img.style.opacity='1';},200);
+  document.querySelectorAll('.gallery-thumb').forEach(function(t){t.classList.remove('active');});
+  thumb.classList.add('active');
+}
 
-    // Meta Pixel
-    if (typeof fbq !== 'undefined') {
-        fbq('track', 'ViewContent', {
-            content_name: '{{ addslashes($car->make_model) }} {{ $car->year }}',
-            content_type: 'vehicle',
-            content_ids: ['{{ $car->id }}'],
-            @if($car->price)
-            value: {{ $car->price }},
-            currency: 'IDR',
-            @endif
-        });
-    }
-
-    // GA4
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'pdp_view', {
-            car_slug: '{{ $car->slug }}',
-            car_price: {{ $car->price }}
-        });
-    }
+// STICKY CTA
+(function(){
+  var bar=document.getElementById('sticky-cta');
+  if(!bar)return;
+  window.addEventListener('scroll',function(){
+    bar.style.display=window.scrollY>400?'block':'none';
+  });
+})();
 </script>
 @endpush

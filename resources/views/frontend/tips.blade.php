@@ -1,201 +1,144 @@
 @extends('frontend.layouts.app')
-
-@section('title', 'Tips & Trick Beli Mobil Bekas — Kerinci Motor')
-@section('description', 'Tips dan panduan beli mobil bekas dari praktisi Kerinci Motor. Cara cek kondisi mesin, bodi, dokumen, dan negosiasi harga terbaik.')
+@section('title','Tips & Trick Beli Mobil Bekas — Kerinci Motor')
+@section('description','Tips dan panduan beli mobil bekas dari praktisi Kerinci Motor. Cara cek kondisi mesin, bodi, dokumen, dan negosiasi harga terbaik.')
 
 @section('content')
 
-<section class="pt-32 pb-20 bg-brand-black min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
+{{-- HERO --}}
+<section style="padding-top:72px;background:linear-gradient(160deg,#fff 60%,#fff8f8);position:relative;overflow:hidden;" class="noise">
+  <div class="orb" style="width:500px;height:500px;background:rgba(204,0,0,0.07);top:-100px;right:-100px;animation:orbFloat 14s ease-in-out infinite;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:56px 24px 48px;position:relative;z-index:10;">
+    <div class="reveal" style="margin-bottom:12px;"><div class="section-tag">Tips & Panduan</div></div>
+    <h1 class="reveal" style="font-size:clamp(2rem,5vw,4.5rem);font-weight:900;letter-spacing:-2px;font-family:'Raleway',sans-serif;margin-bottom:14px;line-height:1.05;">Tips & Trick<br><span class="tgrad">Beli Mobil Bekas</span></h1>
+    <p class="reveal" style="color:var(--g500);font-size:1rem;font-weight:500;max-width:540px;line-height:1.7;">Panduan lengkap dari praktisi — agar Anda tidak salah pilih.</p>
+  </div>
+</section>
 
-        {{-- Header --}}
-        <div class="text-center mb-14">
-            <p class="section-label">TIPS &amp; PANDUAN</p>
-            <h1 class="section-title">Tips &amp; Trick Beli Mobil Bekas</h1>
-            <p class="section-subtitle mx-auto">
-                Panduan lengkap dari praktisi — agar Anda tidak salah pilih.
-            </p>
-            <div class="divider-red mx-auto mt-6"></div>
+<section style="padding:56px 0 80px;background:#fff;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;">
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start;" id="tips-layout">
+
+      {{-- MAIN CONTENT --}}
+      <div>
+
+        {{-- FEATURED POST --}}
+        @if(isset($featuredPost) && $featuredPost)
+        <a href="{{ route('artikel.show', $featuredPost->slug) }}" style="text-decoration:none;display:block;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.1);margin-bottom:36px;transition:all .4s cubic-bezier(0.34,1.56,0.64,1);border:1px solid var(--g100);" class="reveal" onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 32px 80px rgba(0,0,0,0.14)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 40px rgba(0,0,0,0.1)'">
+          @php
+            $fImg = $featuredPost->getFirstMediaUrl('cover') ?: ($featuredPost->thumbnail_url ?? null);
+          @endphp
+          @if($fImg)
+          <img src="{{ $fImg }}" style="width:100%;height:300px;object-fit:cover;display:block;" alt="{{ $featuredPost->title }}" loading="eager">
+          @else
+          <div style="width:100%;height:280px;background:linear-gradient(135deg,var(--g100),var(--g200));display:flex;align-items:center;justify-content:center;font-size:4rem;">📰</div>
+          @endif
+          <div style="padding:32px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+              <span style="background:var(--red);color:#fff;font-size:.72rem;font-weight:800;padding:5px 14px;border-radius:100px;font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:.5px;">⭐ Artikel Utama</span>
+              @if($featuredPost->category)
+              <span style="color:var(--g400);font-size:.8rem;font-weight:600;">{{ $featuredPost->category }}</span>
+              @endif
+            </div>
+            <h2 style="font-weight:900;font-size:1.5rem;font-family:'Raleway',sans-serif;color:var(--black);margin-bottom:10px;line-height:1.3;">{{ $featuredPost->title }}</h2>
+            <p style="color:var(--g500);font-size:.9rem;line-height:1.7;margin-bottom:14px;font-weight:500;">{{ Str::limit($featuredPost->excerpt,200) }}</p>
+            <div style="color:var(--g400);font-size:.78rem;font-weight:600;">{{ $featuredPost->published_at?->locale('id')->isoFormat('D MMM YYYY') }} · {{ $featuredPost->read_time ?? 5 }} mnt baca</div>
+          </div>
+        </a>
+        @endif
+
+        {{-- POSTS GRID --}}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" id="posts-grid">
+          @forelse($posts ?? [] as $post)
+          @php $pImg = $post->getFirstMediaUrl('cover') ?: $post->thumbnail_url; @endphp
+          <a href="{{ route('artikel.show', $post->slug) }}" style="text-decoration:none;display:block;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.07);border:1px solid var(--g100);transition:all .4s cubic-bezier(0.34,1.56,0.64,1);" class="reveal" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.07)'">
+            @if($pImg)
+            <img src="{{ $pImg }}" style="width:100%;height:160px;object-fit:cover;display:block;" alt="{{ $post->title }}" loading="lazy">
+            @else
+            <div style="width:100%;height:160px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">📰</div>
+            @endif
+            <div style="padding:18px;">
+              @if($post->category)
+              <span style="display:inline-block;background:rgba(204,0,0,0.07);color:var(--red);font-size:.68rem;font-weight:800;padding:3px 11px;border-radius:100px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">{{ $post->category }}</span>
+              @endif
+              <h3 style="font-weight:800;font-size:.95rem;font-family:'Raleway',sans-serif;color:var(--black);margin-bottom:8px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{ $post->title }}</h3>
+              <p style="color:var(--g400);font-size:.8rem;line-height:1.6;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{ Str::limit($post->excerpt,100) }}</p>
+              <div style="color:var(--g400);font-size:.72rem;font-weight:600;">{{ $post->published_at?->locale('id')->isoFormat('D MMM YYYY') }} · {{ $post->read_time ?? 5 }} mnt</div>
+            </div>
+          </a>
+          @empty
+          <div style="grid-column:1/-1;text-align:center;padding:60px 24px;">
+            <div style="font-size:3.5rem;margin-bottom:12px;">📝</div>
+            <p style="color:var(--g400);font-weight:600;">Belum ada artikel tersedia.</p>
+          </div>
+          @endforelse
+        </div>
+        <style>@media(max-width:640px){#posts-grid{grid-template-columns:1fr!important;}}</style>
+
+        {{-- PAGINATION --}}
+        @isset($posts)
+        @if(method_exists($posts,'hasPages') && $posts->hasPages())
+        <div style="margin-top:32px;display:flex;justify-content:center;">
+          {{ $posts->withQueryString()->links() }}
+        </div>
+        @endif
+        @endisset
+      </div>
+
+      {{-- SIDEBAR --}}
+      <div style="display:flex;flex-direction:column;gap:20px;position:sticky;top:92px;" id="tips-sidebar">
+
+        {{-- HOT STOCK --}}
+        @if(isset($hotStock) && $hotStock->count())
+        <div style="background:#fff;border:1px solid var(--g100);border-radius:20px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,0.06);" class="reveal">
+          <h3 style="font-weight:900;font-size:1rem;font-family:'Raleway',sans-serif;margin-bottom:18px;display:flex;align-items:center;gap:8px;">🔥 Hot Stock Sekarang</h3>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            @foreach($hotStock as $hcar)
+            @php $hImg = $hcar->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400'; @endphp
+            <a href="{{ route('car.detail', $hcar->slug) }}" style="display:flex;gap:12px;text-decoration:none;align-items:center;padding:8px;border-radius:14px;transition:.3s;" onmouseover="this.style.background='var(--g50)'" onmouseout="this.style.background=''">
+              <div style="width:72px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--g100);">
+                <img src="{{ $hImg }}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="{{ $hcar->make_model }}" loading="lazy">
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:800;font-size:.82rem;font-family:'Raleway',sans-serif;color:var(--black);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3;margin-bottom:3px;">{{ $hcar->make_model }}</div>
+                <div style="color:var(--g400);font-size:.7rem;font-weight:600;">{{ $hcar->year }} · {{ $hcar->formatted_mileage }}</div>
+                <div style="font-weight:900;font-size:.875rem;color:var(--red);font-family:'Raleway',sans-serif;margin-top:2px;">{{ $hcar->formatted_price }}</div>
+              </div>
+            </a>
+            @endforeach
+          </div>
+          <a href="{{ route('inventory.index') }}" class="btn-outline" style="width:100%;margin-top:16px;padding:11px;border-radius:100px;font-size:.8rem;text-decoration:none;justify-content:center;display:flex;"><span>Lihat Semua Unit →</span></a>
+        </div>
+        @else
+        <div class="reveal" style="background:#fff;border:1px solid var(--g100);border-radius:20px;padding:22px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+          <div style="font-size:2.5rem;margin-bottom:10px;">🚗</div>
+          <h3 style="font-weight:900;font-family:'Raleway',sans-serif;margin-bottom:6px;">Cari Mobil Bekas?</h3>
+          <p style="color:var(--g400);font-size:.85rem;margin-bottom:16px;line-height:1.6;font-weight:500;">Lihat inventaris lengkap kami.</p>
+          <a href="{{ route('inventory.index') }}" class="btn-red" style="width:100%;padding:11px;border-radius:100px;font-size:.85rem;text-decoration:none;justify-content:center;display:flex;">Lihat Inventaris</a>
+        </div>
+        @endif
+
+        {{-- SELL CTA --}}
+        <div class="reveal" style="background:var(--black);border-radius:20px;padding:22px;text-align:center;position:relative;overflow:hidden;" class="noise">
+          <div class="orb" style="width:150px;height:150px;background:rgba(204,0,0,0.2);top:-30px;right:-30px;animation:orbFloat2 8s ease-in-out infinite;"></div>
+          <div style="position:relative;z-index:2;">
+            <div style="font-size:2rem;margin-bottom:10px;">💰</div>
+            <h3 style="font-weight:900;color:#fff;font-family:'Raleway',sans-serif;margin-bottom:6px;">Jual Mobil Anda</h3>
+            <p style="color:rgba(255,255,255,.45);font-size:.82rem;margin-bottom:16px;line-height:1.6;font-weight:500;">Proses cepat, harga terbaik, pembayaran langsung.</p>
+            <a href="{{ route('sell.index') }}" class="btn-red" style="width:100%;padding:11px;border-radius:100px;font-size:.85rem;text-decoration:none;justify-content:center;display:flex;">Jual Sekarang →</a>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-            {{-- ── Main Content ─────────────── --}}
-            <div class="lg:col-span-2">
-
-                {{-- Featured Post --}}
-                @if(isset($featuredPost) && $featuredPost)
-                <a href="{{ route('artikel.show', $featuredPost->slug) }}"
-                   class="group block bg-brand-dark-gray border border-white/5 rounded-2xl overflow-hidden
-                          hover:border-brand-red/30 transition-all duration-300 mb-10">
-                    {{-- Image --}}
-                    <div class="aspect-video overflow-hidden bg-brand-mid-gray">
-                        @php
-                            $featImg = $featuredPost->getFirstMediaUrl('cover')
-                                    ?: ($featuredPost->featured_image ?? null)
-                                    ?: ($featuredPost->thumbnail_url ?? null);
-                        @endphp
-                        @if($featImg)
-                        <img src="{{ $featImg }}" alt="{{ $featuredPost->title }}"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        @else
-                        <div class="flex items-center justify-center h-full text-6xl">📰</div>
-                        @endif
-                    </div>
-                    {{-- Body --}}
-                    <div class="p-8">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="bg-brand-red text-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                                ⭐ ARTIKEL UTAMA
-                            </span>
-                            @if($featuredPost->category)
-                            <span class="text-brand-text-gray text-xs">{{ $featuredPost->category }}</span>
-                            @endif
-                        </div>
-                        <h2 class="font-heading font-extrabold text-2xl text-brand-white mb-3 group-hover:text-brand-red transition-colors leading-snug">
-                            {{ $featuredPost->title }}
-                        </h2>
-                        <p class="text-brand-text-gray text-sm leading-relaxed mb-4">
-                            {{ Str::limit($featuredPost->excerpt, 180) }}
-                        </p>
-                        <div class="flex items-center gap-4 text-xs text-brand-text-gray">
-                            <span>{{ $featuredPost->published_at?->locale('id')->isoFormat('D MMM YYYY') }}</span>
-                            <span>·</span>
-                            <span>{{ $featuredPost->read_time ?? 5 }} mnt baca</span>
-                        </div>
-                    </div>
-                </a>
-                @endif
-
-                {{-- Posts Grid --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @forelse($posts ?? [] as $post)
-                    <a href="{{ route('artikel.show', $post->slug) }}"
-                       class="group block bg-brand-dark-gray border border-white/5 rounded-2xl overflow-hidden
-                              hover:border-brand-red/30 transition-all duration-300 hover:-translate-y-1">
-                        {{-- Image --}}
-                        <div class="aspect-video overflow-hidden bg-brand-mid-gray">
-                            @php
-                                $postImg = $post->getFirstMediaUrl('cover')
-                                         ?: ($post->featured_image ?? null)
-                                         ?: ($post->thumbnail_url ?? null);
-                            @endphp
-                            @if($postImg)
-                            <img src="{{ $postImg }}" alt="{{ $post->title }}"
-                                 loading="lazy"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            @else
-                            <div class="flex items-center justify-center h-full text-4xl bg-brand-black">📰</div>
-                            @endif
-                        </div>
-                        {{-- Body --}}
-                        <div class="p-5">
-                            @if($post->category)
-                            <span class="inline-block bg-brand-red/15 text-brand-red text-xs font-heading font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
-                                {{ $post->category }}
-                            </span>
-                            @endif
-                            <h3 class="font-heading font-bold text-brand-white text-sm leading-snug mb-2 group-hover:text-brand-red transition-colors line-clamp-2">
-                                {{ $post->title }}
-                            </h3>
-                            <p class="text-brand-text-gray text-xs leading-relaxed mb-3 line-clamp-3">
-                                {{ Str::limit($post->excerpt, 100) }}
-                            </p>
-                            <div class="flex items-center justify-between text-xs text-brand-text-gray">
-                                <span>{{ $post->published_at?->locale('id')->isoFormat('D MMM YYYY') }}</span>
-                                <span>{{ $post->read_time ?? 5 }} mnt</span>
-                            </div>
-                        </div>
-                    </a>
-                    @empty
-                    <div class="col-span-2 text-center py-20 text-brand-text-gray">
-                        <div class="text-5xl mb-4">📝</div>
-                        <p class="text-sm">Belum ada artikel tersedia.</p>
-                    </div>
-                    @endforelse
-                </div>
-
-                {{-- Pagination --}}
-                @isset($posts)
-                @if(method_exists($posts, 'hasPages') && $posts->hasPages())
-                <div class="mt-10 flex justify-center">
-                    {{ $posts->withQueryString()->links() }}
-                </div>
-                @endif
-                @endisset
-
-            </div>
-
-            {{-- ── Sidebar ─────────────────── --}}
-            <div class="lg:col-span-1 space-y-6">
-
-                {{-- Hot Stock --}}
-                @if(isset($hotStock) && $hotStock->count())
-                <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-6">
-                    <h3 class="font-heading font-bold text-brand-white mb-5 flex items-center gap-2">
-                        🔥 Hot Stock Sekarang
-                    </h3>
-                    <div class="flex flex-col gap-4">
-                        @foreach($hotStock as $car)
-                        <a href="{{ route('car.detail', $car->slug) }}"
-                           class="group flex gap-3 hover:bg-brand-mid-gray rounded-xl p-2 -m-2 transition-colors">
-                            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-brand-black">
-                                <img src="{{ $car->getFirstMediaUrl('car_images', 'thumb') ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400' }}"
-                                     alt="{{ $car->make_model }}"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="font-heading font-semibold text-brand-white text-xs leading-snug group-hover:text-brand-red transition-colors line-clamp-2">
-                                    {{ $car->make_model }}
-                                </div>
-                                <div class="text-brand-text-gray text-xs mt-0.5">{{ $car->year }} · {{ $car->formatted_mileage }}</div>
-                                <div class="font-heading font-bold text-brand-red text-sm mt-1">{{ $car->formatted_price }}</div>
-                            </div>
-                        </a>
-                        @endforeach
-                    </div>
-                    <a href="{{ route('inventory.index') }}" class="btn-outline w-full justify-center text-sm mt-5">
-                        Lihat Semua Unit →
-                    </a>
-                </div>
-                @else
-                {{-- Fallback CTA --}}
-                <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-6 text-center">
-                    <div class="text-4xl mb-3">🚗</div>
-                    <h3 class="font-heading font-bold text-brand-white mb-2">Cari Mobil Bekas?</h3>
-                    <p class="text-brand-text-gray text-sm mb-5">Lihat inventaris lengkap kami dengan harga terbaik.</p>
-                    <a href="{{ route('inventory.index') }}" class="btn-primary w-full justify-center text-sm">
-                        Lihat Inventaris
-                    </a>
-                </div>
-                @endif
-
-                {{-- Sell CTA --}}
-                <div class="bg-gradient-to-br from-brand-red/20 to-brand-red/5 border border-brand-red/20 rounded-2xl p-6 text-center">
-                    <div class="text-4xl mb-3">💰</div>
-                    <h3 class="font-heading font-bold text-brand-white mb-2">Jual Mobil Anda</h3>
-                    <p class="text-brand-text-gray text-sm mb-5">Proses cepat, harga terbaik, pembayaran langsung.</p>
-                    <a href="{{ route('sell.index') }}" class="btn-wa w-full justify-center text-sm">
-                        Jual Sekarang →
-                    </a>
-                </div>
-
-                {{-- WA Contact --}}
-                <div class="bg-brand-dark-gray border border-white/5 rounded-2xl p-6 text-center">
-                    <h3 class="font-heading font-bold text-brand-white mb-2">Ada Pertanyaan?</h3>
-                    <p class="text-brand-text-gray text-sm mb-4">Tim kami siap membantu Anda memilih unit terbaik.</p>
-                    <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener"
-                       class="btn-wa w-full justify-center text-sm">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        Chat via WhatsApp
-                    </a>
-                </div>
-
-            </div>
+        {{-- WA CTA --}}
+        <div class="reveal" style="background:#fff;border:1px solid var(--g100);border-radius:20px;padding:22px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+          <h3 style="font-weight:900;font-family:'Raleway',sans-serif;margin-bottom:6px;font-size:.95rem;">Ada Pertanyaan?</h3>
+          <p style="color:var(--g400);font-size:.82rem;margin-bottom:14px;font-weight:500;">Tim kami siap membantu Anda.</p>
+          <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" style="width:100%;padding:11px;border-radius:100px;font-size:.85rem;text-decoration:none;justify-content:center;display:flex;align-items:center;gap:8px;background:#25D366;color:#fff;font-weight:800;font-family:'Raleway',sans-serif;transition:.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(37,211,102,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow=''">💬 Chat via WhatsApp</a>
         </div>
+      </div>
+
     </div>
+  </div>
+  <style>@media(max-width:1024px){#tips-layout{grid-template-columns:1fr!important;}#tips-sidebar{position:static!important;}}</style>
 </section>
 
 @endsection

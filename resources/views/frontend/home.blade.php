@@ -1,330 +1,361 @@
 @extends('frontend.layouts.app')
-
-@section('title', 'Kerinci Motor | Dealer Mobil Bekas Terpercaya Bekasi')
-@section('description', 'Dealer mobil bekas terpercaya Sejabodetabek. Stok lengkap, harga transparan, 150+ poin inspeksi. Bebas banjir, laka, dan terbakar.')
+@section('title','Kerinci Motor | Dealer Mobil Bekas Terpercaya Sejabodetabek')
+@section('description','Dealer mobil bekas terpercaya Sejabodetabek. Stok lengkap, harga transparan. Bebas banjir, laka, dan terbakar.')
 
 @section('content')
 
-@php
-    $waNumber   = $globalSettings['wa_number']->value ?? '6287776700009';
-    $tagline    = $globalSettings['hero_tagline']->value ?? 'Mobil Bekas Terpercaya, Harga Terbaik';
-    $subtagline = $globalSettings['hero_subtagline']->value ?? 'Stok lengkap, harga transparan, inspeksi ketat 150+ poin.';
-    $address    = $globalSettings['address']->value ?? 'Bekasi, Jawa Barat';
-    $hours      = $globalSettings['operating_hours']->value ?? 'Setiap Hari 08:00–20:00 WIB';
-    $mapsUrl    = $globalSettings['google_maps_url']->value ?? '#';
-    $mapsEmbed  = $globalSettings['google_maps_embed']->value ?? '';
-    $waHeroMsg  = urlencode('Halo Kerinci Motor, saya ingin mengetahui unit mobil bekas yang tersedia.');
-    $waHeroUrl  = "https://wa.me/{$waNumber}?text={$waHeroMsg}";
-    $totalCars  = $totalCars ?? 0;
-@endphp
-
-{{-- ═══════════════════════════ HERO ═══════════════════════════ --}}
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-black">
-
-    {{-- BG --}}
-    <div class="absolute inset-0 bg-gradient-to-br from-brand-black via-[#1a0000] to-brand-black"></div>
-    <div class="absolute inset-0 opacity-10"
-         style="background-image:url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23CC0000\' fill-opacity=\'0.12\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
-    </div>
-    <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-brand-red/5 blur-3xl pointer-events-none"></div>
-
-    @if($hero && $hero->image_url)
-    {{-- Hero Car Image --}}
-    <div class="absolute right-0 bottom-0 w-1/2 h-full pointer-events-none hidden lg:block">
-        <img id="hero-main-img" src="{{ $hero->image_url }}" alt="{{ $hero->card_name }}"
-             class="absolute bottom-0 right-0 h-[85%] w-auto object-contain object-bottom"
-             style="filter: drop-shadow(0 0 60px rgba(204,0,0,0.2));">
-
-        {{-- Car Info Card --}}
-        <div class="absolute bottom-16 right-16 bg-brand-dark-gray/90 backdrop-blur border border-white/10 rounded-2xl px-6 py-4">
-            <div id="hero-card-name"  class="font-heading font-bold text-brand-white text-lg">{{ $hero->card_name }}</div>
-            <div id="hero-card-sub"   class="text-brand-text-gray text-sm mt-0.5">{{ $hero->card_sub }}</div>
-            <div id="hero-card-price" class="font-heading font-extrabold text-brand-red text-2xl mt-2">
-                Rp {{ $hero->card_price }}jt
-            </div>
-        </div>
-    </div>
-    @endif
-
-    <div class="relative max-w-7xl mx-auto px-4 md:px-8 pt-32 pb-20 {{ $hero && $hero->image_url ? 'lg:max-w-3xl lg:ml-0 lg:mr-auto text-left' : 'text-center' }}">
-        <p class="section-label mb-4">🏆 Showroom Mobil Bekas #1 Terpercaya di Bekasi</p>
-
-        <h1 class="font-heading font-extrabold text-4xl md:text-6xl lg:text-7xl text-brand-white leading-tight mb-6">
-            {{ $tagline }}
+{{-- HERO --}}
+<section style="min-height:100vh;padding-top:72px;background:linear-gradient(160deg,#fff 55%,#fff8f8 100%);position:relative;overflow:hidden;display:flex;align-items:center;" class="noise">
+  <div class="orb" style="width:600px;height:600px;background:rgba(204,0,0,0.08);top:-150px;left:-200px;animation:orbFloat 12s ease-in-out infinite;"></div>
+  <div class="orb" style="width:400px;height:400px;background:rgba(192,192,192,0.1);bottom:-80px;right:-100px;animation:orbFloat2 10s ease-in-out infinite 2s;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:72px 24px;width:100%;position:relative;z-index:10;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" id="hero-grid">
+      <div>
+        <div class="badge-red reveal" style="margin-bottom:28px;">✦ Dealer Terpercaya Sejabodetabek</div>
+        <h1 class="reveal" style="font-size:clamp(2.6rem,5.5vw,5rem);font-weight:900;line-height:1.02;letter-spacing:-3px;margin-bottom:20px;font-family:'Raleway',sans-serif;">
+          Temukan<br>
+          <span class="tgrad-anim">Mobil Impian</span><br>
+          Anda.
         </h1>
-
-        <p class="text-brand-text-gray text-lg md:text-xl max-w-2xl mb-10">
-            {{ $subtagline }}
+        <p class="reveal" style="font-size:1.05rem;color:var(--g600);line-height:1.75;max-width:480px;margin-bottom:40px;font-weight:500;">
+          Dealer Used Car terpercaya Sejabodetabek, bebas banjir, laka, dan terbakar. {{ $totalCars ?? 0 }}+ unit tersedia.
         </p>
-
-        <div class="flex flex-col sm:flex-row items-center {{ $hero && $hero->image_url ? '' : 'justify-center' }} gap-4">
-            <a href="{{ $waHeroUrl }}" target="_blank" rel="noopener" class="btn-wa text-base px-8 py-4">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Hubungi via WhatsApp
-            </a>
-            <a href="{{ route('inventory.index') }}" class="btn-outline text-base px-8 py-4">
-                Lihat Inventaris
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </a>
+        <div class="reveal" style="display:flex;flex-wrap:wrap;gap:14px;">
+          <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
+          <a href="{{ route('sell.index') }}" class="btn-outline" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;"><span>Jual Mobil Anda</span></a>
         </div>
-
-        {{-- Stats --}}
-        <div class="mt-16 grid grid-cols-3 gap-4 max-w-sm">
-            <div class="text-center">
-                <div class="font-heading font-extrabold text-3xl text-brand-red">{{ $totalCars }}+</div>
-                <div class="text-brand-text-gray text-xs mt-1">Unit Tersedia</div>
-            </div>
-            <div class="text-center border-x border-white/10">
-                <div class="font-heading font-extrabold text-3xl text-brand-red">150+</div>
-                <div class="text-brand-text-gray text-xs mt-1">Poin Inspeksi</div>
-            </div>
-            <div class="text-center">
-                <div class="font-heading font-extrabold text-3xl text-brand-red">100%</div>
-                <div class="text-brand-text-gray text-xs mt-1">Transparan</div>
-            </div>
+        <div class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);">
+          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
+          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">150+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Poin Inspeksi</div></div>
+          <div><div style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
         </div>
+      </div>
+      <div class="reveal-right tilt-card" style="position:relative;" id="hero-img-col">
+        <div class="tilt-shine"></div>
+        <div style="border-radius:40px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.14);">
+          <img src="{{ $hero?->image_url ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop' }}" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.28),transparent 55%);"></div>
+        </div>
+        <div class="glass" style="position:absolute;bottom:-20px;left:-20px;border-radius:24px;padding:20px 24px;min-width:220px;box-shadow:0 24px 48px rgba(0,0,0,0.12);animation:orbFloat2 6s ease-in-out infinite;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:.72rem;color:var(--g400);font-weight:600;">Featured Deal</span>
+            <span style="color:var(--red);font-weight:900;font-size:.72rem;">🔥 HOT</span>
+          </div>
+          <div style="font-weight:900;font-size:1.05rem;margin-bottom:3px;font-family:'Raleway',sans-serif;">{{ $hero?->card_name ?? 'Toyota Alphard 2023' }}</div>
+          <div style="color:var(--g400);font-size:.78rem;margin-bottom:12px;font-weight:600;">{{ $hero?->card_sub ?? 'Automatic · 18.000 KM · Bebas Laka' }}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-weight:900;font-size:1.3rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $hero?->card_price ?? 'Rp 680jt' }}</div>
+            <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
+          </div>
+        </div>
+        <div class="glass" style="position:absolute;top:20px;right:20px;border-radius:14px;padding:11px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">
+          <div style="font-weight:900;font-size:.8rem;color:var(--red);font-family:'Raleway',sans-serif;">✓ Bebas Banjir & Laka</div>
+        </div>
+      </div>
     </div>
-
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-brand-text-gray text-xs animate-bounce">
-        <span>Scroll</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-    </div>
+  </div>
+  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:orbFloat2 2s ease-in-out infinite;">
+    <span style="font-size:.72rem;font-weight:700;color:var(--g400);letter-spacing:2px;text-transform:uppercase;">Scroll</span>
+    <div style="width:1px;height:32px;background:linear-gradient(to bottom,var(--g400),transparent);"></div>
+  </div>
+  <style>@media(max-width:900px){#hero-grid{grid-template-columns:1fr!important;}#hero-img-col{display:none!important;}}</style>
 </section>
 
-{{-- ════════════════════ FLASH SALE / FEATURED CARS ════════════════════ --}}
-@if(isset($featuredCars) && $featuredCars->count())
-<section id="featured-cars" class="py-20 bg-brand-black">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-        <div class="flex items-end justify-between mb-10">
+{{-- MARQUEE --}}
+<section style="padding:20px 0;background:#fff;border-top:1px solid var(--g100);border-bottom:1px solid var(--g100);overflow:hidden;">
+  <div class="marquee" style="margin-bottom:10px;">
+    <div class="mtrack" style="font-weight:900;font-size:1.6rem;color:var(--g200);font-family:'Raleway',sans-serif;">
+      @foreach(['Toyota','Honda','BMW','Mercedes','Mitsubishi','Nissan','Hyundai','Kia','Mazda','Suzuki','Daihatsu','Toyota','Honda','BMW','Mercedes','Mitsubishi','Nissan','Hyundai','Kia','Mazda','Suzuki','Daihatsu'] as $b)
+      <span>{{ $b }}</span>
+      @endforeach
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="mtrack2" style="font-weight:900;font-size:1rem;color:var(--g100);font-family:'Raleway',sans-serif;">
+      @foreach(['Bebas Banjir','✦','Bebas Laka','✦','BPKB Asli','✦','History Record','✦','Terpercaya','✦','Sejabodetabek','✦','Bebas Banjir','✦','Bebas Laka','✦','BPKB Asli','✦','History Record','✦','Terpercaya','✦','Sejabodetabek','✦'] as $t)
+      <span>{{ $t }}</span>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- FLASH SALE --}}
+<section style="padding:96px 0;background:var(--g50);position:relative;overflow:hidden;">
+  <div class="orb" style="width:400px;height:400px;background:rgba(204,0,0,0.05);top:-100px;right:-100px;animation:orbFloat 14s ease-in-out infinite;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:20px;">
+      <div class="reveal">
+        <div class="section-tag">🔥 Penawaran Terbatas</div>
+        <h2 style="font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;margin-bottom:16px;">Flash Sale Used Car</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-weight:700;font-size:.85rem;color:var(--g500);">Berakhir dalam:</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="cd-box"><div class="cd-num" id="cdH">--</div><div class="cd-lbl">Jam</div></div>
+            <div style="font-weight:900;font-size:1.5rem;color:var(--g400);">:</div>
+            <div class="cd-box"><div class="cd-num" id="cdM">--</div><div class="cd-lbl">Menit</div></div>
+            <div style="font-weight:900;font-size:1.5rem;color:var(--g400);">:</div>
+            <div class="cd-box"><div class="cd-num" id="cdS">--</div><div class="cd-lbl">Detik</div></div>
+          </div>
+        </div>
+      </div>
+      <a href="{{ route('inventory.index') }}" class="btn-outline reveal" style="padding:13px 28px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>Lihat Semua Unit →</span></a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;" id="home-cards">
+      @forelse($featuredCars as $car)
+      @php $img = $car->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+      <div class="car-card tilt-card reveal" onclick="window.location='{{ route('car.detail', $car->slug) }}'" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+        <div class="card-glow"></div>
+        <div class="tilt-shine"></div>
+        <div class="thumb" style="overflow:hidden;position:relative;">
+          <img src="{{ $img }}" style="width:100%;height:220px;object-fit:cover;display:block;" alt="{{ $car->make_model }}" loading="lazy">
+          @if($car->is_featured)
+          <div style="position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 13px;border-radius:100px;font-weight:800;font-size:.72rem;font-family:'Raleway',sans-serif;">🔥 HOT</div>
+          @endif
+          <div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,.7);color:#fff;padding:5px 12px;border-radius:100px;font-size:.68rem;font-weight:700;backdrop-filter:blur(8px);">✓ Bebas Laka</div>
+        </div>
+        <div style="padding:22px;">
+          <div style="color:var(--g400);font-size:.76rem;font-weight:600;margin-bottom:6px;">{{ $car->year }} · {{ strtoupper($car->transmission) }} · {{ $car->formatted_mileage }}</div>
+          <h3 style="font-weight:900;font-size:1.1rem;margin-bottom:14px;font-family:'Raleway',sans-serif;line-clamp:2;overflow:hidden;">{{ $car->make_model }}</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
-                <p class="section-label">🔥 Hot Deals</p>
-                <h2 class="section-title mb-0">Unit Pilihan Terbaik</h2>
+              <div style="font-size:.68rem;color:var(--g400);font-weight:600;">Harga</div>
+              <div style="font-weight:900;font-size:1.4rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $car->formatted_price }}</div>
             </div>
-            <a href="{{ route('inventory.index') }}" class="btn-outline hidden md:inline-flex text-sm">
-                Lihat Semua →
-            </a>
+            <a href="{{ route('car.detail', $car->slug) }}" class="btn-red" style="padding:9px 18px;border-radius:100px;font-size:.8rem;text-decoration:none;" onclick="event.stopPropagation()">Detail</a>
+          </div>
         </div>
+      </div>
+      @empty
+      <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--g400);font-family:'Raleway',sans-serif;font-weight:600;">
+        Belum ada unit. <a href="{{ route('inventory.index') }}" style="color:var(--red);">Lihat semua →</a>
+      </div>
+      @endforelse
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @forelse($featuredCars as $car)
-            <div class="car-card group cursor-pointer"
-                 onclick="window.location='{{ route('car.detail', $car->slug) }}'">
-                {{-- Thumb --}}
-                <div class="relative aspect-[4/3] overflow-hidden bg-brand-dark-gray rounded-t-xl">
-                    <img src="{{ $car->getFirstMediaUrl('car_images', 'thumb') ?: $car->getFirstMediaUrl('car_images') ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800' }}"
-                         alt="{{ $car->make_model }} {{ $car->year }}"
-                         loading="lazy"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                         onerror="this.src='https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'">
-
-                    {{-- Badge --}}
-                    @if($car->is_featured)
-                    <span class="absolute top-3 left-3 bg-brand-red text-white text-xs font-heading font-bold px-2 py-1 rounded-full">
-                        🔥 HOT DEAL
-                    </span>
-                    @endif
-
-                    {{-- Availability --}}
-                    <span class="absolute top-3 right-3 {{ $car->is_available ? 'badge-available' : 'badge-sold' }}">
-                        {{ $car->is_available ? 'TERSEDIA' : 'TERJUAL' }}
-                    </span>
-                </div>
-
-                {{-- Info --}}
-                <div class="p-5">
-                    <h3 class="font-heading font-bold text-brand-white text-sm leading-snug mb-1 group-hover:text-brand-red transition-colors line-clamp-2">
-                        {{ $car->make_model }}
-                    </h3>
-                    <div class="text-brand-text-gray text-xs mb-3">
-                        {{ $car->year }} · {{ strtoupper($car->transmission) }} · {{ $car->formatted_mileage }}
-                    </div>
-                    <div class="font-heading font-extrabold text-brand-white text-lg mb-4">
-                        {{ $car->formatted_price }}
-                    </div>
-                    <a href="{{ route('car.detail', $car->slug) }}"
-                       class="btn-primary w-full justify-center text-sm py-2.5"
-                       onclick="event.stopPropagation()">
-                        Lihat Detail
-                    </a>
-                </div>
-            </div>
-            @empty
-            <div class="col-span-4 text-center py-20 text-brand-text-gray">
-                <svg class="w-16 h-16 mx-auto mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
-                Belum ada unit tersedia.
-            </div>
-            @endforelse
+      <div class="reveal" style="background:var(--black);border-radius:24px;overflow:hidden;position:relative;" class="noise">
+        <div class="orb" style="width:200px;height:200px;background:rgba(204,0,0,0.2);top:-50px;right:-50px;animation:orbFloat2 8s ease-in-out infinite;"></div>
+        <div style="padding:32px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:340px;gap:16px;position:relative;z-index:2;">
+          <div style="font-size:2.5rem;">🚗</div>
+          <h3 style="font-size:1.1rem;font-weight:900;color:#fff;font-family:'Raleway',sans-serif;">Unit Lainnya?</h3>
+          <p style="color:rgba(255,255,255,.45);font-size:.85rem;line-height:1.6;">Request unit spesifik yang Anda inginkan langsung ke tim kami.</p>
+          <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-red" style="padding:13px 26px;border-radius:100px;font-size:.85rem;text-decoration:none;">💬 Konsultasi Gratis</a>
         </div>
-
-        <div class="text-center mt-10 md:hidden">
-            <a href="{{ route('inventory.index') }}" class="btn-primary">Lihat Semua Unit</a>
-        </div>
+      </div>
     </div>
+  </div>
+  <style>@media(max-width:1024px){#home-cards{grid-template-columns:repeat(2,1fr)!important;}}@media(max-width:640px){#home-cards{grid-template-columns:1fr!important;}}</style>
+</section>
+
+{{-- WHY KERINCI --}}
+<section style="padding:96px 0;background:#fff;position:relative;overflow:hidden;">
+  <div class="orb" style="width:500px;height:500px;background:rgba(192,192,192,0.07);bottom:-150px;left:-150px;animation:orbFloat2 12s ease-in-out infinite;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" id="why-grid">
+      <div class="reveal-left tilt-card" style="position:relative;">
+        <div class="tilt-shine"></div>
+        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?q=80&w=1200&auto=format&fit=crop" style="width:100%;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,0.12);display:block;" alt="Showroom Kerinci Motor" loading="lazy">
+        <div class="glass" style="position:absolute;bottom:-24px;right:-24px;border-radius:22px;padding:20px;box-shadow:0 16px 40px rgba(0,0,0,0.1);max-width:210px;animation:orbFloat2 7s ease-in-out infinite;">
+          <div style="font-size:1.75rem;margin-bottom:8px;">✅</div>
+          <div style="font-weight:900;font-size:.95rem;font-family:'Raleway',sans-serif;">Terverifikasi Bersih</div>
+          <div style="color:var(--g400);font-size:.75rem;margin-top:4px;font-weight:600;line-height:1.5;">History record & BPKB asli setiap unit</div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="section-tag">Mengapa Kerinci Motor?</div>
+        <h2 style="font-size:clamp(1.8rem,3.5vw,2.9rem);font-weight:900;line-height:1.1;margin-bottom:40px;letter-spacing:-1px;font-family:'Raleway',sans-serif;">Dipercaya Karena<br>Bukti, Bukan Janji.</h2>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          @foreach([['🔍','Inspeksi Terpercaya Bebas Laka dan Banjir','BPKB asli, history record — semua terbuka untuk Anda periksa.'],['💳','Kredit & Simulasi Cicilan','DP rendah cicilan ringan.'],['🔄','Trade-In Cepat','Estimasi harga instan. Proses bisa selesai dalam 1 hari kerja.'],['📋','Dokumen Lengkap','BPKB, STNK, faktur — semua kami bantu proses balik nama.']] as [$icon,$title,$desc])
+          <div class="reveal" style="display:flex;gap:20px;align-items:flex-start;padding:18px;border-radius:18px;transition:all .3s;" onmouseover="this.style.background='var(--g50)';this.style.transform='translateX(8px)'" onmouseout="this.style.background='';this.style.transform=''">
+            <div style="width:48px;height:48px;min-width:48px;background:rgba(204,0,0,0.07);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">{{ $icon }}</div>
+            <div><div style="font-weight:900;font-size:1rem;margin-bottom:5px;font-family:'Raleway',sans-serif;">{{ $title }}</div><div style="color:var(--g400);line-height:1.7;font-size:.875rem;font-weight:500;">{{ $desc }}</div></div>
+          </div>
+          @endforeach
+        </div>
+        <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-red reveal" style="margin-top:36px;padding:15px 34px;border-radius:100px;font-size:.95rem;text-decoration:none;display:inline-flex;">Konsultasi Sekarang →</a>
+      </div>
+    </div>
+  </div>
+  <style>@media(max-width:900px){#why-grid{grid-template-columns:1fr!important;}}</style>
+</section>
+
+{{-- FINANCING --}}
+<section id="financing" style="padding:96px 0;background:var(--black);color:#fff;position:relative;overflow:hidden;" class="noise">
+  <div class="orb" style="width:700px;height:700px;background:rgba(204,0,0,0.1);top:-200px;left:-300px;animation:orbFloat 16s ease-in-out infinite;"></div>
+  <div class="orb" style="width:400px;height:400px;background:rgba(204,0,0,0.07);bottom:-100px;right:-100px;animation:orbFloat2 12s ease-in-out infinite 3s;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" id="fin-grid">
+      <div class="reveal-left">
+        <div class="section-tag" style="color:var(--red);">Simulasi Cicilan</div>
+        <h2 style="font-size:clamp(1.8rem,3.5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-1px;font-family:'Raleway',sans-serif;">Hitung Cicilan<br>Mobil Impian Anda<br><span style="color:var(--red);">Sekarang.</span></h2>
+        <p style="color:rgba(255,255,255,.5);font-size:1rem;line-height:1.7;margin-bottom:36px;font-weight:500;">DP rendah, cicilan ringan. Proses kredit cepat — ACC dalam hitungan jam!</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div style="border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:20px;background:rgba(255,255,255,.04);transition:all .3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.transform=''">
+            <div style="font-size:1.75rem;font-weight:900;color:var(--red);">0%</div>
+            <div style="color:rgba(255,255,255,.4);font-size:.8rem;margin-top:4px;font-weight:600;">Biaya Admin Unit Tertentu</div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:20px;background:rgba(255,255,255,.04);transition:all .3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.transform='translateY(-4px)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.transform=''">
+            <div style="font-size:1.1rem;font-weight:900;line-height:1.4;color:#fff;font-family:'Raleway',sans-serif;">⚡ ACC Cepat<br><span style="font-size:.8rem;color:rgba(255,255,255,.5);font-weight:700;">Dalam hitungan jam</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:32px;padding:36px;box-shadow:0 32px 80px rgba(0,0,0,0.4);">
+        <h3 style="font-size:1.4rem;font-weight:900;margin-bottom:24px;color:#fff;font-family:'Raleway',sans-serif;">Kalkulator Kredit</h3>
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div>
+            <label style="display:block;color:rgba(255,255,255,.55);font-size:.78rem;margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Harga Cash (Rp)</label>
+            <input type="number" id="calc-price" placeholder="Contoh: 300000000" oninput="calcKredit()" style="width:100%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);border-radius:13px;padding:13px 17px;color:#fff;font-family:'Raleway',sans-serif;font-size:.95rem;outline:none;font-weight:600;" onfocus="this.style.borderColor='rgba(204,0,0,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+          </div>
+          <div>
+            <label style="display:block;color:rgba(255,255,255,.55);font-size:.78rem;margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Uang Muka / DP (Rp)</label>
+            <input type="number" id="calc-dp" placeholder="Contoh: 60000000" oninput="calcKredit()" style="width:100%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);border-radius:13px;padding:13px 17px;color:#fff;font-family:'Raleway',sans-serif;font-size:.95rem;outline:none;font-weight:600;" onfocus="this.style.borderColor='rgba(204,0,0,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+          </div>
+          <div>
+            <label style="display:block;color:rgba(255,255,255,.55);font-size:.78rem;margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Tenor</label>
+            <select id="calc-tenor" oninput="calcKredit()" style="width:100%;border:1px solid rgba(255,255,255,.15);background:rgba(43,43,43,.9);border-radius:13px;padding:13px 17px;color:#fff;font-family:'Raleway',sans-serif;font-size:.95rem;outline:none;font-weight:600;">
+              <option value="12">12 Bulan (1 Tahun)</option>
+              <option value="24">24 Bulan (2 Tahun)</option>
+              <option value="36">36 Bulan (3 Tahun)</option>
+              <option value="48" selected>48 Bulan (4 Tahun)</option>
+              <option value="60">60 Bulan (5 Tahun)</option>
+            </select>
+          </div>
+          <div style="background:#fff;border-radius:20px;padding:24px;">
+            <div style="color:var(--g400);font-size:.8rem;margin-bottom:6px;font-weight:600;">Estimasi Cicilan Per Bulan</div>
+            <div id="calc-result" style="font-size:2.2rem;font-weight:900;color:var(--black);font-family:'Raleway',sans-serif;">Rp —</div>
+            <div id="calc-breakdown" style="color:var(--g400);font-size:.75rem;margin-top:6px;font-weight:600;line-height:1.6;"></div>
+            <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-red" style="width:100%;margin-top:14px;padding:13px;border-radius:16px;font-size:.9rem;justify-content:center;text-decoration:none;display:flex;">💬 Ajukan Kredit Sekarang</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>@media(max-width:900px){#fin-grid{grid-template-columns:1fr!important;}}</style>
+</section>
+
+{{-- VIDEO PREVIEW --}}
+@if(isset($latestPosts) && $latestPosts->count() > 0)
+<section style="padding:96px 0;background:var(--g50);position:relative;overflow:hidden;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:20px;">
+      <div class="reveal">
+        <div class="section-tag">Tips & Panduan</div>
+        <h2 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;">Tips Beli Mobil Bekas</h2>
+      </div>
+      <a href="{{ route('tips.index') }}" class="btn-outline reveal" style="padding:13px 28px;border-radius:100px;font-size:.875rem;text-decoration:none;"><span>Semua Artikel →</span></a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" id="tips-grid">
+      @foreach($latestPosts as $post)
+      <a href="{{ route('artikel.show', $post->slug) }}" style="text-decoration:none;display:block;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:all .4s cubic-bezier(0.34,1.56,0.64,1);position:relative;" class="reveal" onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 24px 60px rgba(0,0,0,0.14)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.06)'">
+        @if($post->thumbnail_url)
+        <img src="{{ $post->thumbnail_url }}" style="width:100%;height:180px;object-fit:cover;display:block;" alt="{{ $post->title }}" loading="lazy">
+        @else
+        <div style="width:100%;height:180px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">📰</div>
+        @endif
+        <div style="padding:20px;">
+          @if($post->category)
+          <span style="display:inline-block;background:rgba(204,0,0,0.07);color:var(--red);font-size:.7rem;font-weight:800;padding:4px 12px;border-radius:100px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">{{ $post->category }}</span>
+          @endif
+          <h3 style="font-weight:800;font-size:1rem;line-height:1.45;color:var(--black);margin-bottom:10px;font-family:'Raleway',sans-serif;">{{ Str::limit($post->title,60) }}</h3>
+          <div style="color:var(--g400);font-size:.76rem;font-weight:600;">{{ $post->published_at?->locale('id')->isoFormat('D MMM YYYY') }} · {{ $post->read_time ?? 5 }} mnt baca</div>
+        </div>
+      </a>
+      @endforeach
+    </div>
+  </div>
+  <style>@media(max-width:900px){#tips-grid{grid-template-columns:1fr 1fr!important;}}@media(max-width:640px){#tips-grid{grid-template-columns:1fr!important;}}</style>
 </section>
 @endif
 
-{{-- ══════════════════ KALKULATOR CICILAN ══════════════════ --}}
-<section id="financing" class="py-20 bg-brand-dark-gray">
-    <div class="max-w-3xl mx-auto px-4 md:px-8">
-        <div class="text-center mb-10">
-            <p class="section-label">Simulasi Kredit</p>
-            <h2 class="section-title">Kalkulator Cicilan</h2>
-            <p class="section-subtitle mx-auto">
-                Estimasi cicilan bulanan sesuai harga dan DP yang Anda masukkan.
-            </p>
-            <div class="divider-red mx-auto mt-4"></div>
-        </div>
-
-        <div class="bg-brand-mid-gray border border-white/5 rounded-2xl p-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div>
-                    <label class="km-label">Harga Mobil (Rp)</label>
-                    <input type="number" id="calc-price" oninput="calcKredit()"
-                           placeholder="150000000" class="km-input">
-                </div>
-                <div>
-                    <label class="km-label">Uang Muka / DP (Rp)</label>
-                    <input type="number" id="calc-dp" oninput="calcKredit()"
-                           placeholder="30000000" class="km-input">
-                </div>
-                <div>
-                    <label class="km-label">Tenor</label>
-                    <select id="calc-tenor" onchange="calcKredit()" class="km-select">
-                        <option value="12">12 bulan</option>
-                        <option value="24">24 bulan</option>
-                        <option value="36">36 bulan</option>
-                        <option value="48" selected>48 bulan</option>
-                        <option value="60">60 bulan</option>
-                        <option value="72">72 bulan</option>
-                    </select>
-                </div>
-            </div>
-
-            {{-- Result --}}
-            <div class="bg-brand-dark-gray border border-white/5 rounded-xl p-6 text-center">
-                <div class="text-brand-text-gray text-sm mb-2">Estimasi Cicilan per Bulan</div>
-                <div id="calc-result" class="font-heading font-extrabold text-4xl text-brand-red">—</div>
-                <div id="calc-breakdown" class="text-brand-text-gray text-xs mt-2">
-                    Masukkan harga dan DP untuk melihat estimasi
-                </div>
-                <p class="text-brand-text-gray/50 text-xs mt-3">
-                    * Sudah termasuk asuransi Rp 6.000.000. Angka final leasing bisa berbeda.
-                </p>
-            </div>
-
-            <div class="text-center mt-6">
-                <a href="{{ route('sell.index') }}" class="text-brand-text-gray hover:text-brand-red text-sm transition-colors">
-                    Ingin menjual mobil Anda? →
-                </a>
-            </div>
-        </div>
+{{-- TESTIMONIALS --}}
+@if(isset($testimonials) && $testimonials->count() > 0)
+<section style="padding:96px 0;background:#fff;overflow:hidden;position:relative;">
+  <div class="orb" style="width:500px;height:500px;background:rgba(204,0,0,0.04);top:-100px;right:-150px;animation:orbFloat 18s ease-in-out infinite;"></div>
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
+    <div class="reveal" style="text-align:center;margin-bottom:56px;">
+      <div class="section-tag" style="justify-content:center;">Testimoni Pelanggan</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;">Kata Mereka Tentang<br>Kerinci Motor</h2>
     </div>
-</section>
-
-{{-- ══════════════════ USP / WHY US ══════════════════ --}}
-<section id="why-us" class="py-20 bg-brand-black">
-    <div class="max-w-7xl mx-auto px-4 md:px-8 text-center">
-        <p class="section-label">Komitmen Kami</p>
-        <h2 class="section-title">Kenapa Pilih Kerinci Motor?</h2>
-        <div class="divider-red mx-auto mb-12"></div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach([
-                ['icon' => '🔍', 'title' => 'Harga Transparan',  'desc' => 'Harga yang Anda lihat adalah harga final. Tidak ada biaya tersembunyi.'],
-                ['icon' => '🔧', 'title' => 'Inspeksi 150+ Poin','desc' => 'Setiap unit melewati 150+ poin inspeksi untuk memastikan kondisi terbaik.'],
-                ['icon' => '⚡', 'title' => 'Proses Cepat',      'desc' => 'Dokumen lengkap, STNK atas nama Anda, proses pembelian yang cepat.'],
-                ['icon' => '📊', 'title' => 'Kilometer Jujur',   'desc' => 'Kilometer asli, tidak direkayasa. Didukung riwayat servis lengkap.'],
-            ] as $usp)
-            <div class="bg-brand-dark-gray border border-white/5 rounded-xl p-7 hover:border-brand-red/30 transition-all duration-300 hover:-translate-y-1 group text-left">
-                <div class="text-4xl mb-4">{{ $usp['icon'] }}</div>
-                <h3 class="font-heading font-bold text-lg text-brand-white mb-2 group-hover:text-brand-red transition-colors">
-                    {{ $usp['title'] }}
-                </h3>
-                <p class="text-brand-text-gray text-sm leading-relaxed">{{ $usp['desc'] }}</p>
+    <div style="overflow:hidden;">
+      <div class="ttrack">
+        @foreach($testimonials->concat($testimonials) as $t)
+        <div style="background:var(--g50);border:1px solid var(--g100);border-radius:24px;padding:28px;min-width:320px;max-width:360px;flex-shrink:0;transition:all .3s;" onmouseover="this.style.boxShadow='0 16px 40px rgba(0,0,0,0.1)';this.style.transform='translateY(-4px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+          <div style="display:flex;gap:3px;margin-bottom:14px;">
+            @for($i=0;$i<($t->rating ?? 5);$i++)
+            <span style="color:#f59e0b;font-size:1rem;">★</span>
+            @endfor
+          </div>
+          <p style="color:var(--g600);line-height:1.7;font-size:.9rem;margin-bottom:18px;font-weight:500;">"{{ $t->content }}"</p>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.875rem;font-family:'Raleway',sans-serif;flex-shrink:0;">{{ substr($t->name,0,1) }}</div>
+            <div>
+              <div style="font-weight:800;font-size:.9rem;font-family:'Raleway',sans-serif;">{{ $t->name }}</div>
+              @if($t->location)
+              <div style="color:var(--g400);font-size:.75rem;font-weight:600;">{{ $t->location }}</div>
+              @endif
             </div>
-            @endforeach
+          </div>
         </div>
+        @endforeach
+      </div>
     </div>
-</section>
-
-{{-- ══════════════════ TESTIMONIALS ══════════════════ --}}
-@if(isset($testimonials) && $testimonials->count() >= 1)
-<section id="testimonials" class="py-20 bg-brand-dark-gray">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-        <div class="text-center mb-12">
-            <p class="section-label">Kata Pelanggan</p>
-            <h2 class="section-title">Ulasan Pelanggan Kami</h2>
-            <div class="divider-red mx-auto"></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($testimonials as $testi)
-            <div class="testi-card flex flex-col h-full">
-                {{-- Stars --}}
-                <div class="flex gap-1 text-yellow-400 mb-3">
-                    @for($i = 1; $i <= 5; $i++)
-                    <svg class="w-4 h-4 {{ $i <= $testi->rating ? 'fill-current' : 'text-white/10 fill-current' }}" viewBox="0 0 24 24">
-                        <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                    </svg>
-                    @endfor
-                </div>
-
-                <p class="text-brand-text-gray text-sm leading-relaxed mb-5 italic flex-1">
-                    "{{ $testi->content }}"
-                </p>
-
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-brand-red/20 flex items-center justify-center font-heading font-bold text-brand-red">
-                        {{ strtoupper(substr($testi->name, 0, 1)) }}
-                    </div>
-                    <div>
-                        <div class="font-heading font-semibold text-brand-white text-sm">{{ $testi->name }}</div>
-                        @if($testi->location)
-                        <div class="text-brand-text-gray text-xs">{{ $testi->location }}</div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
+  </div>
 </section>
 @endif
+
+{{-- FINAL CTA --}}
+<section style="padding:96px 24px;background:var(--black);text-align:center;position:relative;overflow:hidden;" class="noise">
+  <div class="orb" style="width:600px;height:600px;background:rgba(204,0,0,0.12);top:50%;left:50%;transform:translate(-50%,-50%);animation:orbFloat 10s ease-in-out infinite;"></div>
+  <div style="position:relative;z-index:10;max-width:640px;margin:0 auto;">
+    <div class="reveal badge-red" style="margin-bottom:24px;justify-content:center;">✦ Siap Membantu Anda</div>
+    <h2 class="reveal" style="font-size:clamp(2rem,5vw,4rem);font-weight:900;letter-spacing:-2px;color:#fff;margin-bottom:20px;font-family:'Raleway',sans-serif;line-height:1.05;">Temukan Mobil<br><span style="color:var(--red);">Impian Anda</span><br>Hari Ini.</h2>
+    <p class="reveal" style="color:rgba(255,255,255,.5);font-size:1.05rem;margin-bottom:36px;line-height:1.7;font-weight:500;">Tim kami siap membantu Anda memilih unit terbaik sesuai kebutuhan dan budget.</p>
+    <div class="reveal" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
+      <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-outline" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;border-color:rgba(255,255,255,.3);color:#fff;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'"><span>💬 WhatsApp</span></a>
+    </div>
+  </div>
+</section>
 
 @endsection
 
 @push('scripts')
 <script>
-const FIXED_INSURANCE = 6000000;
+(function(){
+  // COUNTDOWN — reset daily at midnight
+  function updateCountdown(){
+    var now=new Date(),end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59);
+    var diff=Math.max(0,Math.floor((end-now)/1000));
+    var h=Math.floor(diff/3600),m=Math.floor((diff%3600)/60),s=diff%60;
+    var pad=function(n){return n<10?'0'+n:n;};
+    var elH=document.getElementById('cdH'),elM=document.getElementById('cdM'),elS=document.getElementById('cdS');
+    if(elH)elH.textContent=pad(h);
+    if(elM)elM.textContent=pad(m);
+    if(elS)elS.textContent=pad(s);
+  }
+  updateCountdown();
+  setInterval(updateCountdown,1000);
 
-function calcKredit() {
-    const price = parseFloat(document.getElementById('calc-price').value) || 0;
-    const dp    = parseFloat(document.getElementById('calc-dp').value) || 0;
-    const tenor = parseInt(document.getElementById('calc-tenor').value) || 48;
-
-    if (price > 0 && dp >= 0 && dp < price) {
-        const principal  = price - dp + FIXED_INSURANCE;
-        const totalBunga = principal * (0.11 * (tenor / 12));
-        const cicilan    = (principal + totalBunga) / tenor + 200000;
-
-        document.getElementById('calc-result').textContent =
-            'Rp ' + Math.round(cicilan).toLocaleString('id-ID');
-        document.getElementById('calc-breakdown').textContent =
-            'Total bayar: Rp ' + Math.round(principal + totalBunga).toLocaleString('id-ID')
-            + ' | ' + tenor + ' bulan';
+  // CICILAN CALCULATOR — FIXED_INSURANCE hidden from user
+  var FIXED_INSURANCE=6000000;
+  window.calcKredit=function(){
+    var price=parseFloat(document.getElementById('calc-price').value)||0;
+    var dp=parseFloat(document.getElementById('calc-dp').value)||0;
+    var tenor=parseInt(document.getElementById('calc-tenor').value)||48;
+    var result=document.getElementById('calc-result');
+    var breakdown=document.getElementById('calc-breakdown');
+    if(!result)return;
+    if(price>0&&dp>=0&&dp<price){
+      var principal=(price-dp)+FIXED_INSURANCE;
+      var totalBunga=principal*(0.11*(tenor/12));
+      var cicilan=Math.round((principal+totalBunga)/tenor+200000);
+      var totalBayar=Math.round(dp+cicilan*tenor);
+      result.textContent='Rp '+cicilan.toLocaleString('id-ID');
+      breakdown.textContent='Total bayar: Rp '+totalBayar.toLocaleString('id-ID')+' | DP: Rp '+dp.toLocaleString('id-ID')+' | '+tenor+' bulan';
     } else {
-        document.getElementById('calc-result').textContent = '—';
-        document.getElementById('calc-breakdown').textContent =
-            'Masukkan harga dan DP untuk melihat estimasi';
+      result.textContent='Rp —';
+      breakdown.textContent='';
     }
-}
+  };
+})();
 </script>
 @endpush
