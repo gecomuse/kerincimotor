@@ -9,6 +9,14 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # Proxy /storage/ to /public/storage/ (Spatie Media Library symlink lives there)
+    RewriteCond %{REQUEST_URI} ^/storage/
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L]
+
+    # Proxy /build/ to /public/build/ (Vite compiled assets)
+    RewriteCond %{REQUEST_URI} ^/build/
+    RewriteRule ^build/(.*)$ public/build/$1 [L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
