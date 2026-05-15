@@ -45,7 +45,7 @@
           <div style="color:var(--g400);font-size:.78rem;margin-bottom:12px;font-weight:600;">{{ $hero?->card_sub ?? 'Automatic · 18.000 KM · Bebas Laka' }}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div style="font-weight:900;font-size:1.3rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $hero?->card_price ?? 'Rp 680jt' }}</div>
-            <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
+            <a href="{{ ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero->car->slug) : route('inventory.index') }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
           </div>
         </div>
         <div class="glass" style="position:absolute;top:20px;right:20px;border-radius:14px;padding:11px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">

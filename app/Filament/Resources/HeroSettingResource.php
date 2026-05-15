@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroSettingResource\Pages;
+use App\Models\Car;
 use App\Models\HeroSetting;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -21,6 +22,28 @@ class HeroSettingResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+            Forms\Components\Section::make('Link ke Unit')
+                ->schema([
+                    Forms\Components\Select::make('car_id')
+                        ->label('Pilih Unit (opsional)')
+                        ->options(fn () => Car::where('is_available', true)->orderBy('make_model')->pluck('make_model', 'id'))
+                        ->searchable()
+                        ->nullable()
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if (! $state) return;
+                            $car = Car::find($state);
+                            if (! $car) return;
+                            $set('card_name', $car->make_model . ' ' . $car->year);
+                            $set('card_sub', strtoupper($car->transmission) . ' · ' . number_format($car->mileage, 0, ',', '.') . ' KM · Bebas Laka');
+                            $set('card_price', (string) round($car->price / 1000000));
+                            $thumb = $car->getFirstMediaUrl('car_images');
+                            if ($thumb) $set('image_url', $thumb);
+                        })
+                        ->helperText('Memilih unit akan mengisi otomatis kolom di bawah.')
+                        ->columnSpanFull(),
+                ]),
+
             Forms\Components\Section::make('Hero Image')
                 ->schema([
                     Forms\Components\TextInput::make('image_url')

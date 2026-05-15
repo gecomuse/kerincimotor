@@ -123,7 +123,7 @@
     @if($car->description ?? $car->condition_notes ?? null)
     <div style="margin-top:56px;max-width:760px;">
       <h2 class="reveal" style="font-weight:900;font-size:1.5rem;font-family:'Raleway',sans-serif;margin-bottom:16px;">Deskripsi & Kondisi</h2>
-      <div class="reveal" style="color:var(--g600);line-height:1.8;font-size:.95rem;font-weight:500;white-space:pre-line;">{{ $car->description ?? $car->condition_notes }}</div>
+      <div class="reveal" style="color:var(--g600);line-height:1.8;font-size:.95rem;font-weight:500;">{!! $car->description ?? $car->condition_notes !!}</div>
     </div>
     @endif
 

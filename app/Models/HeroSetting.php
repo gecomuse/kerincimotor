@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Car;
 
 class HeroSetting extends Model
 {
@@ -15,11 +16,17 @@ class HeroSetting extends Model
         'card_sub',
         'card_price',
         'is_active',
+        'car_id',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
 
     public static function current(): ?self
     {
