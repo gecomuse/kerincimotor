@@ -228,7 +228,7 @@
         @endif
       </div>
       <div class="reveal-right" style="background:#fff;border:1px solid var(--g100);border-radius:32px;padding:36px;box-shadow:0 32px 80px rgba(0,0,0,0.08);">
-        <h3 style="font-size:1.4rem;font-weight:900;margin-bottom:@if($finCar)16px@else24px@endif;color:var(--black);font-family:'Raleway',sans-serif;">Kalkulator Kredit</h3>
+        <h3 style="font-size:1.4rem;font-weight:900;margin-bottom:{{ $finCar ? '16px' : '24px' }};color:var(--black);font-family:'Raleway',sans-serif;">Kalkulator Kredit</h3>
         @if($finCar)
         <div style="background:rgba(204,0,0,0.04);border:1px solid rgba(204,0,0,0.12);border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
           <span style="font-size:1.2rem;">🚗</span>
