@@ -28,9 +28,10 @@ class HomeController extends Controller
         $testimonials  = Testimonial::active()->ordered()->get();
         $totalCars     = Car::available()->count();
         $latestPosts   = Post::published()->take(3)->get();
+        $latestVideos  = \App\Models\Video::active()->ordered()->take(3)->get();
         $hero          = HeroSetting::current();
 
-        return view('frontend.home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'hero'));
+        return view('frontend.home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'latestVideos', 'hero'));
     }
 
     public function sitemap(): Response

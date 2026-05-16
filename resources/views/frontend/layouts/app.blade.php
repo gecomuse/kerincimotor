@@ -149,6 +149,22 @@ body{font-family:'Raleway',sans-serif;background:#fff;color:var(--black);overflo
 @keyframes noiseShift{0%{background-position:0 0;}25%{background-position:40px -20px;}50%{background-position:-30px 30px;}75%{background-position:20px 40px;}100%{background-position:0 0;}}
 .noise::after{animation:noiseShift 8s steps(4,end) infinite!important;}
 
+/* 4E2 — section entrance */
+@keyframes sectionIn{from{opacity:0;}to{opacity:1;}}
+section{animation:sectionIn .5s ease forwards;}
+
+/* hover-lift utility */
+.hover-lift{transition:transform .3s cubic-bezier(0.34,1.56,0.64,1),box-shadow .3s;}
+.hover-lift:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(0,0,0,0.12);}
+
+/* badge-red shine sweep */
+.badge-red::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:badgeShine 3s ease-in-out infinite;pointer-events:none;}
+@keyframes badgeShine{0%{left:-100%;}50%{left:100%;}100%{left:100%;}}
+
+/* card shine on hover */
+.car-card:hover::before{content:'';position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transform:skewX(-15deg);animation:cardShine .6s ease forwards;z-index:5;pointer-events:none;}
+@keyframes cardShine{from{left:-75%;}to{left:125%;}}
+
 /* 4I — gradient border button */
 .btn-gradient-border{position:relative;background:#fff;color:var(--black);font-family:'Raleway',sans-serif;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;z-index:0;}
 .btn-gradient-border::before{content:'';position:absolute;inset:-2px;border-radius:100px;background:linear-gradient(90deg,var(--red),#ff6b35,var(--red));background-size:200%;animation:gradBorder 3s linear infinite;z-index:-1;}
@@ -335,6 +351,61 @@ body{font-family:'Raleway',sans-serif;background:#fff;color:var(--black);overflo
   var vm=document.getElementById('vmodal');
   if(vm)vm.addEventListener('click',function(e){if(e.target===this)closeVid();});
 
+  // SMOOTH SCROLL for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var target=document.querySelector(a.getAttribute('href'));
+      if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+
+  // STAGGERED GRID ANIMATION
+  function initStagger(){
+    document.querySelectorAll('[data-stagger]').forEach(function(grid){
+      var items=grid.children;
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            Array.from(items).forEach(function(item,i){
+              setTimeout(function(){item.style.opacity='1';item.style.transform='translateY(0)';},i*100);
+            });
+            obs.unobserve(e.target);
+          }
+        });
+      },{threshold:.08});
+      Array.from(items).forEach(function(item){
+        item.style.opacity='0';item.style.transform='translateY(30px)';
+        item.style.transition='opacity .6s ease,transform .6s cubic-bezier(0.34,1.2,0.64,1)';
+      });
+      obs.observe(grid);
+    });
+  }
+
+  // NAVBAR ACTIVE LINK
+  (function(){
+    var path=window.location.pathname;
+    document.querySelectorAll('#desknav a').forEach(function(link){
+      if(link.getAttribute('href')===path){link.style.color='var(--red)';link.style.fontWeight='900';}
+    });
+  })();
+
+  // IMAGE LAZY FADE
+  (function(){
+    if(!window.IntersectionObserver)return;
+    var imgObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var img=e.target;
+          img.style.transition='opacity .6s ease';
+          if(img.complete){img.style.opacity='1';}
+          else{img.style.opacity='0';img.onload=function(){img.style.opacity='1';};}
+          imgObs.unobserve(img);
+        }
+      });
+    },{threshold:.1});
+    document.querySelectorAll('img[loading="lazy"]').forEach(function(img){imgObs.observe(img);});
+  })();
+
   // 4A — MAGNETIC BUTTONS
   function initMagnetic(){
     if(window.innerWidth<=768)return;
@@ -401,7 +472,7 @@ body{font-family:'Raleway',sans-serif;background:#fff;color:var(--black);overflo
     });
   }
 
-  document.addEventListener('DOMContentLoaded',function(){initReveal();initTilt();initMagnetic();initCounters();initGSAP();initCardGlow();});
+  document.addEventListener('DOMContentLoaded',function(){initReveal();initTilt();initMagnetic();initCounters();initGSAP();initCardGlow();initStagger();});
 })();
 </script>
 </body>

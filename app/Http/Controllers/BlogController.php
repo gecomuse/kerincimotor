@@ -11,38 +11,33 @@ use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    public function index(): View
+    public function index(\Illuminate\Http\Request $request): View
     {
-        // Ambil pengaturan global
         $settings = Setting::all()->keyBy('key');
 
-        // Setup SEO
         SEOTools::setTitle('Tips & Trick Beli Mobil Bekas — Kerinci Motor');
         SEOTools::setDescription('Tips dan panduan beli mobil bekas dari praktisi Kerinci Motor. Cara cek kondisi mesin, bodi, dokumen, dan negosiasi harga terbaik.');
         SEOTools::opengraph()->setUrl(url('/tips-trick'));
 
-        // 1. Ambil artikel utama (post terbaru)
-        $featuredPost = Post::published()->latest('published_at')->first();
+        $query = Post::published()
+            ->when($request->filled('category'), fn ($q) => $q->where('category', $request->category))
+            ->when($request->filled('search'), fn ($q) => $q->where('title', 'like', '%' . $request->search . '%'));
 
-        // 2. Ambil artikel sisanya untuk grid
-        $posts = Post::published()
-            ->when($featuredPost, function ($query) use ($featuredPost) {
-                return $query->where('id', '!=', $featuredPost->id);
-            })
-            ->latest('published_at')
-            ->paginate(8);
+        $featuredPost = (clone $query)->latest('published_at')->first();
 
-        // 3. Ambil mobil untuk sidebar "Hot Stock"
+        $posts = (clone $query)
+            ->when($featuredPost, fn ($q) => $q->where('id', '!=', $featuredPost->id))
+            ->paginate(12)
+            ->withQueryString();
+
         $hotStock = Car::available()
             ->orderByDesc('is_featured')
             ->latest()
             ->take(4)
             ->get();
 
-        // (Opsional) Tetap panggil FAQ jika suatu saat dipakai lagi
         $faqs = Faq::active()->get();
 
-        // RETURN KE VIEW FRONTEND BARU
         return view('frontend.tips', compact('settings', 'featuredPost', 'posts', 'hotStock', 'faqs'));
     }
 
