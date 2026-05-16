@@ -82,7 +82,10 @@
     @isset($cars)
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:48px;" id="inv-grid">
       @forelse($cars as $car)
-      @php $img = $car->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+      @php
+      $img = $car->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800';
+      $img = str_replace('/storage/', '/storage_assets/', $img);
+      @endphp
       <div class="car-card reveal" onclick="window.location='{{ route('car.detail', $car->slug) }}'" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);border:1px solid var(--g100);">
         <div class="card-glow"></div>
         <div class="thumb" style="overflow:hidden;position:relative;">

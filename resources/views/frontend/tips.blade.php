@@ -78,7 +78,7 @@
           onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 24px 60px rgba(0,0,0,0.12)'"
           onmouseout="this.style.transform='';this.style.boxShadow='0 8px 40px rgba(0,0,0,0.08)'">
           <div style="position:relative;overflow:hidden;aspect-ratio:21/9;">
-            <img src="{{ $featuredPost->thumbnail_url }}"
+            <img src="{{ str_replace('/storage/', '/storage_assets/', $featuredPost->thumbnail_url) }}"
               style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s;"
               onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''"
               alt="{{ $featuredPost->title }}" loading="eager">
@@ -132,7 +132,7 @@
             onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 24px 48px rgba(0,0,0,0.1)'"
             onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.06)'">
             <div style="overflow:hidden;aspect-ratio:16/9;">
-              <img src="{{ $post->thumbnail_url }}"
+              <img src="{{ str_replace('/storage/', '/storage_assets/', $post->thumbnail_url) }}"
                 style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s;"
                 onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''"
                 alt="{{ $post->title }}" loading="lazy">
@@ -193,11 +193,15 @@
           <div style="font-weight:900;margin-bottom:16px;font-size:.95rem;font-family:'Raleway',sans-serif;">🔥 Hot Stock</div>
           <div style="display:flex;flex-direction:column;gap:14px;">
             @foreach($hotStock as $unit)
+            @php
+            $unitImg = $unit->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=200';
+            $unitImg = str_replace('/storage/', '/storage_assets/', $unitImg);
+            @endphp
             <div onclick="window.location='{{ route('car.detail', $unit->slug) }}'"
               style="display:flex;gap:12px;align-items:center;cursor:pointer;padding:10px;border-radius:14px;transition:all .25s;border:1px solid transparent;"
               onmouseover="this.style.background='var(--g50)';this.style.borderColor='var(--g200)';this.style.transform='translateX(4px)'"
               onmouseout="this.style.background='';this.style.borderColor='transparent';this.style.transform=''">
-              <img src="{{ $unit->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=200' }}"
+              <img src="{{ $unitImg }}"
                 style="width:64px;height:50px;border-radius:11px;object-fit:cover;flex-shrink:0;" alt="{{ $unit->make_model }}" loading="lazy">
               <div>
                 <div style="font-weight:800;font-size:.85rem;font-family:'Raleway',sans-serif;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{ $unit->make_model }}</div>

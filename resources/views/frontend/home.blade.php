@@ -6,7 +6,7 @@
 
 {{-- HERO --}}
 @php
-$heroImg   = ($hero && $hero->image_url) ? $hero->image_url : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop';
+$heroImg   = ($hero && $hero->image_url) ? str_replace('/storage/', '/storage_assets/', $hero->image_url) : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop';
 $heroName  = $hero?->card_name  ?: 'Unit Featured';
 $heroSub   = $hero?->card_sub   ?: 'Automatic · Bebas Laka';
 $heroPrice = $hero?->card_price ?: 'Hubungi Kami';
@@ -110,12 +110,15 @@ $heroLink  = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero-
 
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;" id="home-cards" data-stagger>
       @forelse($featuredCars as $car)
-      @php $img = $car->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+      @php
+      $carImg = $car->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800';
+      $carImg = str_replace('/storage/', '/storage_assets/', $carImg);
+      @endphp
       <div class="car-card tilt-card reveal" onclick="window.location='{{ route('car.detail', $car->slug) }}'" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
         <div class="card-glow"></div>
         <div class="tilt-shine"></div>
         <div class="thumb" style="overflow:hidden;position:relative;">
-          <img src="{{ $img }}" style="width:100%;height:220px;object-fit:cover;display:block;" alt="{{ $car->make_model }}" loading="lazy">
+          <img src="{{ $carImg }}" style="width:100%;height:220px;object-fit:cover;display:block;" alt="{{ $car->make_model }}" loading="lazy">
           @if($car->is_featured)
           <div style="position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 13px;border-radius:100px;font-weight:800;font-size:.72rem;font-family:'Raleway',sans-serif;">🔥 HOT</div>
           @endif
@@ -206,7 +209,10 @@ $heroLink  = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero-
         @if($finCar)
         {{-- CMS-selected car card --}}
         <div onclick="window.location='{{ route('car.detail', $finCar->slug) }}'" style="background:#fff;border:1px solid var(--g100);border-radius:24px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.07);cursor:pointer;transition:all .3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.07)'">
-          @php $finImg = $finCar->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+          @php
+          $finImg = $finCar->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800';
+          $finImg = str_replace('/storage/', '/storage_assets/', $finImg);
+          @endphp
           <div style="position:relative;overflow:hidden;">
             <img src="{{ $finImg }}" style="width:100%;height:200px;object-fit:cover;display:block;" alt="{{ $finCar->make_model }}" loading="lazy">
             <div style="position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 14px;border-radius:100px;font-weight:800;font-size:.72rem;">💳 Unit Cicilan</div>
@@ -311,7 +317,15 @@ $heroLink  = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero-
 @endif
 
 {{-- WHY KERINCI --}}
-@php $whyImg = $featuredCars->first()?->thumbnail ?: 'https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=1200&auto=format&fit=crop'; @endphp
+@php
+$whyImg = null;
+if ($featuredCars && $featuredCars->count()) {
+    $firstCar = $featuredCars->first();
+    $whyImg = $firstCar->getFirstMediaUrl('car_images');
+    $whyImg = $whyImg ? str_replace('/storage/', '/storage_assets/', $whyImg) : null;
+}
+$whyImg = $whyImg ?: 'https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=1200&auto=format&fit=crop';
+@endphp
 <section style="padding:96px 0;background:var(--g50);position:relative;overflow:hidden;">
   <div class="orb" style="width:500px;height:500px;background:rgba(192,192,192,0.07);bottom:-150px;left:-150px;animation:orbFloat2 12s ease-in-out infinite;"></div>
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">

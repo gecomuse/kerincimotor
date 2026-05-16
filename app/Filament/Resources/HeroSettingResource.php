@@ -49,8 +49,9 @@ class HeroSettingResource extends Resource
                             $set('card_name', $car->make_model . ' ' . $car->year);
                             $set('card_sub', strtoupper($car->transmission) . ' · ' . number_format($car->mileage, 0, ',', '.') . ' KM · Bebas Laka');
                             $set('card_price', 'Rp ' . round($car->price / 1000000) . 'jt');
-                            $thumb = $car->getFirstMediaUrl('car_images');
-                            $set('image_url', $thumb ?: '');
+                            $rawUrl = $car->getFirstMediaUrl('car_images');
+                            $img = $rawUrl ? str_replace('/storage/', '/storage_assets/', $rawUrl) : '';
+                            $set('image_url', $img);
                         })
                         ->helperText('Memilih unit mengisi otomatis nama, sub, harga, dan gambar.')
                         ->columnSpanFull(),

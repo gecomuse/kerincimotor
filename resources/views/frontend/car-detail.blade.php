@@ -7,7 +7,8 @@
 
 @php
   $images = $car->getMedia('car_images');
-  $mainImg = $car->large_image ?: ($images->first()?->getUrl() ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400');
+  $rawMain = $car->large_image ?: ($images->first()?->getUrl() ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400');
+  $mainImg = str_replace('/storage/', '/storage_assets/', $rawMain);
   $FIXED_INSURANCE = 6000000;
   $dp30 = round($car->price * 0.30);
   $principal = ($car->price - $dp30) + $FIXED_INSURANCE;
@@ -59,8 +60,13 @@
         @if($images->count() > 1)
         <div style="display:flex;gap:10px;flex-wrap:wrap;" id="thumbs">
           @foreach($images as $i => $media)
-          @php $url = $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl(); @endphp
-          <div class="gallery-thumb {{ $i===0?'active':'' }}" onclick="switchImg('{{ $media->hasGeneratedConversion('large')?$media->getUrl('large'):$media->getUrl() }}',this)" style="width:80px;flex-shrink:0;">
+          @php
+          $url = $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl();
+          $url = str_replace('/storage/', '/storage_assets/', $url);
+          $switchUrl = $media->hasGeneratedConversion('large') ? $media->getUrl('large') : $media->getUrl();
+          $switchUrl = str_replace('/storage/', '/storage_assets/', $switchUrl);
+          @endphp
+          <div class="gallery-thumb {{ $i===0?'active':'' }}" onclick="switchImg('{{ $switchUrl }}',this)" style="width:80px;flex-shrink:0;">
             <img src="{{ $url }}" alt="Foto {{ $i+1 }}" loading="lazy">
           </div>
           @endforeach
@@ -136,7 +142,10 @@
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;" id="rel-grid">
         @foreach($relatedCars as $rel)
-        @php $relImg = $rel->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+        @php
+        $relImg = $rel->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800';
+        $relImg = str_replace('/storage/', '/storage_assets/', $relImg);
+        @endphp
         <div class="car-card reveal" onclick="window.location='{{ route('car.detail', $rel->slug) }}'" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);border:1px solid var(--g100);">
           <div class="card-glow"></div>
           <div class="thumb" style="overflow:hidden;">
