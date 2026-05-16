@@ -17,6 +17,7 @@ class HeroSetting extends Model
         'card_price',
         'is_active',
         'car_id',
+        'financing_car_id',
     ];
 
     protected $casts = [
@@ -26,6 +27,11 @@ class HeroSetting extends Model
     public function car()
     {
         return $this->belongsTo(Car::class);
+    }
+
+    public function financingCar()
+    {
+        return $this->belongsTo(Car::class, 'financing_car_id');
     }
 
     public static function current(): ?self

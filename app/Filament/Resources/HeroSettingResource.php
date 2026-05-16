@@ -70,7 +70,7 @@ class HeroSettingResource extends Resource
                     Forms\Components\TextInput::make('card_price')
                         ->label('Price Label')
                         ->maxLength(50)
-                        ->placeholder('e.g. 175'),
+                        ->placeholder('e.g. Rp 175jt'),
 
                     Forms\Components\Toggle::make('is_active')
                         ->label('Active')
@@ -78,6 +78,18 @@ class HeroSettingResource extends Resource
                         ->helperText('Only the latest active hero will be displayed.'),
                 ])
                 ->columns(2),
+
+            Forms\Components\Section::make('Simulasi Cicilan — Unit Unggulan')
+                ->description('Unit yang dipilih akan ditampilkan di bagian kalkulator kredit, dan harganya otomatis mengisi kalkulator.')
+                ->schema([
+                    Forms\Components\Select::make('financing_car_id')
+                        ->label('Unit untuk Simulasi Cicilan')
+                        ->options(fn () => Car::where('is_available', true)->orderBy('make_model')->pluck('make_model', 'id'))
+                        ->searchable()
+                        ->nullable()
+                        ->helperText('Kosongkan jika tidak ingin menampilkan unit spesifik di kalkulator.')
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 

@@ -185,6 +185,7 @@
 </section>
 
 {{-- FINANCING --}}
+@php $finCar = $hero?->financingCar; @endphp
 <section id="financing" style="padding:96px 0;background:var(--g50);color:var(--black);position:relative;overflow:hidden;" class="noise">
   <div class="orb" style="width:700px;height:700px;background:rgba(204,0,0,0.06);top:-200px;left:-300px;animation:orbFloat 16s ease-in-out infinite;"></div>
   <div class="orb" style="width:400px;height:400px;background:rgba(204,0,0,0.04);bottom:-100px;right:-100px;animation:orbFloat2 12s ease-in-out infinite 3s;"></div>
@@ -193,7 +194,28 @@
       <div class="reveal-left">
         <div class="section-tag">Simulasi Cicilan</div>
         <h2 style="font-size:clamp(1.8rem,3.5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-1px;font-family:'Raleway',sans-serif;">Hitung Cicilan<br>Mobil Impian Anda<br><span style="color:var(--red);">Sekarang.</span></h2>
-        <p style="color:var(--g500);font-size:1rem;line-height:1.7;margin-bottom:36px;font-weight:500;">DP rendah, cicilan ringan. Proses kredit cepat — ACC dalam hitungan jam!</p>
+        <p style="color:var(--g500);font-size:1rem;line-height:1.7;margin-bottom:32px;font-weight:500;">DP rendah, cicilan ringan. Proses kredit cepat — ACC dalam hitungan jam!</p>
+
+        @if($finCar)
+        {{-- CMS-selected car card --}}
+        <div onclick="window.location='{{ route('car.detail', $finCar->slug) }}'" style="background:#fff;border:1px solid var(--g100);border-radius:24px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.07);cursor:pointer;transition:all .3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.07)'">
+          @php $finImg = $finCar->thumbnail ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'; @endphp
+          <div style="position:relative;overflow:hidden;">
+            <img src="{{ $finImg }}" style="width:100%;height:200px;object-fit:cover;display:block;" alt="{{ $finCar->make_model }}" loading="lazy">
+            <div style="position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 14px;border-radius:100px;font-weight:800;font-size:.72rem;">💳 Unit Cicilan</div>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.18),transparent 60%);"></div>
+          </div>
+          <div style="padding:20px;">
+            <div style="color:var(--g400);font-size:.76rem;font-weight:600;margin-bottom:4px;">{{ $finCar->year }} · {{ strtoupper($finCar->transmission) }} · {{ $finCar->formatted_mileage }}</div>
+            <div style="font-weight:900;font-size:1.05rem;margin-bottom:12px;font-family:'Raleway',sans-serif;">{{ $finCar->make_model }}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-weight:900;font-size:1.3rem;color:var(--red);font-family:'Raleway',sans-serif;">{{ $finCar->formatted_price }}</div>
+              <div style="font-size:.72rem;font-weight:700;color:var(--g400);">Harga sudah terisi otomatis →</div>
+            </div>
+          </div>
+        </div>
+        @else
+        {{-- Fallback feature cards --}}
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div style="border:1px solid var(--g200);border-radius:20px;padding:20px;background:#fff;transition:all .3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
             <div style="font-size:1.75rem;font-weight:900;color:var(--red);">0%</div>
@@ -203,13 +225,20 @@
             <div style="font-size:1.1rem;font-weight:900;line-height:1.4;color:var(--black);font-family:'Raleway',sans-serif;">⚡ ACC Cepat<br><span style="font-size:.8rem;color:var(--g400);font-weight:700;">Dalam hitungan jam</span></div>
           </div>
         </div>
+        @endif
       </div>
       <div class="reveal-right" style="background:#fff;border:1px solid var(--g100);border-radius:32px;padding:36px;box-shadow:0 32px 80px rgba(0,0,0,0.08);">
-        <h3 style="font-size:1.4rem;font-weight:900;margin-bottom:24px;color:var(--black);font-family:'Raleway',sans-serif;">Kalkulator Kredit</h3>
+        <h3 style="font-size:1.4rem;font-weight:900;margin-bottom:@if($finCar)16px@else24px@endif;color:var(--black);font-family:'Raleway',sans-serif;">Kalkulator Kredit</h3>
+        @if($finCar)
+        <div style="background:rgba(204,0,0,0.04);border:1px solid rgba(204,0,0,0.12);border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">🚗</span>
+          <div><div style="font-weight:800;font-size:.85rem;font-family:'Raleway',sans-serif;">{{ $finCar->make_model }}</div><div style="font-size:.75rem;color:var(--red);font-weight:700;">{{ $finCar->formatted_price }}</div></div>
+        </div>
+        @endif
         <div style="display:flex;flex-direction:column;gap:18px;">
           <div>
             <label style="display:block;color:var(--g500);font-size:.78rem;margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Harga Cash (Rp)</label>
-            <input type="number" id="calc-price" placeholder="Contoh: 300000000" oninput="calcKredit()" class="finput">
+            <input type="number" id="calc-price" placeholder="Contoh: 300000000" oninput="calcKredit()" class="finput" value="{{ $finCar ? $finCar->price : '' }}">
           </div>
           <div>
             <label style="display:block;color:var(--g500);font-size:.78rem;margin-bottom:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">Uang Muka / DP (Rp)</label>
@@ -338,6 +367,10 @@
   }
   updateCountdown();
   setInterval(updateCountdown,1000);
+
+  // Auto-run calculator if price is pre-filled from CMS
+  var prePrice=document.getElementById('calc-price');
+  if(prePrice && prePrice.value) { setTimeout(function(){ if(window.calcKredit) window.calcKredit(); }, 50); }
 
   // CICILAN CALCULATOR — FIXED_INSURANCE hidden from user
   var FIXED_INSURANCE=6000000;
