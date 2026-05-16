@@ -5,7 +5,11 @@
 @section('content')
 
 {{-- HERO --}}
-<section style="min-height:100vh;padding-top:72px;background:linear-gradient(160deg,#fff 55%,#fff8f8 100%);position:relative;overflow:hidden;display:flex;align-items:center;" class="noise">
+@php
+$heroImg = $hero?->image_url ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop';
+$heroCarUrl = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero->car->slug) : route('inventory.index');
+@endphp
+<section id="hero-section" style="min-height:100vh;padding-top:72px;background:linear-gradient(160deg,#fff 55%,#fff8f8 100%);position:relative;overflow:hidden;display:flex;align-items:center;" class="noise">
   <div class="orb" style="width:600px;height:600px;background:rgba(204,0,0,0.08);top:-150px;left:-200px;animation:orbFloat 12s ease-in-out infinite;"></div>
   <div class="orb" style="width:400px;height:400px;background:rgba(192,192,192,0.1);bottom:-80px;right:-100px;animation:orbFloat2 10s ease-in-out infinite 2s;"></div>
   <div style="max-width:1280px;margin:0 auto;padding:72px 24px;width:100%;position:relative;z-index:10;">
@@ -24,19 +28,19 @@
           <a href="{{ route('inventory.index') }}" class="btn-gradient-border" style="font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
           <a href="{{ route('sell.index') }}" class="btn-outline" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;"><span>Jual Mobil Anda</span></a>
         </div>
-        <div class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);" data-stats-section>
-          <div><div data-counter="{{ $totalCars ?? 50 }}" data-suffix="+" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
+        <div id="stats-section" class="reveal" style="display:flex;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid var(--g100);" data-stats-section>
+          <div><div id="stat-units" data-counter="{{ $totalCars ?? 50 }}" data-suffix="+" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">{{ $totalCars ?? '50' }}+</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Unit Tersedia</div></div>
           <div><div data-counter="100" data-suffix="%" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">100%</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Jaminan KM Bebas Reset</div></div>
-          <div><div data-counter="4.9" data-suffix="★" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
+          <div><div id="stat-rating" data-counter="4.9" data-suffix="★" style="font-size:1.8rem;font-weight:900;font-family:'Raleway',sans-serif;color:var(--black);">4.9★</div><div style="color:var(--g500);font-size:.8rem;font-weight:600;margin-top:2px;">Rating Pelanggan</div></div>
         </div>
       </div>
       <div class="reveal-right tilt-card" style="position:relative;" id="hero-img-col">
         <div class="tilt-shine"></div>
         <div class="hero-float" style="border-radius:40px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.14);">
-          <img src="{{ $hero?->image_url ?? 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop' }}" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
+          <img id="hero-main-img" src="{{ $heroImg }}" class="clip-reveal" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.28),transparent 55%);"></div>
         </div>
-        <div class="glass" style="position:absolute;bottom:-20px;left:-20px;border-radius:24px;padding:20px 24px;min-width:220px;box-shadow:0 24px 48px rgba(0,0,0,0.12);animation:orbFloat2 6s ease-in-out infinite;">
+        <div id="hero-float-card" class="glass float-card" style="position:absolute;bottom:-20px;left:-20px;border-radius:24px;padding:20px 24px;min-width:220px;box-shadow:0 24px 48px rgba(0,0,0,0.12);">
           <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
             <span style="font-size:.72rem;color:var(--g400);font-weight:600;">Featured Deal</span>
             <span style="color:var(--red);font-weight:900;font-size:.72rem;">🔥 HOT</span>
@@ -45,10 +49,10 @@
           <div style="color:var(--g400);font-size:.78rem;margin-bottom:12px;font-weight:600;">{{ $hero?->card_sub ?? 'Automatic · 18.000 KM · Bebas Laka' }}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div style="font-weight:900;font-size:1.3rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $hero?->card_price ?? 'Hubungi Kami' }}</div>
-            <a href="{{ ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero->car->slug) : route('inventory.index') }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
+            <a href="{{ $heroCarUrl }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
           </div>
         </div>
-        <div class="glass" style="position:absolute;top:20px;right:20px;border-radius:14px;padding:11px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">
+        <div class="glass float-card-alt" style="position:absolute;top:20px;right:20px;border-radius:14px;padding:11px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">
           <div style="font-weight:900;font-size:.8rem;color:var(--red);font-family:'Raleway',sans-serif;">✓ Bebas Banjir & Laka</div>
         </div>
       </div>
@@ -86,7 +90,7 @@
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:20px;">
       <div class="reveal">
         <div class="section-tag">🔥 Penawaran Terbatas</div>
-        <h2 style="font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;margin-bottom:16px;">Flash Sale Used Car</h2>
+        <h2 class="word-reveal" style="font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;letter-spacing:-1px;font-family:'Raleway',sans-serif;margin-bottom:16px;">Flash Sale Used Car</h2>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span style="font-weight:700;font-size:.85rem;color:var(--g500);">Berakhir dalam:</span>
           <div style="display:flex;align-items:center;gap:6px;">
@@ -304,13 +308,14 @@
 @endif
 
 {{-- WHY KERINCI --}}
+@php $whyImg = $featuredCars->first()?->thumbnail ?: 'https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=1200&auto=format&fit=crop'; @endphp
 <section style="padding:96px 0;background:var(--g50);position:relative;overflow:hidden;">
   <div class="orb" style="width:500px;height:500px;background:rgba(192,192,192,0.07);bottom:-150px;left:-150px;animation:orbFloat2 12s ease-in-out infinite;"></div>
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" id="why-grid">
       <div class="reveal-left tilt-card" style="position:relative;">
         <div class="tilt-shine"></div>
-        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?q=80&w=1200&auto=format&fit=crop" style="width:100%;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,0.12);display:block;" alt="Showroom Kerinci Motor" loading="lazy">
+        <img src="{{ $whyImg }}" style="width:100%;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,0.12);display:block;" alt="Kerinci Motor Unit" loading="lazy" class="clip-reveal">
         <div class="glass" style="position:absolute;bottom:-24px;right:-24px;border-radius:22px;padding:20px;box-shadow:0 16px 40px rgba(0,0,0,0.1);max-width:210px;animation:orbFloat2 7s ease-in-out infinite;">
           <div style="font-size:1.75rem;margin-bottom:8px;">✅</div>
           <div style="font-weight:900;font-size:.95rem;font-family:'Raleway',sans-serif;">Terverifikasi Bersih</div>
