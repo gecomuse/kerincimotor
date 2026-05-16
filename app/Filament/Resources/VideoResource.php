@@ -21,9 +21,15 @@ class VideoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Video Info')
+            Forms\Components\Toggle::make('is_featured')
+                ->label('Featured — tampil di homepage dan halaman Video')
+                ->helperText('Hanya 1 video featured yang tampil di bagian atas halaman Video.')
+                ->columnSpanFull(),
+
+            Forms\Components\Section::make('Info Video')
                 ->schema([
                     Forms\Components\TextInput::make('title')
+                        ->label('Judul Video')
                         ->required()
                         ->maxLength(255)
                         ->columnSpanFull(),
@@ -33,35 +39,35 @@ class VideoResource extends Resource
                         ->required()
                         ->maxLength(50)
                         ->placeholder('e.g. -A3QvyQ9sP8')
-                        ->helperText('The ID at the end of a YouTube URL: youtube.com/watch?v=THIS_PART'),
-
-                    Forms\Components\TextInput::make('price_label')
-                        ->label('Price Label')
-                        ->maxLength(50)
-                        ->placeholder('e.g. Rp 120jt'),
-                ])
-                ->columns(2),
-
-            Forms\Components\Section::make('Display Settings')
-                ->schema([
-                    Forms\Components\Textarea::make('description')
-                        ->maxLength(500)
-                        ->rows(3)
+                        ->helperText('ID di akhir URL YouTube: youtube.com/watch?v=ID_INI')
                         ->columnSpanFull(),
 
-                    Forms\Components\Toggle::make('is_featured')
-                        ->label('Featured Video')
-                        ->helperText('The featured video appears prominently on the video page.'),
-
-                    Forms\Components\Toggle::make('is_active')
-                        ->label('Active')
-                        ->default(true),
+                    Forms\Components\TextInput::make('price_label')
+                        ->label('Harga Unit')
+                        ->maxLength(50)
+                        ->placeholder('175jt'),
 
                     Forms\Components\TextInput::make('sort_order')
+                        ->label('Urutan Tampil')
                         ->numeric()
                         ->default(0),
                 ])
-                ->columns(3),
+                ->columns(2),
+
+            Forms\Components\Section::make('Deskripsi')
+                ->schema([
+                    Forms\Components\Textarea::make('description')
+                        ->label('Deskripsi Video')
+                        ->rows(4)
+                        ->maxLength(500)
+                        ->helperText('Muncul di halaman utama featured video section dan halaman Video.')
+                        ->columnSpanFull(),
+                ]),
+
+            Forms\Components\Toggle::make('is_active')
+                ->label('Aktif (tampilkan di website)')
+                ->default(true)
+                ->columnSpanFull(),
         ]);
     }
 

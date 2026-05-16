@@ -9,6 +9,7 @@ use App\Filament\Resources\PostResource;
 use App\Filament\Resources\SellInquiryResource;
 use App\Filament\Resources\SettingResource;
 use App\Filament\Resources\TestimonialResource;
+use App\Filament\Resources\VideoResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -49,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
                 PostResource::class,
                 FaqResource::class,
                 TestimonialResource::class,
+                VideoResource::class,
                 SettingResource::class,
                 SellInquiryResource::class,
             ])
