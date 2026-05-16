@@ -230,14 +230,6 @@ section{animation:sectionIn .5s ease forwards;}
 <header id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.93);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid rgba(0,0,0,0.06);transition:box-shadow .4s;">
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between;">
     <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-      <div style="width:44px;height:44px;background:#0A0A0A;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s;"
-           onmouseover="this.style.transform='rotate(-5deg) scale(1.1)'"
-           onmouseout="this.style.transform=''">
-        <svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 18L8 2L14 12L20 2L26 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="14" cy="12" r="2" fill="#CC0000"/>
-        </svg>
-      </div>
       <div>
         <div style="font-weight:900;font-size:1.1rem;line-height:1;letter-spacing:-0.5px;font-family:'Raleway',sans-serif;color:#0A0A0A;">KERINCI<span style="color:#CC0000;">MOTOR</span></div>
         <div style="font-size:.66rem;color:#9ca3af;font-weight:600;margin-top:1px;letter-spacing:.3px;">Jual-Beli Mobil Bekas · Bebas Banjir & Laka</div>
