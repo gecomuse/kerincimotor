@@ -19,6 +19,18 @@
     RewriteCond %{REQUEST_URI} ^/build/
     RewriteRule ^ - [L]
 
+    # Allow direct access to storage_assets symlink
+    RewriteCond %{REQUEST_URI} ^/storage_assets/
+    RewriteRule ^ - [L]
+
+    # Allow direct access to css symlink
+    RewriteCond %{REQUEST_URI} ^/css/
+    RewriteRule ^ - [L]
+
+    # Allow direct access to js symlink
+    RewriteCond %{REQUEST_URI} ^/js/
+    RewriteRule ^ - [L]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
