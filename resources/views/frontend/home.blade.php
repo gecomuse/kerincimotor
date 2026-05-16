@@ -332,7 +332,7 @@ $whyImg = $whyImg ?: 'https://images.unsplash.com/photo-1549924231-f129b911e442?
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" id="why-grid">
       <div class="reveal-left tilt-card" style="position:relative;">
         <div class="tilt-shine"></div>
-        <img src="{{ $whyImg }}" style="width:100%;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,0.12);display:block;" alt="Kerinci Motor Unit" loading="lazy" class="clip-reveal">
+        <img src="{{ $whyImg }}" loading="eager" style="width:100%;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,0.14);display:block;" alt="Kerinci Motor Showroom">
         <div class="glass" style="position:absolute;bottom:-24px;right:-24px;border-radius:22px;padding:20px;box-shadow:0 16px 40px rgba(0,0,0,0.1);max-width:210px;animation:orbFloat2 7s ease-in-out infinite;">
           <div style="font-size:1.75rem;margin-bottom:8px;">✅</div>
           <div style="font-weight:900;font-size:.95rem;font-family:'Raleway',sans-serif;">Terverifikasi Bersih</div>
@@ -358,12 +358,12 @@ $whyImg = $whyImg ?: 'https://images.unsplash.com/photo-1549924231-f129b911e442?
 </section>
 
 {{-- SELL CAR CTA --}}
-<section style="padding:96px 24px;background:var(--black);text-align:center;position:relative;overflow:hidden;" class="noise">
+<section style="padding:120px 24px 96px;background:var(--black);text-align:center;position:relative;overflow:hidden;" class="noise">
   <div class="orb" style="width:600px;height:600px;background:rgba(204,0,0,0.12);top:50%;left:50%;transform:translate(-50%,-50%);animation:orbFloat 10s ease-in-out infinite;"></div>
   <div style="position:relative;z-index:10;max-width:640px;margin:0 auto;">
     <div class="reveal badge-red" style="margin-bottom:24px;justify-content:center;">✦ Jual atau Beli Sekarang</div>
-    <h2 class="reveal" style="font-size:clamp(2rem,5vw,4rem);font-weight:900;letter-spacing:-2px;color:#fff;margin-bottom:20px;font-family:'Raleway',sans-serif;line-height:1.05;">Temukan Mobil<br><span style="color:var(--red);">Impian Anda</span><br>Hari Ini.</h2>
-    <p class="reveal" style="color:rgba(255,255,255,.5);font-size:1.05rem;margin-bottom:36px;line-height:1.7;font-weight:500;">Tim kami siap membantu Anda memilih atau menjual unit terbaik sesuai kebutuhan dan budget.</p>
+    <h2 class="reveal" style="font-size:clamp(2rem,5vw,4rem);font-weight:900;letter-spacing:-2px;color:#fff;margin-bottom:20px;padding-bottom:40px;font-family:'Raleway',sans-serif;line-height:1.05;">Temukan Mobil<br><span style="color:var(--red);">Impian Anda</span><br>Hari Ini.</h2>
+    <p class="reveal" style="color:rgba(255,255,255,.5);font-size:1.05rem;margin-top:32px;margin-bottom:36px;line-height:1.7;font-weight:500;">Tim kami siap membantu Anda memilih atau menjual unit terbaik sesuai kebutuhan dan budget.</p>
     <div class="reveal" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
       <a href="{{ route('inventory.index') }}" class="btn-red" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;">🔥 Lihat Flash Sale</a>
       <a href="{{ route('sell.index') }}" class="btn-outline" style="padding:16px 36px;border-radius:100px;font-size:1rem;text-decoration:none;border-color:rgba(255,255,255,.3);color:#fff;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'"><span>💰 Jual Mobil Anda</span></a>

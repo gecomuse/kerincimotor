@@ -1,0 +1,9 @@
+<svg width="200" height="48" viewBox="0 0 200 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- KM Icon Box -->
+  <rect width="44" height="44" x="0" y="2" rx="10" fill="#0A0A0A"/>
+  <text x="22" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="white">KM</text>
+  <!-- KERINCI text -->
+  <text x="56" y="24" font-family="Arial, sans-serif" font-weight="900" font-size="18" fill="#0A0A0A" letter-spacing="-0.5">KERINCI</text>
+  <!-- MOTOR text in red -->
+  <text x="56" y="42" font-family="Arial, sans-serif" font-weight="900" font-size="18" fill="#CC0000" letter-spacing="-0.5">MOTOR</text>
+</svg>

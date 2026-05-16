@@ -3,8 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="shortcut icon" href="/favicon.svg">
+<meta name="theme-color" content="#CC0000">
+<meta property="og:site_name" content="Kerinci Motor">
+<meta property="og:locale" content="id_ID">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>@yield('title', 'Kerinci Motor | Jual Beli Mobil Bekas Terpercaya Bekasi')</title>
+<title>@yield('title', 'Kerinci Motor — Dealer Mobil Bekas Terpercaya Bekasi')</title>
 <meta name="description" content="@yield('description', 'Dealer mobil bekas terpercaya Sejabodetabek. Bebas banjir, laka, dan terbakar.')">
 <meta property="og:title" content="@yield('title', 'Kerinci Motor')">
 <meta property="og:image" content="@yield('og_image', asset('images/og-default.jpg'))">
@@ -225,10 +230,17 @@ section{animation:sectionIn .5s ease forwards;}
 <header id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.93);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid rgba(0,0,0,0.06);transition:box-shadow .4s;">
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between;">
     <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-      <div style="width:40px;height:40px;background:var(--black);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.875rem;font-family:'Raleway',sans-serif;transition:transform .3s;" onmouseover="this.style.transform='rotate(-5deg) scale(1.1)'" onmouseout="this.style.transform=''">KM</div>
+      <div style="width:44px;height:44px;background:#0A0A0A;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s;"
+           onmouseover="this.style.transform='rotate(-5deg) scale(1.1)'"
+           onmouseout="this.style.transform=''">
+        <svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 18L8 2L14 12L20 2L26 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14" cy="12" r="2" fill="#CC0000"/>
+        </svg>
+      </div>
       <div>
-        <div style="font-weight:900;font-size:1.1rem;line-height:1;letter-spacing:-.5px;font-family:'Raleway',sans-serif;color:var(--black);">KERINCI<span style="color:var(--red);">MOTOR</span></div>
-        <div style="font-size:.65rem;color:var(--g400);font-weight:600;margin-top:2px;">Jual-Beli Mobil Bekas · Bebas Banjir & Laka</div>
+        <div style="font-weight:900;font-size:1.1rem;line-height:1;letter-spacing:-0.5px;font-family:'Raleway',sans-serif;color:#0A0A0A;">KERINCI<span style="color:#CC0000;">MOTOR</span></div>
+        <div style="font-size:.66rem;color:#9ca3af;font-weight:600;margin-top:1px;letter-spacing:.3px;">Jual-Beli Mobil Bekas · Bebas Banjir & Laka</div>
       </div>
     </a>
     <nav style="display:flex;align-items:center;gap:28px;" id="desknav">
@@ -261,8 +273,22 @@ section{animation:sectionIn .5s ease forwards;}
         <div style="font-weight:900;font-size:1.4rem;margin-bottom:14px;font-family:'Raleway',sans-serif;">KERINCI<span style="color:var(--red)">MOTOR</span></div>
         <p style="color:rgba(255,255,255,.35);line-height:1.7;font-size:.875rem;margin-bottom:20px;font-weight:500;">Dealer mobil bekas terpercaya Sejabodetabek. Bebas banjir, laka, dan terbakar.</p>
         <div style="display:flex;gap:10px;">
-          <a href="https://instagram.com/kerincimotor" target="_blank" rel="noopener" style="width:38px;height:38px;background:rgba(255,255,255,.08);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:.75rem;font-weight:800;transition:.3s;font-family:'Raleway',sans-serif;" onmouseover="this.style.background='var(--red)';this.style.transform='translateY(-3px)'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.transform=''">IG</a>
-          <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" style="width:38px;height:38px;background:rgba(255,255,255,.08);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:.72rem;font-weight:800;transition:.3s;font-family:'Raleway',sans-serif;" onmouseover="this.style.background='#25D366';this.style.transform='translateY(-3px)'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.transform=''">WA</a>
+          <a href="https://instagram.com/kerincimotor" target="_blank" rel="noopener"
+             style="width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:.3s;background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);"
+             onmouseover="this.style.transform='translateY(-3px) scale(1.1)'"
+             onmouseout="this.style.transform=''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/6287776700009" target="_blank" rel="noopener"
+             style="width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:.3s;background:#25D366;"
+             onmouseover="this.style.transform='translateY(-3px) scale(1.1)'"
+             onmouseout="this.style.transform=''">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
         </div>
       </div>
       <div>
