@@ -22,15 +22,27 @@ class HeroSettingResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Link ke Unit')
+            Forms\Components\Toggle::make('is_active')
+                ->label('Aktif (tampilkan di homepage)')
+                ->default(true)
+                ->columnSpanFull(),
+
+            Forms\Components\Section::make('Unit yang Ditampilkan di Hero Banner')
+                ->description('Pilih unit — data kartu terisi otomatis. Bisa diedit manual di bawah.')
                 ->schema([
                     Forms\Components\Select::make('car_id')
-                        ->label('Pilih Unit (opsional)')
-                        ->options(fn () => Car::where('is_available', true)->orderBy('make_model')->pluck('make_model', 'id'))
+                        ->label('Pilih Unit')
+                        ->options(fn () => Car::where('is_available', true)
+                            ->orderBy('make_model')
+                            ->get()
+                            ->mapWithKeys(fn ($car) => [
+                                $car->id => $car->make_model . ' ' . $car->year . ' — Rp ' . round($car->price / 1000000) . 'jt',
+                            ])
+                            ->toArray())
                         ->searchable()
                         ->nullable()
                         ->live()
-                        ->afterStateUpdated(function ($state, callable $set) {
+                        ->afterStateUpdated(function ($state, Forms\Set $set) {
                             if (! $state) return;
                             $car = Car::find($state);
                             if (! $car) return;
@@ -38,56 +50,57 @@ class HeroSettingResource extends Resource
                             $set('card_sub', strtoupper($car->transmission) . ' · ' . number_format($car->mileage, 0, ',', '.') . ' KM · Bebas Laka');
                             $set('card_price', 'Rp ' . round($car->price / 1000000) . 'jt');
                             $thumb = $car->getFirstMediaUrl('car_images');
-                            if ($thumb) $set('image_url', $thumb);
+                            $set('image_url', $thumb ?: '');
                         })
-                        ->helperText('Memilih unit akan mengisi otomatis kolom di bawah.')
+                        ->helperText('Memilih unit mengisi otomatis nama, sub, harga, dan gambar.')
                         ->columnSpanFull(),
                 ]),
 
-            Forms\Components\Section::make('Hero Image')
+            Forms\Components\Section::make('Override Manual (opsional)')
+                ->description('Edit langsung jika ingin teks atau gambar berbeda dari data unit.')
                 ->schema([
                     Forms\Components\TextInput::make('image_url')
-                        ->label('Image URL')
-                        ->url()
+                        ->label('URL Gambar Hero')
+                        ->nullable()
                         ->maxLength(2048)
                         ->columnSpanFull()
-                        ->placeholder('https://...')
-                        ->helperText('Full URL of the hero car image.'),
-                ]),
+                        ->placeholder('https://... atau kosongkan jika pakai gambar unit'),
 
-            Forms\Components\Section::make('Car Card Overlay')
-                ->schema([
                     Forms\Components\TextInput::make('card_name')
-                        ->label('Car Name')
+                        ->label('Nama Unit di Kartu')
                         ->maxLength(120)
-                        ->placeholder('e.g. Honda Brio Satya E CVT'),
+                        ->nullable()
+                        ->placeholder('e.g. Honda Brio Satya E CVT 2022'),
 
                     Forms\Components\TextInput::make('card_sub')
-                        ->label('Subtitle')
+                        ->label('Sub-teks')
                         ->maxLength(200)
-                        ->placeholder('e.g. 2023 · Automatic · 12.000 KM'),
+                        ->nullable()
+                        ->placeholder('e.g. AUTOMATIC · 18.500 KM · Bebas Laka'),
 
                     Forms\Components\TextInput::make('card_price')
-                        ->label('Price Label')
+                        ->label('Harga')
                         ->maxLength(50)
+                        ->nullable()
                         ->placeholder('e.g. Rp 175jt'),
-
-                    Forms\Components\Toggle::make('is_active')
-                        ->label('Active')
-                        ->default(true)
-                        ->helperText('Only the latest active hero will be displayed.'),
                 ])
                 ->columns(2),
 
             Forms\Components\Section::make('Simulasi Cicilan — Unit Unggulan')
-                ->description('Unit yang dipilih akan ditampilkan di bagian kalkulator kredit, dan harganya otomatis mengisi kalkulator.')
+                ->description('Unit ini ditampilkan di kalkulator kredit dan harganya terisi otomatis.')
                 ->schema([
                     Forms\Components\Select::make('financing_car_id')
                         ->label('Unit untuk Simulasi Cicilan')
-                        ->options(fn () => Car::where('is_available', true)->orderBy('make_model')->pluck('make_model', 'id'))
+                        ->options(fn () => Car::where('is_available', true)
+                            ->orderBy('make_model')
+                            ->get()
+                            ->mapWithKeys(fn ($car) => [
+                                $car->id => $car->make_model . ' ' . $car->year . ' — Rp ' . round($car->price / 1000000) . 'jt',
+                            ])
+                            ->toArray())
                         ->searchable()
                         ->nullable()
-                        ->helperText('Kosongkan jika tidak ingin menampilkan unit spesifik di kalkulator.')
+                        ->helperText('Kosongkan untuk tampilkan form cicilan generik.')
                         ->columnSpanFull(),
                 ]),
         ]);
@@ -98,26 +111,27 @@ class HeroSettingResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('card_name')
-                    ->label('Car Name')
+                    ->label('Unit')
                     ->searchable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->default('—'),
 
                 Tables\Columns\TextColumn::make('card_price')
-                    ->label('Price'),
-
-                Tables\Columns\TextColumn::make('card_sub')
-                    ->label('Subtitle')
-                    ->limit(40),
+                    ->label('Harga')
+                    ->default('—'),
 
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label('Aktif')
                     ->boolean()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Updated')
+                    ->label('Diupdate')
                     ->since()
                     ->sortable(),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

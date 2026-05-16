@@ -29,7 +29,8 @@ class HomeController extends Controller
         $totalCars     = Car::available()->count();
         $latestPosts   = Post::published()->take(3)->get();
         $latestVideos  = \App\Models\Video::active()->ordered()->take(3)->get();
-        $hero          = HeroSetting::with(['car', 'financingCar.media'])->where('is_active', true)->latest()->first();
+        $hero          = HeroSetting::with(['car', 'financingCar.media'])->where('is_active', true)->latest()->first()
+                     ?? HeroSetting::with(['car', 'financingCar.media'])->latest()->first();
 
         return view('frontend.home', compact('settings', 'featuredCars', 'testimonials', 'totalCars', 'latestPosts', 'latestVideos', 'hero'));
     }

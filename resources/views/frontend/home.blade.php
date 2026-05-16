@@ -6,8 +6,11 @@
 
 {{-- HERO --}}
 @php
-$heroImg = $hero?->image_url ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop';
-$heroCarUrl = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero->car->slug) : route('inventory.index');
+$heroImg   = ($hero && $hero->image_url) ? $hero->image_url : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop';
+$heroName  = $hero?->card_name  ?: 'Unit Featured';
+$heroSub   = $hero?->card_sub   ?: 'Automatic · Bebas Laka';
+$heroPrice = $hero?->card_price ?: 'Hubungi Kami';
+$heroLink  = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero->car->slug) : route('inventory.index');
 @endphp
 <section id="hero-section" style="min-height:100vh;padding-top:72px;background:linear-gradient(160deg,#fff 55%,#fff8f8 100%);position:relative;overflow:hidden;display:flex;align-items:center;" class="noise">
   <div class="orb" style="width:600px;height:600px;background:rgba(204,0,0,0.08);top:-150px;left:-200px;animation:orbFloat 12s ease-in-out infinite;"></div>
@@ -45,11 +48,11 @@ $heroCarUrl = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero
             <span style="font-size:.72rem;color:var(--g400);font-weight:600;">Featured Deal</span>
             <span style="color:var(--red);font-weight:900;font-size:.72rem;">🔥 HOT</span>
           </div>
-          <div style="font-weight:900;font-size:1.05rem;margin-bottom:3px;font-family:'Raleway',sans-serif;">{{ $hero?->card_name ?? 'Toyota Alphard 2023' }}</div>
-          <div style="color:var(--g400);font-size:.78rem;margin-bottom:12px;font-weight:600;">{{ $hero?->card_sub ?? 'Automatic · 18.000 KM · Bebas Laka' }}</div>
+          <div style="font-weight:900;font-size:1.05rem;margin-bottom:3px;font-family:'Raleway',sans-serif;">{{ $heroName }}</div>
+          <div style="color:var(--g400);font-size:.78rem;margin-bottom:12px;font-weight:600;">{{ $heroSub }}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-weight:900;font-size:1.3rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $hero?->card_price ?? 'Hubungi Kami' }}</div>
-            <a href="{{ $heroCarUrl }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
+            <div style="font-weight:900;font-size:1.3rem;font-family:'Raleway',sans-serif;color:var(--red);">{{ $heroPrice }}</div>
+            <a href="{{ $heroLink }}" class="btn-red" style="padding:8px 16px;border-radius:100px;font-size:.78rem;text-decoration:none;">Detail</a>
           </div>
         </div>
         <div class="glass float-card-alt" style="position:absolute;top:20px;right:20px;border-radius:14px;padding:11px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);">
