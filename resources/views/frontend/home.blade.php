@@ -40,7 +40,7 @@ $heroLink  = ($hero && $hero->car_id && $hero->car) ? route('car.detail', $hero-
       <div class="reveal-right tilt-card" style="position:relative;" id="hero-img-col">
         <div class="tilt-shine"></div>
         <div class="hero-float" style="border-radius:40px;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.14);">
-          <img id="hero-main-img" src="{{ $heroImg }}" class="clip-reveal" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
+          <img id="hero-main-img" src="{{ $heroImg }}" style="width:100%;height:520px;object-fit:cover;display:block;" alt="Kerinci Motor Featured Car" loading="eager">
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.28),transparent 55%);"></div>
         </div>
         <div id="hero-float-card" class="glass float-card" style="position:absolute;bottom:-20px;left:-20px;border-radius:24px;padding:20px 24px;min-width:220px;box-shadow:0 24px 48px rgba(0,0,0,0.12);">
