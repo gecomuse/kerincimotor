@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="shortcut icon" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
 <meta name="theme-color" content="#CC0000">
 <meta property="og:site_name" content="Kerinci Motor">
 <meta property="og:locale" content="id_ID">
@@ -12,7 +13,27 @@
 <title>@yield('title', 'Kerinci Motor — Dealer Mobil Bekas Terpercaya Bekasi')</title>
 <meta name="description" content="@yield('description', 'Dealer mobil bekas terpercaya Sejabodetabek. Bebas banjir, laka, dan terbakar.')">
 <meta property="og:title" content="@yield('title', 'Kerinci Motor')">
-<meta property="og:image" content="@yield('og_image', asset('images/og-default.jpg'))">
+<meta property="og:image" content="https://kerincimotor.com/images/og-default.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "name": "Kerinci Motor",
+  "url": "https://kerincimotor.com",
+  "telephone": "+6287776700009",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jl. Mustika Jaya RT.006/RW.012",
+    "addressLocality": "Mustikajaya",
+    "addressRegion": "Bekasi",
+    "postalCode": "17158",
+    "addressCountry": "ID"
+  },
+  "openingHours": "Mo-Sa 08:00-21:00",
+  "description": "Dealer mobil bekas Bekasi. Kami beli mobil Anda dengan harga kompetitif, proses cepat, bayar tunai."
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -215,7 +236,7 @@ section{animation:sectionIn .5s ease forwards;}
 
 {{-- MOBILE NAV --}}
 <div id="mnav">
-  <div style="font-weight:900;font-size:1.75rem;letter-spacing:-1px;font-family:'Raleway',sans-serif;">KERINCI<span style="color:var(--red)">MOTOR</span></div>
+  <img src="/images/logo.png" alt="Kerinci Motor" style="height:40px;width:auto;object-fit:contain;">
   <div style="display:flex;flex-direction:column;gap:20px;">
     <a href="{{ route('inventory.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Mobil <span style="color:var(--red);font-weight:900;">HOT DEALS!</span></a>
     <a href="{{ route('home') }}#financing" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Simulasi Cicilan</a>
@@ -229,11 +250,8 @@ section{animation:sectionIn .5s ease forwards;}
 {{-- NAVBAR --}}
 <header id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.93);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid rgba(0,0,0,0.06);transition:box-shadow .4s;">
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between;">
-    <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-      <div>
-        <div style="font-weight:900;font-size:1.1rem;line-height:1;letter-spacing:-0.5px;font-family:'Raleway',sans-serif;color:#0A0A0A;">KERINCI<span style="color:#CC0000;">MOTOR</span></div>
-        <div style="font-size:.66rem;color:#9ca3af;font-weight:600;margin-top:1px;letter-spacing:.3px;">Jual-Beli Mobil Bekas · Bebas Banjir & Laka</div>
-      </div>
+    <a href="{{ route('home') }}" style="display:flex;align-items:center;text-decoration:none;">
+      <img src="/images/logo.png" alt="Kerinci Motor" style="height:44px;width:auto;object-fit:contain;">
     </a>
     <nav style="display:flex;align-items:center;gap:28px;" id="desknav">
       <a href="{{ route('inventory.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Mobil <span style="color:var(--red);font-weight:900;">HOT!</span></a>

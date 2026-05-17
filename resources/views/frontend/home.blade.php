@@ -2,6 +2,57 @@
 @section('title','Kerinci Motor | Dealer Mobil Bekas Terpercaya Sejabodetabek')
 @section('description','Dealer mobil bekas terpercaya Sejabodetabek. Stok lengkap, harga transparan. Bebas banjir, laka, dan terbakar.')
 
+@push('styles')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Apakah Kerinci Motor beli mobil bekas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ya, kami membeli berbagai jenis mobil bekas di area Bekasi dan Jabodetabek dengan harga kompetitif dan bayar hari itu juga."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Berapa lama proses jual mobil ke Kerinci Motor?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Proses sangat cepat — dari inspeksi sampai uang cair bisa selesai dalam 1 hari."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apakah ada biaya inspeksi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tidak ada. Inspeksi gratis dan kami bisa jemput ke lokasi Anda di area Bekasi."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jenis mobil apa yang dibeli Kerinci Motor?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kami membeli MPV (Avanza, Xpander, Innova Reborn), SUV (Fortuner, Pajero Sport bensin, HR-V), dan city car (Brio, Jazz, Yaris, Agya)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bagaimana cara menghubungi Kerinci Motor untuk jual mobil?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hubungi WhatsApp kami di 0877-7670-0009 atau kunjungi showroom di Jl. Mustika Jaya RT.006/RW.012, Mustikajaya, Bekasi."
+      }
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 
 {{-- HERO --}}
