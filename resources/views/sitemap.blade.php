@@ -34,6 +34,36 @@
   </url>
 
   <url>
+    <loc>https://kerincimotor.com/jual-mobil/bekasi</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://kerincimotor.com/jual-mobil/jakarta</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://kerincimotor.com/jual-mobil/bogor</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://kerincimotor.com/jual-mobil/depok</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://kerincimotor.com/jual-mobil/tangerang</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>{{ url('/lokasi') }}</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

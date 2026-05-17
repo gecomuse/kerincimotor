@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JualMobilController;
 use App\Http\Controllers\SellInquiryController;
 use App\Http\Controllers\SellCarController;
 use App\Http\Controllers\VideoController;
@@ -26,8 +27,13 @@ Route::post('/sell-inquiry', [SellInquiryController::class, 'store'])
     ->middleware('throttle:5,60')
     ->name('sell-inquiry.store');
 
-// Sell Your Car — dedicated page + JSON endpoint
-Route::get('/jual-mobil', [SellCarController::class, 'index'])->name('sell.index');
+// Sell Your Car — form POST endpoint (kept for backward compat)
+Route::get('/jual-mobil', function () {
+    return redirect('/jual-mobil/bekasi', 301);
+})->name('sell.index');
+
+// Jual Mobil location pages
+Route::get('/jual-mobil/{kota}', [JualMobilController::class, 'show'])->name('jual-mobil.show');
 Route::post('/lead', [SellCarController::class, 'store'])
     ->middleware('throttle:5,60')
     ->name('lead.store');

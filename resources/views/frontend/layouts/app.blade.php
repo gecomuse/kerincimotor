@@ -242,7 +242,7 @@ section{animation:sectionIn .5s ease forwards;}
     <a href="{{ route('home') }}#financing" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Simulasi Cicilan</a>
     <a href="{{ route('video.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Video Review</a>
     <a href="{{ route('tips.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Tips & Trick</a>
-    <a href="{{ route('sell.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Jual Mobil Anda</a>
+    <a href="/jual-mobil/bekasi" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.2rem;color:var(--black);text-decoration:none;" onclick="document.getElementById('mnav').classList.remove('open')">Jual Mobil Anda</a>
   </div>
   <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-red" style="padding:16px 32px;border-radius:100px;font-size:.95rem;justify-content:center;text-decoration:none;">💬 WhatsApp</a>
 </div>
@@ -258,7 +258,7 @@ section{animation:sectionIn .5s ease forwards;}
       <a href="{{ route('home') }}#financing" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Simulasi Cicilan</a>
       <a href="{{ route('video.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Video Review</a>
       <a href="{{ route('tips.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Tips & Trick</a>
-      <a href="{{ route('sell.index') }}" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Jual Mobil</a>
+      <a href="/jual-mobil/bekasi" style="font-family:'Raleway',sans-serif;font-weight:700;font-size:.875rem;color:var(--black);text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--black)'">Jual Mobil</a>
     </nav>
     <div style="display:flex;align-items:center;gap:12px;">
       <a href="{{ route('whatsapp') }}" target="_blank" rel="noopener" class="btn-red" style="padding:11px 22px;border-radius:100px;font-size:.85rem;text-decoration:none;" id="navwa">💬 WhatsApp</a>
@@ -278,7 +278,7 @@ section{animation:sectionIn .5s ease forwards;}
 <footer style="background:var(--black);color:#fff;padding:72px 0 28px;position:relative;overflow:hidden;" class="noise">
   <div class="orb" style="width:500px;height:500px;background:rgba(204,0,0,0.07);top:-100px;right:-100px;animation:orbFloat 16s ease-in-out infinite;"></div>
   <div style="max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:10;">
-    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.5fr;gap:44px;margin-bottom:56px;" class="ft-grid">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.5fr;gap:36px;margin-bottom:56px;" class="ft-grid">
       <div>
         <div style="font-weight:900;font-size:1.4rem;margin-bottom:14px;font-family:'Raleway',sans-serif;">KERINCI<span style="color:var(--red)">MOTOR</span></div>
         <p style="color:rgba(255,255,255,.35);line-height:1.7;font-size:.875rem;margin-bottom:20px;font-weight:500;">Dealer mobil bekas terpercaya Sejabodetabek. Bebas banjir, laka, dan terbakar.</p>
@@ -307,8 +307,18 @@ section{animation:sectionIn .5s ease forwards;}
           <a href="{{ route('inventory.index') }}" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Flash Sale / Inventory</a>
           <a href="{{ route('video.index') }}" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Video Review</a>
           <a href="{{ route('tips.index') }}" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Tips & Trick</a>
-          <a href="{{ route('sell.index') }}" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil</a>
+          <a href="/jual-mobil/bekasi" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil</a>
           <a href="{{ route('home') }}#financing" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Simulasi Cicilan</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:900;margin-bottom:18px;font-size:.95rem;font-family:'Raleway',sans-serif;">Lokasi</div>
+        <div style="display:flex;flex-direction:column;gap:11px;font-size:.875rem;font-weight:600;">
+          <a href="/jual-mobil/bekasi" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil Bekasi</a>
+          <a href="/jual-mobil/jakarta" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil Jakarta</a>
+          <a href="/jual-mobil/bogor" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil Bogor</a>
+          <a href="/jual-mobil/depok" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil Depok</a>
+          <a href="/jual-mobil/tangerang" style="color:rgba(255,255,255,.35);text-decoration:none;transition:.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Jual Mobil Tangerang</a>
         </div>
       </div>
       <div>
