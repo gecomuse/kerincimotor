@@ -21,4 +21,6 @@ return [
         'token' => env('OPENCLAW_API_TOKEN'),
     ],
 
+    'n8n_api_key' => env('N8N_API_KEY', ''),
+
 ];

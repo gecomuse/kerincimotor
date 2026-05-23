@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom middleware
         $middleware->alias([
             'admin.register.token' => \App\Http\Middleware\AdminRegisterToken::class,
+            'api.key'              => \App\Http\Middleware\ApiKeyMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
