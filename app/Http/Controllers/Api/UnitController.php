@@ -37,6 +37,9 @@ class UnitController extends Controller
             'mileage'         => $validated['kilometer'],
             'tax_status'      => $validated['pajak'],
             'condition_notes' => $validated['keterangan'] ?? null,
+            'color'           => 'Tidak Diketahui',
+            'fuel_type'       => 'petrol',
+            'body_type'       => 'mpv',
             'is_available'    => true,
             'is_featured'     => false,
         ]);
